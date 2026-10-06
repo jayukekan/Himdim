@@ -1,0 +1,1126 @@
+{%- capture sh_customer_testimonials_css -%}
+<style>
+  #sh-testimonials-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-container {
+    max-width: {{ section.settings.container_max_width }}px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-container.sh-testi-full-width {
+    max-width: 100%;
+    padding: 0 20px;
+  }
+
+  /* Header Section */
+  #sh-testimonials-{{ section.id }} .sh-testi-header-wrap {
+    display: flex;
+    align-items: flex-end;
+    justify-content: {% if section.settings.heading_align == 'center' and section.settings.arrow_position != 'top' %}center{% else %}space-between{% endif %};
+    margin-bottom: 36px;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-header {
+    text-align: {{ section.settings.heading_align }};
+    {% if section.settings.heading_align == 'center' and section.settings.arrow_position != 'top' %}
+      margin: 0 auto;
+    {% endif %}
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-heading {
+    margin: 0;
+    font-size: {{ section.settings.heading_size }}px;
+    font-family: {% if section.settings.heading_font_style == 'serif' %}Georgia, "Times New Roman", serif{% elsif section.settings.heading_font_style == 'sans-serif' %}sans-serif{% else %}var(--font-heading-family){% endif %};
+    font-weight: {{ section.settings.heading_weight }};
+    color: {{ section.settings.heading_color }};
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-subheading {
+    margin: 10px 0 0;
+    font-size: 13px;
+    font-family: var(--font-body-family);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: {{ section.settings.subheading_color }};
+    opacity: 0.85;
+  }
+
+  /* Top Navigation Arrows */
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  /* Stage Wrapper */
+  #sh-testimonials-{{ section.id }} .sh-testi-stage {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+  }
+
+  /* SLIDER MODE */
+  #sh-testimonials-{{ section.id }} .sh-testi-slider-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-slider-track {
+    display: flex;
+    align-items: stretch;
+    gap: {{ section.settings.card_gap_desktop }}px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 12px 4px 24px;
+    cursor: grab;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-slider-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-slider-track.is-dragging {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-slider-track .sh-testi-card {
+    flex: 0 0 {{ section.settings.card_width_desktop }}px;
+    width: {{ section.settings.card_width_desktop }}px;
+    scroll-snap-align: start;
+  }
+
+  /* GRID MODE */
+  #sh-testimonials-{{ section.id }} .sh-testi-grid-container {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.grid_columns }}, 1fr);
+    gap: {{ section.settings.card_gap_desktop }}px;
+    padding: 10px 0 24px;
+    width: 100%;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-grid-container .sh-testi-card {
+    width: 100%;
+  }
+
+  /* Card Styles */
+  #sh-testimonials-{{ section.id }} .sh-testi-card {
+    background-color: {{ section.settings.card_bg_color }};
+    border-radius: {{ section.settings.card_border_radius }}px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s ease;
+    position: relative;
+    border: 1px solid {{ section.settings.card_border_color }};
+    {% if section.settings.show_card_shadow %}
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    {% endif %}
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-card:hover {
+    transform: translateY(-4px);
+    {% if section.settings.show_card_shadow %}
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    {% endif %}
+  }
+
+  /* Author Header (Avatar + Name & Role) */
+  #sh-testimonials-{{ section.id }} .sh-testi-author-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background-color: #f1f1f1;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-avatar-placeholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #e8ecf1;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    font-family: var(--font-body-family);
+    flex-shrink: 0;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-author-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-author-name {
+    margin: 0;
+    font-size: {{ section.settings.author_font_size }}px;
+    font-weight: 700;
+    font-family: var(--font-heading-family);
+    color: {{ section.settings.card_text_color }};
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-verified-icon {
+    width: 15px;
+    height: 15px;
+    color: #0284c7;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-author-role {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: {{ section.settings.card_subtext_color }};
+    font-family: var(--font-body-family);
+    line-height: 1.3;
+  }
+
+  /* Star Rating */
+  #sh-testimonials-{{ section.id }} .sh-testi-stars {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 16px;
+    color: {{ section.settings.star_color }};
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-star {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  /* Review Text */
+  #sh-testimonials-{{ section.id }} .sh-testi-text {
+    font-size: {{ section.settings.text_font_size }}px;
+    line-height: 1.6;
+    color: {{ section.settings.card_text_color }};
+    font-family: var(--font-body-family);
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  /* Optional Product / Date Tag */
+  #sh-testimonials-{{ section.id }} .sh-testi-footer-tag {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: {{ section.settings.card_subtext_color }};
+    font-family: var(--font-body-family);
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-product-link {
+    color: {{ section.settings.card_text_color }};
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+  }
+
+  /* Navigation Arrow Buttons */
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.94);
+    color: #1a1a1a;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(8px);
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow:hover {
+    transform: scale(1.08);
+    background-color: #121212;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow.is-disabled {
+    opacity: 0.25;
+    cursor: default;
+    pointer-events: none;
+    box-shadow: none;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Floating Arrows Position */
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow-floating {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow-floating:hover {
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow-prev.sh-testi-nav-arrow-floating {
+    left: -12px;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow-next.sh-testi-nav-arrow-floating {
+    right: -12px;
+  }
+
+  /* Progress Bar */
+  #sh-testimonials-{{ section.id }} .sh-testi-progress-wrap {
+    width: 140px;
+    height: 3px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 99px;
+    margin: 24px auto 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #sh-testimonials-{{ section.id }} .sh-testi-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 30%;
+    background: {{ section.settings.heading_color }};
+    border-radius: 99px;
+    transition: width 0.2s ease, transform 0.1s ease-out;
+  }
+
+  /* Responsive Rules */
+  @media only screen and (max-width: 989px) {
+    #sh-testimonials-{{ section.id }} .sh-testi-grid-container {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    #sh-testimonials-{{ section.id }} {
+      padding-top: {{ section.settings.mob_padding_top }}px;
+      padding-bottom: {{ section.settings.mob_padding_bottom }}px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-container {
+      padding: 0 16px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-header-wrap {
+      flex-direction: column;
+      align-items: {% if section.settings.heading_align == 'center' %}center{% else %}flex-start{% endif %};
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-heading {
+      font-size: {{ section.settings.mob_heading_size }}px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-slider-track {
+      gap: {{ section.settings.card_gap_mobile }}px;
+      padding: 6px 0 18px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-slider-track .sh-testi-card {
+      flex: 0 0 {{ section.settings.card_width_mobile }}px;
+      width: {{ section.settings.card_width_mobile }}px;
+      padding: 24px 20px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-grid-container {
+      grid-template-columns: repeat({{ section.settings.mob_grid_columns | default: 1 }}, 1fr);
+      gap: {{ section.settings.card_gap_mobile }}px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow {
+      width: 38px;
+      height: 38px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow-prev.sh-testi-nav-arrow-floating {
+      left: 2px;
+    }
+
+    #sh-testimonials-{{ section.id }} .sh-testi-nav-arrow-next.sh-testi-nav-arrow-floating {
+      right: 2px;
+    }
+  }
+</style>
+{%- endcapture -%}
+{{- sh_customer_testimonials_css | strip_newlines -}}
+
+<div id="sh-testimonials-{{ section.id }}" class="sh-customer-testimonials-section">
+  <div class="sh-testi-container{% if section.settings.full_width %} sh-testi-full-width{% endif %}">
+    
+    <!-- Section Header Wrap -->
+    <div class="sh-testi-header-wrap">
+      {% if section.settings.heading != blank or section.settings.subheading != blank %}
+        <div class="sh-testi-header">
+          {% if section.settings.heading != blank %}
+            <h2 class="sh-testi-heading">{{ section.settings.heading }}</h2>
+          {% endif %}
+          {% if section.settings.subheading != blank %}
+            <p class="sh-testi-subheading">{{ section.settings.subheading }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.layout_mode == 'slider' and section.settings.show_arrows and section.settings.arrow_position == 'top' %}
+        <div class="sh-testi-nav-top" aria-label="Testimonial navigation">
+          <button type="button" class="sh-testi-nav-arrow sh-testi-nav-arrow-prev" data-testi-prev aria-label="Previous review">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="sh-testi-nav-arrow sh-testi-nav-arrow-next" data-testi-next aria-label="Next review">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Main Stage -->
+    <div class="sh-testi-stage" data-sh-testi-stage>
+      
+      {% if section.settings.layout_mode == 'slider' and section.settings.show_arrows and section.settings.arrow_position == 'floating' %}
+        <button type="button" class="sh-testi-nav-arrow sh-testi-nav-arrow-floating sh-testi-nav-arrow-prev" data-testi-prev aria-label="Previous review">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      {% endif %}
+
+      {% if section.settings.layout_mode == 'slider' %}
+        <div class="sh-testi-slider-wrap">
+          <div class="sh-testi-slider-track" data-testi-track tabindex="0">
+      {% else %}
+        <div class="sh-testi-grid-container sh-testi-grid-cols-{{ section.settings.grid_columns }}">
+      {% endif %}
+
+          {% if section.blocks.size > 0 %}
+            {% for block in section.blocks %}
+              <div class="sh-testi-card" {{ block.shopify_attributes }}>
+                
+                <!-- Author Header -->
+                <div class="sh-testi-author-wrap">
+                  {% if block.settings.author_image != blank %}
+                    {{ block.settings.author_image | image_url: width: 140 | image_tag:
+                      loading: 'lazy',
+                      class: 'sh-testi-avatar',
+                      alt: block.settings.author_name,
+                      widths: '60, 100, 140',
+                      sizes: '48px'
+                    }}
+                  {% else %}
+                    <div class="sh-testi-avatar-placeholder" aria-hidden="true">
+                      {% if block.settings.author_name != blank %}
+                        {{ block.settings.author_name | slice: 0, 1 | upcase }}
+                      {% else %}
+                        C
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+                  <div class="sh-testi-author-info">
+                    <h3 class="sh-testi-author-name">
+                      {{ block.settings.author_name }}
+                      {% if block.settings.is_verified %}
+                        <svg class="sh-testi-verified-icon" viewBox="0 0 24 24" title="Verified Customer" aria-label="Verified Customer">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                      {% endif %}
+                    </h3>
+                    {% if block.settings.author_role != blank %}
+                      <span class="sh-testi-author-role">{{ block.settings.author_role }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Star Rating -->
+                {% if section.settings.show_stars %}
+                  <div class="sh-testi-stars" aria-label="{{ block.settings.rating }} out of 5 stars">
+                    {% assign star_rating = block.settings.rating | default: 5 %}
+                    {% for i in (1..5) %}
+                      <svg class="sh-testi-star" viewBox="0 0 24 24" aria-hidden="true" style="{% if i > star_rating %}opacity: 0.2;{% endif %}">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                <!-- Review Content -->
+                <div class="sh-testi-text">
+                  {{ block.settings.review_text }}
+                </div>
+
+                <!-- Footer Tag / Product Link -->
+                {% if block.settings.product_name != blank or block.settings.review_date != blank %}
+                  <div class="sh-testi-footer-tag">
+                    {% if block.settings.product_name != blank %}
+                      <span>
+                        Purchased: 
+                        {% if block.settings.product_link != blank %}
+                          <a href="{{ block.settings.product_link }}" class="sh-testi-product-link">{{ block.settings.product_name }}</a>
+                        {% else %}
+                          <strong>{{ block.settings.product_name }}</strong>
+                        {% endif %}
+                      </span>
+                    {% endif %}
+                    {% if block.settings.review_date != blank %}
+                      <span>{{ block.settings.review_date }}</span>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+              </div>
+            {% endfor %}
+          {% endif %}
+
+      {% if section.settings.layout_mode == 'slider' %}
+          </div>
+        </div>
+      {% else %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.layout_mode == 'slider' and section.settings.show_arrows and section.settings.arrow_position == 'floating' %}
+        <button type="button" class="sh-testi-nav-arrow sh-testi-nav-arrow-floating sh-testi-nav-arrow-next" data-testi-next aria-label="Next review">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      {% endif %}
+
+    </div>
+
+    <!-- Elegant Progress Bar Indicator -->
+    {% if section.settings.layout_mode == 'slider' and section.settings.show_progress_bar %}
+      <div class="sh-testi-progress-wrap" aria-hidden="true">
+        <div class="sh-testi-progress-bar" data-testi-progress></div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initTestiSlider(sectionEl) {
+      if (!sectionEl) return;
+      var track = sectionEl.querySelector('[data-testi-track]');
+      if (!track) return;
+
+      var prevBtns = sectionEl.querySelectorAll('[data-testi-prev]');
+      var nextBtns = sectionEl.querySelectorAll('[data-testi-next]');
+      var progressBar = sectionEl.querySelector('[data-testi-progress]');
+
+      function updateNavState() {
+        var scrollLeft = track.scrollLeft;
+        var maxScroll = track.scrollWidth - track.clientWidth;
+
+        prevBtns.forEach(function(btn) {
+          if (scrollLeft <= 5) {
+            btn.classList.add('is-disabled');
+          } else {
+            btn.classList.remove('is-disabled');
+          }
+        });
+
+        nextBtns.forEach(function(btn) {
+          if (scrollLeft >= maxScroll - 5) {
+            btn.classList.add('is-disabled');
+          } else {
+            btn.classList.remove('is-disabled');
+          }
+        });
+
+        if (progressBar) {
+          if (maxScroll > 0) {
+            var ratio = Math.max(0, Math.min(1, scrollLeft / maxScroll));
+            var barPct = Math.max(20, Math.min(60, (track.clientWidth / track.scrollWidth) * 100));
+            progressBar.style.width = barPct + '%';
+            var maxOffset = 140 * (1 - barPct / 100);
+            progressBar.style.transform = 'translateX(' + (ratio * maxOffset) + 'px)';
+          } else {
+            progressBar.style.width = '100%';
+            progressBar.style.transform = 'translateX(0)';
+          }
+        }
+      }
+
+      function scrollCards(direction) {
+        var firstCard = track.querySelector('.sh-testi-card');
+        var step = firstCard ? (firstCard.offsetWidth + 24) : 340;
+        track.scrollBy({
+          left: direction === 'next' ? step : -step,
+          behavior: 'smooth'
+        });
+      }
+
+      prevBtns.forEach(function(btn) {
+        btn.onclick = function(e) {
+          e.preventDefault();
+          scrollCards('prev');
+        };
+      });
+
+      nextBtns.forEach(function(btn) {
+        btn.onclick = function(e) {
+          e.preventDefault();
+          scrollCards('next');
+        };
+      });
+
+      track.addEventListener('scroll', updateNavState, { passive: true });
+
+      // Mouse drag to scroll
+      var isDown = false;
+      var startX = 0;
+      var scrollLeftVal = 0;
+      var hasMoved = false;
+
+      track.addEventListener('mousedown', function(e) {
+        isDown = true;
+        hasMoved = false;
+        track.classList.add('is-dragging');
+        startX = e.pageX - track.offsetLeft;
+        scrollLeftVal = track.scrollLeft;
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (!isDown) return;
+        isDown = false;
+        track.classList.remove('is-dragging');
+      });
+
+      track.addEventListener('mousemove', function(e) {
+        if (!isDown) return;
+        var x = e.pageX - track.offsetLeft;
+        var walk = (x - startX) * 1.5;
+        if (Math.abs(walk) > 4) {
+          hasMoved = true;
+        }
+        track.scrollLeft = scrollLeftVal - walk;
+      });
+
+      setTimeout(updateNavState, 150);
+      window.addEventListener('resize', updateNavState);
+    }
+
+    var currentSection = document.getElementById('sh-testimonials-{{ section.id }}');
+    if (currentSection) {
+      initTestiSlider(currentSection);
+    }
+
+    document.addEventListener('shopify:section:load', function(e) {
+      var s = e.target.querySelector('#sh-testimonials-{{ section.id }}');
+      if (s) {
+        initTestiSlider(s);
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "SH: Customers Love",
+  "tag": "section",
+  "class": "sh-section-testimonials",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Mode (Slider vs Grid)"
+    },
+    {
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Display Layout",
+      "options": [
+        { "value": "slider", "label": "Horizontal Slider (like image)" },
+        { "value": "grid", "label": "Grid Layout" }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "select",
+      "id": "grid_columns",
+      "label": "Grid Columns (Desktop)",
+      "options": [
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" }
+      ],
+      "default": "3",
+      "info": "Applies when 'Grid Layout' is selected"
+    },
+    {
+      "type": "select",
+      "id": "mob_grid_columns",
+      "label": "Grid Columns (Mobile)",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" }
+      ],
+      "default": "1",
+      "info": "Applies when 'Grid Layout' is selected on mobile"
+    },
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Customers Love"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "THEIR CONFIDENCE IS OUR GREATEST INSPIRATION."
+    },
+    {
+      "type": "select",
+      "id": "heading_font_style",
+      "label": "Heading Font Style",
+      "options": [
+        { "value": "theme", "label": "Theme Default" },
+        { "value": "serif", "label": "Editorial Serif" },
+        { "value": "sans-serif", "label": "Modern Sans-Serif" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size (Desktop)",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mob_heading_size",
+      "label": "Heading Font Size (Mobile)",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading Alignment",
+      "options": [
+        { "value": "left", "label": "Left (like image)" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Slider Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show Arrow Navigation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "arrow_position",
+      "label": "Arrow Position",
+      "options": [
+        { "value": "top", "label": "Top Right Beside Heading" },
+        { "value": "floating", "label": "Floating at Sides" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress_bar",
+      "label": "Show Progress Bar",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Card Styling & Dimensions"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Text & Author Color",
+      "default": "#1e293b"
+    },
+    {
+      "type": "color",
+      "id": "card_subtext_color",
+      "label": "Card Role & Subtext Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card_shadow",
+      "label": "Enable Soft Card Shadow",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card Corner Radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "card_width_desktop",
+      "label": "Card Width (Desktop Slider)",
+      "min": 280,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "label": "Card Width (Mobile Slider)",
+      "min": 240,
+      "max": 340,
+      "step": 10,
+      "unit": "px",
+      "default": 290
+    },
+    {
+      "type": "range",
+      "id": "card_gap_desktop",
+      "label": "Gap Between Cards (Desktop)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_gap_mobile",
+      "label": "Gap Between Cards (Mobile)",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Card Content Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "Show Star Rating",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Rating Color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "author_font_size",
+      "label": "Author Name Font Size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_font_size",
+      "label": "Review Text Font Size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Section Background & Spacing"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#fafafa"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container Max Width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mob_padding_top",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "mob_padding_bottom",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 35
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Customer Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "author_image",
+          "label": "Author Photo / Avatar"
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author Name",
+          "default": "Sarah Ahmed"
+        },
+        {
+          "type": "text",
+          "id": "author_role",
+          "label": "Role / Subtitle",
+          "default": "Customer"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_verified",
+          "label": "Show Verified Customer Badge",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Content",
+          "default": "I've always struggled to find outfits that feel both stylish and comfortable — until I discovered this brand."
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Product Purchased (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "product_link",
+          "label": "Product Link (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "review_date",
+          "label": "Review Date / Location (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SH: Customers Love",
+      "settings": {
+        "heading": "Customers Love",
+        "subheading": "THEIR CONFIDENCE IS OUR GREATEST INSPIRATION.",
+        "layout_mode": "slider",
+        "bg_color": "#fafafa"
+      },
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Farhan Rahman",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "Ordered a suit set for an office celebration, and honestly, I wasn't expecting this luxury at the price. The fabric was incredible."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Sarah Ahmed",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "I've always struggled to find outfits that feel both stylish and comfortable — until I discovered this brand."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Tanvir Khan",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "My shopping experience felt so personal and warm. The website was easy to browse, the checkout seamless, and delivery arrived earlier than expected."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Meherun Nesa",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "I never thought an outfit could change how I felt about myself — until I wore this. The moment I put it on, I felt confident and effortlessly beautiful."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

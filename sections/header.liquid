@@ -1,0 +1,1556 @@
+<link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
+<link
+  rel="stylesheet"
+  href="{{ 'component-cart-notification.css' | asset_url }}"
+  media="print"
+  onload="this.media='all'"
+>
+
+{%- if settings.predictive_search_enabled -%}
+  <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- endif -%}
+
+{%- if section.settings.menu_type_desktop == 'mega' -%}
+  <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- endif -%}
+
+<style>
+  header-drawer {
+    justify-self: start;
+    margin-left: -1.2rem;
+  }
+
+  {%- if section.settings.sticky_header_type == 'reduce-logo-size' -%}
+    .scrolled-past-header .header__heading-logo-wrapper {
+      width: 75%;
+    }
+  {%- endif -%}
+
+  {%- if section.settings.menu_type_desktop != "drawer" -%}
+    @media screen and (min-width: 990px) {
+      header-drawer {
+        display: none;
+      }
+    }
+  {%- endif -%}
+
+  .menu-drawer-container {
+    display: flex;
+  }
+
+  .list-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .list-menu--inline {
+    display: inline-flex;
+    flex-wrap: wrap;
+  }
+
+  summary.list-menu__item {
+    padding-right: 2.7rem;
+  }
+
+  .list-menu__item {
+    display: flex;
+    align-items: center;
+    line-height: calc(1 + 0.3 / var(--font-body-scale));
+  }
+
+  .list-menu__item--link {
+    text-decoration: none;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    line-height: calc(1 + 0.8 / var(--font-body-scale));
+  }
+
+  @media screen and (min-width: 750px) {
+    .list-menu__item--link {
+      padding-bottom: 0.5rem;
+      padding-top: 0.5rem;
+    }
+  }
+
+  shopify-account.header__icon {
+    --shopify-account-font-heading: var(--font-heading-family);
+    --shopify-account-font-heading-weight: var(--font-heading-weight);
+    --shopify-account-font-body: var(--font-body-family);
+    --shopify-account-font-body-weight: var(--font-body-weight);
+    --shopify-account-radius-base: var(--popup-corner-radius);
+    --shopify-account-radius-button: var(--buttons-radius);
+    --shopify-account-radius-button-small: var(--buttons-radius);
+    --shopify-account-radius-input: var(--inputs-radius);
+    --shopify-account-color-background: rgb(var(--color-background));
+    --shopify-account-color-text: rgb(var(--color-foreground));
+    --shopify-account-color-accent: rgb(var(--color-button));
+    --shopify-account-color-accent-text: rgb(var(--color-button-text));
+    --shopify-account-dialog-position-top: var(--account-dialog-top, var(--header-height, 0px));
+  }
+
+  shopify-account.header__icon:not(:defined) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.4rem;
+    height: 4.4rem;
+  }
+</style>
+
+{%- style -%}
+  .header {
+    padding: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px 3rem {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px 3rem;
+  }
+
+  .section-header {
+    position: sticky; /* This is for fixing a Safari z-index issue. PR #2147 */
+    margin-bottom: {{ section.settings.margin_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-header {
+      margin-bottom: {{ section.settings.margin_bottom }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .header {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  {%- if section.settings.enable_transparent_header -%}
+    {%- if section.settings.transparent_header_home_only == false or request.page_type == 'index' -%}
+      .section-header {
+        position: relative;
+        margin-bottom: calc(-1 * var(--header-height, 70px)) !important;
+        z-index: 10;
+        background: transparent !important;
+      }
+
+      .section-header.shopify-section-header-sticky {
+        position: sticky;
+        top: 0;
+      }
+
+      .section-header .header-wrapper {
+        background: transparent !important;
+        background-color: transparent !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+      }
+
+      .section-header.scrolled-past-header .header-wrapper {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+      }
+
+      .section-header.menu-open .header-wrapper {
+        background-color: rgb(var(--color-background)) !important;
+        border-bottom: 1px solid rgba(var(--color-foreground), 0.08) !important;
+      }
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if section.settings.enable_icon_white_bg -%}
+    .header__icon--menu,
+    .header__search .header__icon--search,
+    .header__icon--account,
+    .header__icon--cart {
+      background-color: {{ section.settings.header_icon_bg | default: '#ffffff' }} !important;
+      color: {{ section.settings.header_icon_color | default: '#121212' }} !important;
+      border-radius: 50% !important;
+      width: 4.4rem !important;
+      height: 4.4rem !important;
+      min-width: 4.4rem !important;
+      min-height: 4.4rem !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+      border: 1px solid rgba(0, 0, 0, 0.06) !important;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease !important;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .header__icon--menu:hover,
+    .header__search .header__icon--search:hover,
+    .header__icon--account:hover,
+    .header__icon--cart:hover {
+      transform: scale(1.08) !important;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18) !important;
+    }
+
+    .header__icon--menu span,
+    .header__icon--cart .svg-wrapper,
+    .header__search .header__icon--search > span,
+    .header__icon--account .svg-wrapper {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .header__search .header__icon--search .svg-wrapper {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Fix search modal toggle icon: hide close X when closed, hide magnifying glass when open */
+    .header__search details:not([open]) .header__icon-close {
+      display: none !important;
+    }
+
+    .header__search details[open] .header__icon--search .svg-wrapper:not(.header__icon-close) {
+      display: none !important;
+    }
+
+    .header__search details[open] .header__icon-close {
+      display: flex !important;
+    }
+
+    .header__icon--menu .icon,
+    .header__search .header__icon--search .icon,
+    .header__icon--account .icon,
+    .header__icon--cart .icon {
+      width: 2rem !important;
+      height: 2rem !important;
+      color: {{ section.settings.header_icon_color | default: '#121212' }} !important;
+      fill: currentColor !important;
+    }
+
+    .header__icons {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+      gap: 1rem !important;
+      padding-right: 0.5rem !important;
+    }
+
+    .header__icon--cart {
+      margin-right: 0 !important;
+    }
+
+    header-drawer {
+      margin-left: 0 !important;
+    }
+
+    .cart-count-bubble {
+      position: absolute !important;
+      top: -2px !important;
+      right: -2px !important;
+      background-color: #000000 !important;
+      color: #ffffff !important;
+      border: 2px solid #ffffff !important;
+      width: 1.9rem !important;
+      height: 1.9rem !important;
+      border-radius: 50% !important;
+      font-size: 1rem !important;
+      font-weight: 700 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+      line-height: 1 !important;
+      margin: 0 !important;
+      bottom: auto !important;
+      left: auto !important;
+    }
+
+    @media screen and (max-width: 749px) {
+      .header {
+        grid-template-columns: auto 1fr auto !important;
+        padding-left: 1.2rem !important;
+        padding-right: 1.2rem !important;
+      }
+      .header__icon--menu,
+      .header__search .header__icon--search,
+      .header__icon--account,
+      .header__icon--cart {
+        width: 3.8rem !important;
+        height: 3.8rem !important;
+        min-width: 3.8rem !important;
+        min-height: 3.8rem !important;
+      }
+      .header__icon--menu .icon,
+      .header__search .header__icon--search .icon,
+      .header__icon--account .icon,
+      .header__icon--cart .icon {
+        width: 1.8rem !important;
+        height: 1.8rem !important;
+      }
+      .header__icons {
+        gap: 0.6rem !important;
+        padding-right: 0 !important;
+      }
+    }
+  {%- endif -%}
+
+  /* =========================================================
+     CUSTOM LUXURY SEARCH MODAL & PREDICTIVE SEARCH
+     ========================================================= */
+  details-modal.header__search details[open] .search-modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    background-color: {{ section.settings.search_modal_bg | default: '#f4f0ec' }} !important;
+    z-index: 99999 !important;
+    opacity: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 6rem 2rem 5rem 2rem !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+    animation: searchModalSlideDown 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  }
+
+  @keyframes searchModalSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .search-modal .modal-overlay {
+    display: none !important;
+  }
+
+  /* Close button at top right */
+  .search-modal .search-modal__close-button {
+    position: absolute !important;
+    top: 3.5rem !important;
+    right: 4rem !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    color: #1a1a1a !important;
+    width: 4.4rem !important;
+    height: 4.4rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 100000 !important;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    padding: 0 !important;
+    line-height: 1 !important;
+  }
+
+  .search-modal .search-modal__close-button:hover {
+    transform: scale(1.15);
+    opacity: 0.7;
+  }
+
+  .search-modal .search-modal__close-button svg {
+    width: 2.4rem !important;
+    height: 2.4rem !important;
+    stroke: currentColor !important;
+    display: block !important;
+  }
+
+  /* Centered content box */
+  .search-modal .search-modal__content {
+    width: 100% !important;
+    max-width: 660px !important;
+    margin: 2rem auto 0 auto !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    position: relative !important;
+    background: transparent !important;
+  }
+
+  .search-modal .search-modal__form {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Clean underline input */
+  .search-modal .field {
+    position: relative !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  .search-modal .field:after,
+  .search-modal .field:before {
+    content: none !important;
+    display: none !important;
+  }
+
+  .search-modal input.search__input {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1.5px solid #2b2b2b !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-family: inherit !important;
+    font-size: 2.2rem !important;
+    color: #121212 !important;
+    padding: 0.6rem 6.5rem 0.6rem 0.2rem !important;
+    width: 100% !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    outline: none !important;
+    transition: border-color 0.2s ease;
+  }
+
+  .search-modal input.search__input:focus {
+    border-bottom-color: #000000 !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  .search-modal input.search__input::placeholder {
+    color: #767676 !important;
+    font-weight: 300 !important;
+    opacity: 0.85 !important;
+    font-style: normal;
+  }
+
+  .search-modal .field__label {
+    display: none !important;
+  }
+
+  /* Right-side search & reset buttons */
+  .search-modal .search__button {
+    position: absolute !important;
+    right: 0 !important;
+    bottom: 0.6rem !important;
+    top: auto !important;
+    width: 3.6rem !important;
+    height: 3.6rem !important;
+    background: transparent !important;
+    border: none !important;
+    color: #2b2b2b !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    z-index: 30 !important;
+    pointer-events: auto !important;
+    transition: transform 0.15s ease, color 0.15s ease !important;
+  }
+
+  .search-modal .search__button:hover {
+    color: #000000 !important;
+    transform: scale(1.12) !important;
+  }
+
+  .search-modal .search__button .icon,
+  .search-modal .search__button .svg-wrapper,
+  .search-modal .search__button svg {
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    fill: currentColor !important;
+    pointer-events: none !important;
+  }
+
+  /* Disable native browser search cancel button in Webkit/Blink */
+  .search-modal input[type="search"]::-webkit-search-cancel-button,
+  .search-modal input[type="search"]::-webkit-search-decoration,
+  .search-modal input[type="search"]::-webkit-search-results-button,
+  .search-modal input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    display: none !important;
+  }
+
+  .search-modal .reset__button {
+    position: absolute !important;
+    right: 3.5rem !important;
+    bottom: 0.8rem !important;
+    top: auto !important;
+    width: 2.4rem !important;
+    height: 2.4rem !important;
+    background: transparent !important;
+    border: none !important;
+    color: #2f6bb0 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .search-modal .reset__button:hover {
+    opacity: 0.8;
+    transform: scale(1.15);
+  }
+
+  .search-modal .reset__button.hidden {
+    display: none !important;
+  }
+
+  .search-modal .reset__button svg {
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+    stroke: currentColor !important;
+    display: block !important;
+  }
+
+  /* Popular searches row */
+  .header-search__popular {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1.6rem;
+    font-size: 1.45rem;
+    flex-wrap: wrap;
+    line-height: 1.5;
+  }
+
+  .header-search__popular-label {
+    color: {{ section.settings.search_popular_label_color | default: '#9c5436' }};
+    font-weight: 500;
+    font-style: italic;
+    font-family: inherit;
+  }
+
+  .header-search__popular-tags {
+    display: inline-flex;
+    gap: 1.2rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .header-search__tag-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1.45rem;
+    color: #2b2b2b;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    font-family: inherit;
+  }
+
+  .header-search__tag-btn:hover {
+    color: {{ section.settings.search_popular_label_color | default: '#9c5436' }};
+    text-decoration: underline;
+  }
+
+  /* Predictive search live results */
+  .search-modal .predictive-search--header {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 660px !important;
+    margin-top: 3.5rem !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-height: 520px !important;
+    overflow-y: auto !important;
+    padding: 0 0.8rem 2rem 0 !important;
+  }
+
+  .search-modal .predictive-search__results-groups-wrapper {
+    display: block !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .search-modal .predictive-search__result-group {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .search-modal .predictive-search__heading {
+    font-size: 1.2rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.16em !important;
+    color: #777777 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    padding: 0 0 1rem 0 !important;
+    margin: 0 0 1.8rem 0 !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+  }
+
+  .search-modal .predictive-search__results-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.2rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+  }
+
+  .search-modal .predictive-search__list-item {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .search-modal .predictive-search__item--link-with-thumbnail {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1.6rem !important;
+    padding: 0.6rem 0.8rem !important;
+    border-radius: 4px !important;
+    background: transparent !important;
+    text-decoration: none !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  .search-modal .predictive-search__item--link-with-thumbnail:hover {
+    background-color: rgba(0, 0, 0, 0.035) !important;
+  }
+
+  .search-modal .predictive-search__image {
+    width: 52px !important;
+    height: 72px !important;
+    min-width: 52px !important;
+    min-height: 72px !important;
+    object-fit: cover !important;
+    border-radius: 2px !important;
+    background-color: #e5e0d8 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .search-modal .predictive-search__item-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.4rem !important;
+    flex: 1 !important;
+  }
+
+  .search-modal .predictive-search__item-heading {
+    font-size: 1.45rem !important;
+    font-weight: 400 !important;
+    color: #1a1a1a !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+    text-align: left !important;
+    transition: color 0.15s ease;
+  }
+
+  .search-modal .predictive-search__item--link-with-thumbnail:hover .predictive-search__item-heading {
+    color: #000000 !important;
+  }
+
+  .search-modal .predictive-search__item .price {
+    font-size: 1.35rem !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+  }
+
+  /* Prevent duplicate price rendering */
+  .search-modal .predictive-search__item .price--on-sale .price__regular {
+    display: none !important;
+  }
+
+  .search-modal .predictive-search__item .price:not(.price--on-sale) .price__sale {
+    display: none !important;
+  }
+
+  .search-modal .predictive-search__item .price__sale {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.8rem !important;
+    flex-wrap: wrap !important;
+  }
+
+  .search-modal .predictive-search__item .price__regular {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .search-modal .predictive-search__item .price-item--sale,
+  .search-modal .predictive-search__item .price-item--regular {
+    color: #333333 !important;
+    font-weight: 500 !important;
+  }
+
+  .search-modal .predictive-search__item .price--on-sale .price-item--regular {
+    color: #8c8c8c !important;
+    text-decoration: line-through !important;
+    font-weight: 400 !important;
+  }
+
+  .search-modal .predictive-search__search-for-button {
+    margin-top: 1.5rem !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    padding-top: 1rem !important;
+  }
+
+  /* Custom scrollbar for search modal */
+  .search-modal .predictive-search--header::-webkit-scrollbar,
+  details-modal.header__search details[open] .search-modal::-webkit-scrollbar {
+    width: 6px !important;
+  }
+
+  .search-modal .predictive-search--header::-webkit-scrollbar-track,
+  details-modal.header__search details[open] .search-modal::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-radius: 10px !important;
+  }
+
+  .search-modal .predictive-search--header::-webkit-scrollbar-thumb,
+  details-modal.header__search details[open] .search-modal::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.22) !important;
+    border-radius: 10px !important;
+  }
+
+  /* Responsive for mobile */
+  @media screen and (max-width: 749px) {
+    details-modal.header__search details[open] .search-modal {
+      padding: 5rem 1.5rem 3rem 1.5rem !important;
+    }
+    .search-modal .search-modal__close-button {
+      top: 1.5rem !important;
+      right: 1.5rem !important;
+    }
+    .search-modal input.search__input {
+      font-size: 1.8rem !important;
+      padding-right: 5.5rem !important;
+    }
+    .header-search__popular {
+      font-size: 1.35rem !important;
+      gap: 0.6rem !important;
+    }
+    .header-search__popular-tags {
+      gap: 0.8rem !important;
+    }
+    .header-search__tag-btn {
+      font-size: 1.35rem !important;
+    }
+    .search-modal .predictive-search__image {
+      width: 46px !important;
+      height: 64px !important;
+      min-width: 46px !important;
+      min-height: 64px !important;
+    }
+    .search-modal .predictive-search__item-heading {
+      font-size: 1.35rem !important;
+    }
+    .search-modal .predictive-search__item .price {
+      font-size: 1.25rem !important;
+    }
+  }
+{%- endstyle -%}
+
+<script>
+  (function() {
+    function setHeaderH() {
+      const h = document.querySelector('.section-header');
+      if (h && h.offsetHeight > 0) {
+        document.documentElement.style.setProperty('--header-height', h.offsetHeight + 'px');
+      }
+    }
+    setHeaderH();
+    window.addEventListener('resize', setHeaderH, { passive: true });
+    document.addEventListener('DOMContentLoaded', setHeaderH);
+  })();
+</script>
+
+<script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  for block in section.blocks
+    if block.type == '@app'
+      assign has_app_block = true
+    endif
+  endfor
+-%}
+
+{% liquid
+  assign header_tag = 'div'
+
+  if section.settings.sticky_header_type != 'none'
+    assign header_tag = 'sticky-header'
+  endif
+%}
+
+<{{ header_tag }}
+  {% if header_tag == 'sticky-header' %}
+    data-sticky-type="{{ section.settings.sticky_header_type }}"
+  {% endif %}
+  class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}"
+>
+  {%- liquid
+    assign social_links = false
+    if settings.social_twitter_link != blank or settings.social_facebook_link != blank or settings.social_pinterest_link != blank or settings.social_instagram_link != blank or settings.social_youtube_link != blank or settings.social_vimeo_link != blank or settings.social_tiktok_link != blank or settings.social_tumblr_link != blank or settings.social_snapchat_link != blank
+      assign social_links = true
+    endif
+
+    assign country_selector = false
+    if section.settings.enable_country_selector and localization.available_countries.size > 1
+      assign country_selector = true
+    endif
+
+    assign language_selector = false
+    if section.settings.enable_language_selector and localization.available_languages.size > 1
+      assign language_selector = true
+    endif
+  -%}
+  <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if country_selector or language_selector %} header--has-localizations{% endif %}">
+    {%- liquid
+      assign render_search_left = false
+      if section.settings.logo_position == 'top-center' or section.settings.menu == blank or shop.customer_accounts_enabled
+        assign render_search_left = true
+      endif
+
+      if section.settings.menu != blank
+        render 'header-drawer', show_country_selector: country_selector, show_language_selector: language_selector, show_social_links: social_links
+      endif
+
+      if render_search_left
+        render 'header-search', input_id: 'Search-In-Modal-1'
+      endif
+    -%}
+
+    {%- if section.settings.logo_position != 'middle-center' -%}
+      {%- if request.page_type == 'index' -%}
+        <h1 class="header__heading">
+      {%- endif -%}
+      <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
+        {%- if settings.logo != blank -%}
+          <div class="header__heading-logo-wrapper">
+            {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+            {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
+            {% capture sizes %}(max-width: {{ settings.logo_width | times: 2 }}px) 50vw, {{ settings.logo_width }}px{% endcapture %}
+            {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+            {{
+              settings.logo
+              | image_url: width: 600
+              | image_tag:
+                class: 'header__heading-logo motion-reduce',
+                widths: widths,
+                height: logo_height,
+                width: settings.logo_width,
+                alt: logo_alt,
+                sizes: sizes,
+                preload: true
+            }}
+          </div>
+        {%- else -%}
+          <span class="h2">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+      {%- if request.page_type == 'index' -%}
+        </h1>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- liquid
+      if section.settings.menu != blank
+        if section.settings.menu_type_desktop == 'dropdown'
+          render 'header-dropdown-menu'
+        elsif section.settings.menu_type_desktop != 'drawer'
+          render 'header-mega-menu'
+        endif
+      endif
+    %}
+
+    {%- if section.settings.logo_position == 'middle-center' -%}
+      {%- if request.page_type == 'index' -%}
+        <h1 class="header__heading">
+      {%- endif -%}
+      <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
+        {%- if settings.logo != blank -%}
+          <div class="header__heading-logo-wrapper">
+            {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+            {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
+            {% capture sizes %}(min-width: 750px) {{ settings.logo_width }}px, 50vw{% endcapture %}
+            {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+            {{
+              settings.logo
+              | image_url: width: 600
+              | image_tag:
+                class: 'header__heading-logo',
+                widths: widths,
+                height: logo_height,
+                width: settings.logo_width,
+                alt: logo_alt,
+                sizes: sizes,
+                preload: true
+            }}
+          </div>
+        {%- else -%}
+          <span class="h2">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+      {%- if request.page_type == 'index' -%}
+        </h1>
+      {%- endif -%}
+    {%- endif -%}
+
+    <div class="header__icons{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header__icons--localization header-localization{% endif %}">
+      <div class="desktop-localization-wrapper">
+        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+          <localization-form class="small-hide medium-hide" data-prevent-hide>
+            {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
+              <div>
+                <h2 class="visually-hidden" id="HeaderCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
+              </div>
+            {%- endform -%}
+          </localization-form>
+        {% endif %}
+
+        {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+          <localization-form class="small-hide medium-hide" data-prevent-hide>
+            {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
+              <div>
+                <h2 class="visually-hidden" id="HeaderLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+                {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
+              </div>
+            {%- endform -%}
+          </localization-form>
+        {%- endif -%}
+      </div>
+      {% render 'header-search', input_id: 'Search-In-Modal' %}
+
+      {%- if shop.customer_accounts_enabled -%}
+        <shopify-account
+          menu="{{ settings.customer_account_menu | default: 'customer-account-main-menu' }}"
+          class="header__icon header__icon--account link focus-inset"
+        >
+          <span slot="signed-out-avatar" class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+          <span slot="signed-out-avatar" class="visually-hidden">{{ 'customer.log_in' | t }}</span>
+        </shopify-account>
+      {%- endif -%}
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+            {% render block %}
+        {%- endcase -%}
+      {%- endfor -%}
+
+      <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
+        {% if cart == empty %}
+          <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
+        {% else %}
+          <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+        {% endif %}
+        <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+        {%- if cart != empty -%}
+          <div class="cart-count-bubble">
+            {%- if cart.item_count < 100 -%}
+              <span aria-hidden="true">{{ cart.item_count }}</span>
+            {%- endif -%}
+            <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+          </div>
+        {%- endif -%}
+      </a>
+    </div>
+  </header>
+</{{ header_tag }}>
+
+{%- if settings.cart_type == 'notification' -%}
+  {%- render 'cart-notification',
+    color_scheme: section.settings.color_scheme,
+    desktop_menu_type: section.settings.menu_type_desktop
+  -%}
+{%- endif -%}
+
+{% javascript %}
+  class StickyHeader extends HTMLElement {
+    constructor() {
+      super();
+      this.setHeaderHeight = this.setHeaderHeight.bind(this);
+    }
+
+    connectedCallback() {
+      this.header = document.querySelector('.section-header');
+      this.mobileMediaQuery = window.matchMedia('(max-width: 990px)');
+      this.headerIsAlwaysSticky =
+        this.getAttribute('data-sticky-type') === 'always' ||
+        this.getAttribute('data-sticky-type') === 'reduce-logo-size';
+      this.headerBounds = {};
+
+      this.setHeaderHeight();
+
+      this.mobileMediaQuery.addEventListener('change', this.setHeaderHeight);
+
+      if (this.headerIsAlwaysSticky) {
+        this.header.classList.add('shopify-section-header-sticky');
+      }
+
+      this.currentScrollTop = 0;
+      this.preventReveal = false;
+      this.predictiveSearches = this.querySelectorAll('predictive-search');
+
+      this.onScrollHandler = this.onScroll.bind(this);
+      this.hideHeaderOnScrollUp = () => (this.preventReveal = true);
+
+      this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
+      window.addEventListener('scroll', this.onScrollHandler, false);
+
+      this.createObserver();
+    }
+
+    setHeaderHeight() {
+      document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight}px`);
+    }
+
+    disconnectedCallback() {
+      this.mobileMediaQuery.removeEventListener('change', this.setHeaderHeight);
+      this.removeEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
+      window.removeEventListener('scroll', this.onScrollHandler);
+    }
+
+    createObserver() {
+      let observer = new IntersectionObserver((entries, observer) => {
+        this.headerBounds = entries[0].intersectionRect;
+        observer.disconnect();
+      });
+
+      observer.observe(this.header);
+    }
+
+    onScroll() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if ([...this.predictiveSearches].some((predictiveSearch) => predictiveSearch.isOpen)) return;
+
+      if (scrollTop > this.currentScrollTop && scrollTop > this.headerBounds.bottom) {
+        this.header.classList.add('scrolled-past-header');
+        if (this.preventHide) return;
+        requestAnimationFrame(this.hide.bind(this));
+      } else if (scrollTop < this.currentScrollTop && scrollTop > this.headerBounds.bottom) {
+        this.header.classList.add('scrolled-past-header');
+        if (!this.preventReveal) {
+          requestAnimationFrame(this.reveal.bind(this));
+        } else {
+          window.clearTimeout(this.isScrolling);
+
+          this.isScrolling = setTimeout(() => {
+            this.preventReveal = false;
+          }, 66);
+
+          requestAnimationFrame(this.hide.bind(this));
+        }
+      } else if (scrollTop <= this.headerBounds.top) {
+        this.header.classList.remove('scrolled-past-header');
+        requestAnimationFrame(this.reset.bind(this));
+      }
+
+      this.currentScrollTop = scrollTop;
+    }
+
+    hide() {
+      if (this.headerIsAlwaysSticky) return;
+      this.header.classList.add('shopify-section-header-hidden', 'shopify-section-header-sticky');
+      this.closeMenuDisclosure();
+      this.closeSearchModal();
+    }
+
+    reveal() {
+      if (this.headerIsAlwaysSticky) return;
+      this.header.classList.add('shopify-section-header-sticky', 'animate');
+      this.header.classList.remove('shopify-section-header-hidden');
+    }
+
+    reset() {
+      if (this.headerIsAlwaysSticky) return;
+      this.header.classList.remove('shopify-section-header-hidden', 'shopify-section-header-sticky', 'animate');
+    }
+
+    closeMenuDisclosure() {
+      this.disclosures = this.disclosures || this.header.querySelectorAll('header-menu');
+      this.disclosures.forEach((disclosure) => disclosure.close());
+    }
+
+    closeSearchModal() {
+      this.searchModals = this.searchModals || this.header.querySelectorAll('details-modal');
+      this.searchModals.forEach((searchModal) => searchModal.close(false));
+    }
+  }
+
+  // The account `open` event is composed but does not bubble, so listen during capture.
+  // Anchor the dialog to the bottom of the account button itself. The header group can be
+  // much taller than the button's row (for example, a top-left logo pushes the menu to a
+  // second row), so anchoring to the section bottom drops the dialog too low.
+  document.addEventListener(
+    'open',
+    (event) => {
+      if (!(event.target instanceof HTMLElement) || !event.target.matches('shopify-account')) return;
+
+      const bottom = Math.max(0, Math.round(event.target.getBoundingClientRect().bottom));
+      event.target.style.setProperty('--account-dialog-top', `${bottom}px`);
+    },
+    true
+  );
+
+  customElements.define('sticky-header', StickyHeader);
+{% endjavascript %}
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    {% if settings.logo %}
+      "logo": {{ settings.logo | image_url: width: 500 | prepend: "https:" | json }},
+    {% endif %}
+    "sameAs": [
+      {{ settings.social_twitter_link | json }},
+      {{ settings.social_facebook_link | json }},
+      {{ settings.social_pinterest_link | json }},
+      {{ settings.social_instagram_link | json }},
+      {{ settings.social_tiktok_link | json }},
+      {{ settings.social_tumblr_link | json }},
+      {{ settings.social_snapchat_link | json }},
+      {{ settings.social_youtube_link | json }},
+      {{ settings.social_vimeo_link | json }}
+    ],
+    "url": {{ request.origin | append: page.url | json }}
+  }
+</script>
+
+{%- if request.page_type == 'index' -%}
+  {% assign potential_action_target = request.origin | append: routes.search_url | append: '?q={search_term_string}' %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ request.origin | append: page.url | json }}
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "class": "section-header",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "select",
+      "id": "logo_position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "t:sections.header.settings.logo_position.options__2.label"
+        },
+        {
+          "value": "top-center",
+          "label": "t:sections.header.settings.logo_position.options__3.label"
+        },
+        {
+          "value": "middle-left",
+          "label": "t:sections.header.settings.logo_position.options__1.label"
+        },
+        {
+          "value": "middle-center",
+          "label": "t:sections.header.settings.logo_position.options__4.label"
+        }
+      ],
+      "default": "middle-left",
+      "label": "t:sections.header.settings.logo_position.label",
+      "info": "t:sections.header.settings.logo_help.content"
+    },
+    {
+      "type": "select",
+      "id": "mobile_logo_position",
+      "options": [
+        {
+          "value": "center",
+          "label": "t:sections.header.settings.mobile_logo_position.options__1.label"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.header.settings.mobile_logo_position.options__2.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.header.settings.mobile_logo_position.label"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "t:sections.header.settings.menu.label"
+    },
+    {
+      "type": "select",
+      "id": "menu_type_desktop",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "t:sections.header.settings.menu_type_desktop.options__1.label"
+        },
+        {
+          "value": "mega",
+          "label": "t:sections.header.settings.menu_type_desktop.options__2.label"
+        },
+        {
+          "value": "drawer",
+          "label": "t:sections.header.settings.menu_type_desktop.options__3.label"
+        }
+      ],
+      "default": "dropdown",
+      "label": "t:sections.header.settings.menu_type_desktop.label"
+    },
+    {
+      "type": "header",
+      "content": "Transparent Header & Icon Styling"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent_header",
+      "label": "Enable Transparent Header",
+      "default": true,
+      "info": "Floats header transparently over the hero section"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_header_home_only",
+      "label": "Transparent on Homepage Only",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_icon_white_bg",
+      "label": "Highlight Icons with White Badge",
+      "default": true,
+      "info": "Adds circular white background to header icons"
+    },
+    {
+      "type": "color",
+      "id": "header_icon_bg",
+      "label": "Icon Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "header_icon_color",
+      "label": "Icon Symbol Color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Luxury Search Modal & Popular Searches"
+    },
+    {
+      "type": "color",
+      "id": "search_modal_bg",
+      "label": "Search Modal Background Color",
+      "default": "#f4f0ec"
+    },
+    {
+      "type": "text",
+      "id": "search_popular_label",
+      "label": "Popular Searches Label",
+      "default": "Popular searches:"
+    },
+    {
+      "type": "color",
+      "id": "search_popular_label_color",
+      "label": "Popular Searches Label Color",
+      "default": "#9c5436"
+    },
+    {
+      "type": "text",
+      "id": "search_popular_tags",
+      "label": "Popular Search Tags (comma-separated)",
+      "default": "Featured, Trendy, Sale, New"
+    },
+    {
+      "type": "header",
+      "content": "Menu Drawer Background Image & Button"
+    },
+    {
+      "type": "range",
+      "id": "drawer_width_desktop",
+      "label": "Drawer Width on Desktop",
+      "min": 400,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 640
+    },
+    {
+      "type": "select",
+      "id": "drawer_layout_desktop",
+      "label": "Desktop Image Layout",
+      "options": [
+        { "value": "side_by_side", "label": "Side-by-Side (Menu & Image Card)" },
+        { "value": "background", "label": "Drawer Background (Behind Menu)" }
+      ],
+      "default": "side_by_side"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_image",
+      "label": "Drawer Default / Fallback Image",
+      "info": "Displayed when opening drawer or when a menu item has no specific image"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_image_mobile",
+      "label": "Drawer Mobile Image (Optional)"
+    },
+    {
+      "type": "select",
+      "id": "drawer_image_fit",
+      "label": "Image Fit Mode",
+      "options": [
+        { "value": "contain", "label": "Model / Subject Centered (Contain)" },
+        { "value": "cover", "label": "Full Background (Cover)" }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "text",
+      "id": "drawer_view_all_text",
+      "label": "Button Label",
+      "default": "VIEW ALL"
+    },
+    {
+      "type": "url",
+      "id": "drawer_view_all_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "select",
+      "id": "drawer_btn_position",
+      "label": "Button Position",
+      "options": [
+        { "value": "bottom", "label": "Bottom Center (Recommended)" },
+        { "value": "center", "label": "Center of Stage" },
+        { "value": "nav_bottom", "label": "Inside Navigation Column" }
+      ],
+      "default": "bottom"
+    },
+    {
+      "type": "select",
+      "id": "drawer_btn_style",
+      "label": "Button Style",
+      "options": [
+        { "value": "solid", "label": "Solid Button" },
+        { "value": "outline", "label": "Outline Button" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "drawer_btn_bg",
+      "label": "Button Background Color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "drawer_btn_text",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "drawer_overlay_opacity",
+      "label": "Background Image Overlay Darkness",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_menu_brackets",
+      "label": "Show [ Bracket ] styling for menu items",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_show_counts",
+      "label": "Show collection product count [ # ]",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "drawer_menu_font_size",
+      "label": "Menu Item Font Size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "sticky_header_type",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.header.settings.sticky_header_type.options__1.label"
+        },
+        {
+          "value": "on-scroll-up",
+          "label": "t:sections.header.settings.sticky_header_type.options__2.label"
+        },
+        {
+          "value": "always",
+          "label": "t:sections.header.settings.sticky_header_type.options__3.label"
+        },
+        {
+          "value": "reduce-logo-size",
+          "label": "t:sections.header.settings.sticky_header_type.options__4.label"
+        }
+      ],
+      "default": "on-scroll-up",
+      "label": "t:sections.header.settings.sticky_header_type.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_line_separator",
+      "default": true,
+      "label": "t:sections.header.settings.show_line_separator.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__1.content"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color_scheme",
+      "id": "menu_color_scheme",
+      "label": "t:sections.header.settings.menu_color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__utilities.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "default": true,
+      "label": "t:sections.header.settings.enable_country_selector.label",
+      "info": "t:sections.header.settings.enable_country_selector.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "default": true,
+      "label": "t:sections.header.settings.enable_language_selector.label",
+      "info": "t:sections.header.settings.enable_language_selector.info"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.header.settings.customer_account_menu.content"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.header.settings.margin_bottom.label",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 36,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 36,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "menu_image",
+      "name": "Menu Item Image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu Item Title (Exact Match)",
+          "info": "e.g. Home, Best Sellers, Co-Ord Sets, Dresses, Kurta, Suits"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Hover Image"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Custom Button Link (Optional)",
+          "info": "If left empty, links to the menu item URL"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Custom Button Text (Optional)",
+          "info": "e.g. VIEW BEST SELLERS"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

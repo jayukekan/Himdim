@@ -1,0 +1,834 @@
+{% doc %}
+  Renders a header drawer menu for mobile and desktop.
+
+  @param {boolean} [show_country_selector] - Whether to render the country selector in the drawer.
+  @param {boolean} [show_language_selector] - Whether to render the language selector in the drawer.
+  @param {boolean} [show_social_links] - Whether to render social links list in the drawer.
+
+  @example
+  {% render 'header-drawer', show_language_selector: true %}
+{% enddoc %}
+
+{%- liquid
+  assign drawer_img = section.settings.drawer_image
+  assign drawer_img_mobile = section.settings.drawer_image_mobile | default: drawer_img
+  assign has_drawer_image = false
+  if drawer_img != blank or drawer_img_mobile != blank
+    assign has_drawer_image = true
+  endif
+  for block in section.blocks
+    if block.type == 'menu_image' and block.settings.image != blank
+      assign has_drawer_image = true
+    endif
+  endfor
+  for link in section.settings.menu.links
+    if link.type == 'collection_link' and link.object.image != blank or link.object.featured_image != blank
+      assign has_drawer_image = true
+    endif
+  endfor
+
+  assign drawer_width = section.settings.drawer_width_desktop | default: 640
+  assign drawer_layout = section.settings.drawer_layout_desktop | default: 'side_by_side'
+  assign view_all_text = section.settings.drawer_view_all_text
+  assign view_all_link = section.settings.drawer_view_all_link | default: routes.all_products_collection_url
+  assign btn_style = section.settings.drawer_btn_style | default: 'solid'
+  assign btn_bg = section.settings.drawer_btn_bg | default: '#121212'
+  assign btn_text = section.settings.drawer_btn_text | default: '#ffffff'
+  assign overlay_opacity = section.settings.drawer_overlay_opacity | default: 10
+  assign use_brackets = section.settings.drawer_menu_brackets
+  assign show_counts = section.settings.drawer_show_counts
+  assign font_size = section.settings.drawer_menu_font_size | default: 20
+  assign img_fit = section.settings.drawer_image_fit | default: 'contain'
+  assign btn_pos = section.settings.drawer_btn_position | default: 'bottom'
+-%}
+
+<style>
+  @media screen and (min-width: 750px) {
+    #Details-menu-drawer-container .menu-drawer {
+      width: {{ drawer_width }}px !important;
+      max-width: 90vw !important;
+      left: 0 !important;
+      overflow: hidden !important;
+      background-color: rgb(var(--color-background));
+      border-right: 1px solid rgba(var(--color-foreground), 0.1);
+      box-shadow: 15px 0 35px rgba(0, 0, 0, 0.12);
+    }
+
+    #Details-menu-drawer-container .menu-drawer__inner-container {
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    {% if drawer_layout == 'side_by_side' and has_drawer_image %}
+      #Details-menu-drawer-container .menu-drawer__navigation-container {
+        position: relative;
+        z-index: 6;
+        width: 48%;
+        min-width: 260px;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-right: 1px solid rgba(var(--color-foreground), 0.08);
+        background-color: rgb(var(--color-background));
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .sh-drawer-media-stage {
+        position: relative;
+        width: 52%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2.2rem 1.8rem;
+        box-sizing: border-box;
+        z-index: 5;
+        background-color: rgba(var(--color-foreground), 0.02);
+      }
+
+      .sh-drawer-stage-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        max-height: calc(100% - 1rem);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        background: rgba(var(--color-foreground), 0.04);
+      }
+    {% else %}
+      #Details-menu-drawer-container .menu-drawer__navigation-container {
+        position: relative;
+        z-index: 6;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .sh-drawer-media-stage {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .sh-drawer-stage-card {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+      }
+
+      .sh-drawer-hover-img {
+        object-fit: cover !important;
+        object-position: right center !important;
+      }
+
+      .sh-drawer-img-overlay {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(var(--color-background), 0.88) 0%, rgba(var(--color-background), 0.45) 45%, rgba(var(--color-background), 0.05) 75%, transparent 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+    {% endif %}
+
+    #Details-menu-drawer-container .menu-drawer__submenu {
+      width: 100% !important;
+      max-width: 100% !important;
+      z-index: 10 !important;
+      background-color: rgb(var(--color-background)) !important;
+    }
+  }
+
+  .sh-menu-drawer-enhanced .menu-drawer__menu-item {
+    font-size: {{ font_size }}px !important;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background-color: transparent !important;
+    text-shadow: 0 1px 2px rgba(var(--color-background), 0.85);
+  }
+
+  .sh-menu-drawer-enhanced .menu-drawer__menu-item:hover,
+  .sh-menu-drawer-enhanced .menu-drawer__menu-item:focus {
+    background-color: rgba(var(--color-foreground), 0.05) !important;
+  }
+
+  .sh-menu-drawer-enhanced .menu-drawer__menu-item--active {
+    background-color: transparent !important;
+    font-weight: 800 !important;
+  }
+
+  .sh-menu-drawer-enhanced .sh-bracket-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .sh-menu-drawer-enhanced .sh-bracket-symbol {
+    opacity: 0.45;
+    font-weight: 300;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .sh-menu-drawer-enhanced .menu-drawer__menu-item:hover .sh-bracket-symbol {
+    opacity: 1;
+    color: rgb(var(--color-foreground));
+  }
+
+  .sh-menu-drawer-enhanced .sh-menu-count {
+    font-size: 0.82em;
+    font-weight: 600;
+    opacity: 0.65;
+    margin-left: auto;
+    padding-right: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .sh-menu-drawer-enhanced summary.menu-drawer__menu-item .sh-menu-count {
+    padding-right: 2.2rem;
+  }
+
+  .sh-drawer-images-stack {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .sh-drawer-hover-item {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(1.04);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sh-drawer-hover-item.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  .sh-drawer-hover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ img_fit }};
+    object-position: center bottom;
+    display: block;
+  }
+
+  .sh-drawer-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: #000000;
+    opacity: {{ overlay_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .sh-drawer-btn-wrap {
+    position: relative;
+    z-index: 8;
+    pointer-events: auto;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sh-drawer-btn--stage {
+    margin-bottom: 2rem;
+    padding: 0 1.5rem;
+  }
+
+  .sh-drawer-btn-wrap--nav {
+    margin: 2rem 0 2.5rem;
+    padding: 0 2.5rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .sh-drawer-view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 280px;
+    padding: 1.2rem 2.2rem;
+    font-family: inherit;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    {% if btn_style == 'outline' %}
+      background: transparent;
+      border: 2px solid {{ btn_bg }};
+      color: {{ btn_bg }};
+    {% else %}
+      background: {{ btn_bg }};
+      border: 2px solid {{ btn_bg }};
+      color: {{ btn_text }};
+    {% endif %}
+  }
+
+  .sh-drawer-view-all-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+    {% if btn_style == 'outline' %}
+      background: {{ btn_bg }};
+      color: {{ btn_text }};
+    {% else %}
+      opacity: 0.92;
+      filter: brightness(1.1);
+    {% endif %}
+  }
+
+  .sh-drawer-view-all-btn svg {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.2s ease;
+    fill: none;
+    stroke: currentColor;
+    flex-shrink: 0;
+  }
+
+  .sh-drawer-view-all-btn:hover svg {
+    transform: translateX(4px);
+  }
+
+  @media screen and (min-width: 750px) {
+    {% if drawer_layout == 'side_by_side' and has_drawer_image and btn_pos != 'nav_bottom' %}
+      .sh-drawer-btn--mobile-only {
+        display: none !important;
+      }
+    {% else %}
+      .sh-drawer-btn--stage {
+        display: none !important;
+      }
+    {% endif %}
+  }
+
+  @media screen and (max-width: 749px) {
+    #Details-menu-drawer-container .menu-drawer {
+      width: 100% !important;
+    }
+    #Details-menu-drawer-container .menu-drawer__inner-container {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      height: 100%;
+    }
+    #Details-menu-drawer-container .menu-drawer__navigation-container {
+      position: relative;
+      z-index: 6;
+      width: 100% !important;
+      background: rgba(var(--color-background), 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .sh-drawer-media-stage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 1;
+      padding: 0;
+    }
+    .sh-drawer-stage-card {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .sh-drawer-btn--stage {
+      display: none !important;
+    }
+    .sh-drawer-btn-wrap--nav {
+      padding: 0 2rem;
+      margin: 2rem 0;
+    }
+    .sh-drawer-view-all-btn {
+      width: 100%;
+      max-width: 100%;
+      padding: 1.3rem 2rem;
+      font-size: 1.3rem;
+    }
+  }
+</style>
+
+<header-drawer data-breakpoint="{% if section.settings.menu_type_desktop == 'drawer' %}desktop{% else %}tablet{% endif %}">
+  <details id="Details-menu-drawer-container" class="menu-drawer-container">
+    <summary
+      class="header__icon header__icon--menu header__icon--summary link focus-inset"
+      aria-label="{{ 'sections.header.menu' | t }}"
+    >
+      <span>
+        {{- 'icon-hamburger.svg' | inline_asset_content -}}
+        {{- 'icon-close.svg' | inline_asset_content -}}
+      </span>
+    </summary>
+    <div id="menu-drawer" class="gradient menu-drawer motion-reduce color-{{ section.settings.menu_color_scheme }} sh-menu-drawer-enhanced">
+      <div class="menu-drawer__inner-container">
+        <div class="menu-drawer__navigation-container">
+          <nav class="menu-drawer__navigation">
+            <ul class="menu-drawer__menu has-submenu list-menu" role="list">
+              {%- for link in section.settings.menu.links -%}
+                {%- liquid
+                  assign item_hover_btn_url = link.url
+                  assign item_hover_btn_text = view_all_text
+                  assign link_title_clean = link.title | strip | downcase
+
+                  for block in section.blocks
+                    if block.type == 'menu_image'
+                      assign block_title_clean = block.settings.menu_title | strip | downcase
+                      if block_title_clean == link_title_clean
+                        if block.settings.button_link != blank
+                          assign item_hover_btn_url = block.settings.button_link
+                        endif
+                        if block.settings.button_label != blank
+                          assign item_hover_btn_text = block.settings.button_label
+                        endif
+                        break
+                      endif
+                    endif
+                  endfor
+                -%}
+                <li>
+                  {%- if link.links != blank -%}
+                    <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
+                      <summary
+                        id="HeaderDrawer-{{ link.handle }}"
+                        class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
+                        data-hover-trigger="{{ link.handle | escape }}"
+                        data-hover-url="{{ item_hover_btn_url | escape }}"
+                        data-hover-title="{{ item_hover_btn_text | escape }}"
+                      >
+                        <span class="sh-bracket-label">{% if use_brackets %}<span class="sh-bracket-symbol">[</span>{% endif %}{{ link.title | escape }}{% if use_brackets %}<span class="sh-bracket-symbol">]</span>{% endif %}</span>
+                        {%- if show_counts and link.type == 'collection_link' and link.object.products_count != blank -%}
+                          <span class="sh-menu-count">[ {{ link.object.products_count }} ]</span>
+                        {%- endif -%}
+                        <span class="svg-wrapper">
+                          {{- 'icon-arrow.svg' | inline_asset_content -}}
+                        </span>
+                        <span class="svg-wrapper">
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </span>
+                      </summary>
+                      <div
+                        id="link-{{ link.handle | escape }}"
+                        class="menu-drawer__submenu has-submenu gradient motion-reduce"
+                        tabindex="-1"
+                      >
+                        <div class="menu-drawer__inner-submenu">
+                          <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
+                            <span class="svg-wrapper">
+                              {{- 'icon-arrow.svg' | inline_asset_content -}}
+                            </span>
+                            {{ link.title | escape }}
+                          </button>
+                          <ul class="menu-drawer__menu list-menu" role="list" tabindex="-1">
+                            {%- for childlink in link.links -%}
+                              <li>
+                                {%- if childlink.links == blank -%}
+                                  <a
+                                    id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
+                                    href="{{ childlink.url }}"
+                                    class="menu-drawer__menu-item link link--text list-menu__item focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"
+                                    {% if childlink.current %}
+                                      aria-current="page"
+                                    {% endif %}
+                                  >
+                                    {{ childlink.title | escape }}
+                                  </a>
+                                {%- else -%}
+                                  <details id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}">
+                                    <summary
+                                      id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
+                                      class="menu-drawer__menu-item link link--text list-menu__item focus-inset"
+                                    >
+                                      {{ childlink.title | escape }}
+                                      <span class="svg-wrapper">
+                                        {{- 'icon-arrow.svg' | inline_asset_content -}}
+                                      </span>
+                                      <span class="svg-wrapper">
+                                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                                      </span>
+                                    </summary>
+                                    <div
+                                      id="childlink-{{ childlink.handle | escape }}"
+                                      class="menu-drawer__submenu has-submenu gradient motion-reduce"
+                                    >
+                                      <button
+                                        class="menu-drawer__close-button link link--text focus-inset"
+                                        aria-expanded="true"
+                                      >
+                                        <span class="svg-wrapper">
+                                          {{- 'icon-arrow.svg' | inline_asset_content -}}
+                                        </span>
+                                        {{ childlink.title | escape }}
+                                      </button>
+                                      <ul
+                                        class="menu-drawer__menu list-menu"
+                                        role="list"
+                                        tabindex="-1"
+                                      >
+                                        {%- for grandchildlink in childlink.links -%}
+                                          <li>
+                                            <a
+                                              id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                              href="{{ grandchildlink.url }}"
+                                              class="menu-drawer__menu-item link link--text list-menu__item focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"
+                                              {% if grandchildlink.current %}
+                                                aria-current="page"
+                                              {% endif %}
+                                            >
+                                              {{ grandchildlink.title | escape }}
+                                            </a>
+                                          </li>
+                                        {%- endfor -%}
+                                      </ul>
+                                    </div>
+                                  </details>
+                                {%- endif -%}
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      </div>
+                    </details>
+                  {%- else -%}
+                    <a
+                      id="HeaderDrawer-{{ link.handle }}"
+                      href="{{ link.url }}"
+                      class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                      data-hover-trigger="{{ link.handle | escape }}"
+                      data-hover-url="{{ item_hover_btn_url | escape }}"
+                      data-hover-title="{{ item_hover_btn_text | escape }}"
+                    >
+                      <span class="sh-bracket-label">{% if use_brackets %}<span class="sh-bracket-symbol">[</span>{% endif %}{{ link.title | escape }}{% if use_brackets %}<span class="sh-bracket-symbol">]</span>{% endif %}</span>
+                      {%- if show_counts and link.type == 'collection_link' and link.object.products_count != blank -%}
+                        <span class="sh-menu-count">[ {{ link.object.products_count }} ]</span>
+                      {%- endif -%}
+                    </a>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+          {%- if view_all_text != blank -%}
+            <div class="sh-drawer-btn-wrap sh-drawer-btn-wrap--nav{% if has_drawer_image and btn_pos != 'nav_bottom' %} sh-drawer-btn--mobile-only{% endif %}">
+              <a href="{{ view_all_link }}" class="sh-drawer-view-all-btn">
+                <span>{{ view_all_text }}</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          {%- endif -%}
+          <div class="menu-drawer__utility-links">
+            {%- if show_country_selector or show_language_selector -%}
+              <div class="menu-drawer__localization header-localization">
+                {%- if show_country_selector -%}
+                  <localization-form>
+                    {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
+                      <div>
+                        <h2 class="visually-hidden" id="HeaderCountryMobileLabel">
+                          {{ 'localization.country_label' | t }}
+                        </h2>
+                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
+                      </div>
+                    {%- endform -%}
+                  </localization-form>
+                {% endif %}
+
+                {%- if show_language_selector -%}
+                  <localization-form>
+                    {%- form 'localization', id: 'HeaderLanguageMobileForm', class: 'localization-form' -%}
+                      <div>
+                        <h2 class="visually-hidden" id="HeaderLanguageMobileLabel">
+                          {{ 'localization.language_label' | t }}
+                        </h2>
+                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
+                      </div>
+                    {%- endform -%}
+                  </localization-form>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+            {% if show_social_links %}
+              <ul class="list list-social list-unstyled" role="list">
+                {%- if settings.social_twitter_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_twitter_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-twitter.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_facebook_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_facebook_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-facebook.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_pinterest_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_pinterest_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-pinterest.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_instagram_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_instagram_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-instagram.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_tiktok_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_tiktok_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-tiktok.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_tumblr_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_tumblr_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-tumblr.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_snapchat_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_snapchat_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-snapchat.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_youtube_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_youtube_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-youtube.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if settings.social_vimeo_link != blank -%}
+                  <li class="list-social__item">
+                    <a href="{{ settings.social_vimeo_link }}" class="list-social__link link">
+                      <span class="svg-wrapper">
+                        {{- 'icon-vimeo.svg' | inline_asset_content -}}
+                      </span>
+                      <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+        {%- if has_drawer_image -%}
+          <div class="sh-drawer-media-stage" id="ShDrawerMediaStage" aria-hidden="true">
+            <div class="sh-drawer-stage-card">
+              <div class="sh-drawer-images-stack">
+                {%- for link in section.settings.menu.links -%}
+                  {%- liquid
+                    assign item_hover_img = nil
+                    assign link_title_clean = link.title | strip | downcase
+
+                    for block in section.blocks
+                      if block.type == 'menu_image'
+                        assign block_title_clean = block.settings.menu_title | strip | downcase
+                        if block_title_clean == link_title_clean
+                          assign item_hover_img = block.settings.image
+                          break
+                        endif
+                      endif
+                    endfor
+
+                    if item_hover_img == blank and link.type == 'collection_link'
+                      assign item_hover_img = link.object.image | default: link.object.featured_image
+                    endif
+
+                    if item_hover_img == blank
+                      assign item_hover_img = drawer_img
+                    endif
+                  -%}
+                  <div
+                    class="sh-drawer-hover-item{% if forloop.first %} is-active{% endif %}"
+                    data-hover-handle="{{ link.handle | escape }}"
+                  >
+                    {%- if item_hover_img != blank -%}
+                      {{
+                        item_hover_img
+                        | image_url: width: 1000
+                        | image_tag:
+                          class: 'sh-drawer-hover-img',
+                          loading: 'lazy',
+                          widths: '300, 500, 750, 1000',
+                          alt: item_hover_img.alt | default: link.title
+                      }}
+                    {%- elsif drawer_img != blank -%}
+                      {{
+                        drawer_img
+                        | image_url: width: 1000
+                        | image_tag:
+                          class: 'sh-drawer-hover-img',
+                          loading: 'lazy',
+                          widths: '300, 500, 750, 1000',
+                          alt: drawer_img.alt | default: link.title
+                      }}
+                    {%- endif -%}
+                  </div>
+                {%- endfor -%}
+              </div>
+
+              {%- if overlay_opacity > 0 -%}
+                <div class="sh-drawer-img-overlay"></div>
+              {%- endif -%}
+
+              {%- if view_all_text != blank and btn_pos != 'nav_bottom' -%}
+                <div class="sh-drawer-btn-wrap sh-drawer-btn--stage">
+                  <a href="{{ view_all_link }}" class="sh-drawer-view-all-btn" id="ShDrawerViewAllBtn">
+                    <span class="sh-drawer-btn-label">{{ view_all_text }}</span>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </a>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </details>
+</header-drawer>
+
+<script>
+  (function() {
+    function initShDrawerHover() {
+      const container = document.getElementById('Details-menu-drawer-container');
+      if (!container) return;
+
+      const triggers = container.querySelectorAll('[data-hover-trigger]');
+      const items = container.querySelectorAll('.sh-drawer-hover-item');
+      const stageBtn = container.querySelector('#ShDrawerViewAllBtn');
+      const stageBtnLabel = stageBtn ? stageBtn.querySelector('.sh-drawer-btn-label') : null;
+
+      triggers.forEach(function(trigger) {
+        trigger.addEventListener('mouseenter', function() {
+          const handle = trigger.getAttribute('data-hover-trigger');
+          const btnUrl = trigger.getAttribute('data-hover-url');
+          const btnTitle = trigger.getAttribute('data-hover-title');
+
+          let hasMatch = false;
+          items.forEach(function(item) {
+            if (item.getAttribute('data-hover-handle') === handle) {
+              item.classList.add('is-active');
+              hasMatch = true;
+            } else {
+              item.classList.remove('is-active');
+            }
+          });
+
+          if (stageBtn && btnUrl) {
+            stageBtn.setAttribute('href', btnUrl);
+          }
+          if (stageBtnLabel && btnTitle) {
+            stageBtnLabel.textContent = btnTitle;
+          }
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initShDrawerHover);
+    } else {
+      initShDrawerHover();
+    }
+    document.addEventListener('shopify:section:load', initShDrawerHover);
+  })();
+</script>

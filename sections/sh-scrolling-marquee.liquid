@@ -1,0 +1,563 @@
+{%- capture sh_scrolling_marquee_css -%}
+<style>
+  #sh-marquee-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    position: relative;
+    overflow: hidden;
+    {% if section.settings.border_top %}
+      border-top: 1px solid {{ section.settings.border_color }};
+    {% endif %}
+    {% if section.settings.border_bottom %}
+      border-bottom: 1px solid {{ section.settings.border_color }};
+    {% endif %}
+  }
+
+  #sh-marquee-{{ section.id }} .sh-marquee-outer {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    position: relative;
+    width: 100%;
+  }
+
+  #sh-marquee-{{ section.id }} .sh-marquee-track {
+    display: flex;
+    flex-shrink: 0;
+    width: max-content;
+    will-change: transform;
+    animation: sh-scroll-{{ section.settings.direction }} {{ section.settings.speed }}s linear infinite;
+  }
+
+  {% if section.settings.pause_on_hover %}
+    #sh-marquee-{{ section.id }} .sh-marquee-track:hover {
+      animation-play-state: paused;
+    }
+  {% endif %}
+
+  #sh-marquee-{{ section.id }} .sh-marquee-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  #sh-marquee-{{ section.id }} .sh-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 calc({{ section.settings.gap_between_items }}px / 2);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  #sh-marquee-{{ section.id }} .sh-marquee-text {
+    font-size: {{ section.settings.font_size_desktop }}px;
+    font-weight: {{ section.settings.font_weight }};
+    font-family: {% if section.settings.font_style == 'serif' %}Georgia, "Times New Roman", serif{% elsif section.settings.font_style == 'sans-serif' %}sans-serif{% else %}var(--font-heading-family){% endif %};
+    text-transform: {{ section.settings.letter_case }};
+    letter-spacing: {{ section.settings.letter_spacing }}px;
+    line-height: 1.1;
+    color: {{ section.settings.text_color }};
+    white-space: nowrap;
+    transition: color 0.2s ease;
+    {% if section.settings.outline_text %}
+      -webkit-text-stroke: 1.5px {{ section.settings.text_color }};
+      color: transparent;
+    {% endif %}
+  }
+
+  #sh-marquee-{{ section.id }} a.sh-marquee-item:hover .sh-marquee-text {
+    color: {{ section.settings.text_hover_color }};
+    {% if section.settings.outline_text %}
+      color: {{ section.settings.text_hover_color }};
+    {% endif %}
+  }
+
+  #sh-marquee-{{ section.id }} .sh-marquee-separator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: calc({{ section.settings.gap_between_items }}px / 2);
+    color: {{ section.settings.separator_color }};
+    line-height: 1;
+  }
+
+  /* Asterisk 8-point SVG Icon (Exact match to screenshot) */
+  #sh-marquee-{{ section.id }} .sh-marquee-asterisk-svg {
+    width: {{ section.settings.separator_size }}px;
+    height: {{ section.settings.separator_size }}px;
+    fill: {{ section.settings.separator_color }};
+    display: block;
+  }
+
+  /* Bullet Dot */
+  #sh-marquee-{{ section.id }} .sh-marquee-dot {
+    width: calc({{ section.settings.separator_size }}px * 0.45);
+    height: calc({{ section.settings.separator_size }}px * 0.45);
+    border-radius: 50%;
+    background-color: {{ section.settings.separator_color }};
+    display: inline-block;
+  }
+
+  /* Sparkle Star */
+  #sh-marquee-{{ section.id }} .sh-marquee-sparkle-svg {
+    width: {{ section.settings.separator_size }}px;
+    height: {{ section.settings.separator_size }}px;
+    fill: {{ section.settings.separator_color }};
+    display: block;
+  }
+
+  /* Dash / Slash */
+  #sh-marquee-{{ section.id }} .sh-marquee-symbol {
+    font-size: {{ section.settings.separator_size }}px;
+    font-weight: 700;
+  }
+
+  /* Custom Image */
+  #sh-marquee-{{ section.id }} .sh-marquee-img {
+    height: {{ section.settings.separator_size }}px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Left-to-Right and Right-to-Left Keyframes */
+  @keyframes sh-scroll-left {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes sh-scroll-right {
+    0% {
+      transform: translate3d(-50%, 0, 0);
+    }
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* Mobile Responsive */
+  @media only screen and (max-width: 767px) {
+    #sh-marquee-{{ section.id }} {
+      padding-top: {{ section.settings.mob_padding_top }}px;
+      padding-bottom: {{ section.settings.mob_padding_bottom }}px;
+    }
+
+    #sh-marquee-{{ section.id }} .sh-marquee-track {
+      animation-duration: {{ section.settings.mob_speed }}s;
+    }
+
+    #sh-marquee-{{ section.id }} .sh-marquee-item {
+      padding: 0 calc({{ section.settings.mob_gap }}px / 2);
+    }
+
+    #sh-marquee-{{ section.id }} .sh-marquee-text {
+      font-size: {{ section.settings.font_size_mobile }}px;
+      {% if section.settings.outline_text %}
+        -webkit-text-stroke: 1px {{ section.settings.text_color }};
+      {% endif %}
+    }
+
+    #sh-marquee-{{ section.id }} .sh-marquee-separator {
+      margin-left: calc({{ section.settings.mob_gap }}px / 2);
+    }
+
+    #sh-marquee-{{ section.id }} .sh-marquee-asterisk-svg,
+    #sh-marquee-{{ section.id }} .sh-marquee-sparkle-svg,
+    #sh-marquee-{{ section.id }} .sh-marquee-img {
+      width: calc({{ section.settings.separator_size }}px * 0.75);
+      height: calc({{ section.settings.separator_size }}px * 0.75);
+    }
+
+    #sh-marquee-{{ section.id }} .sh-marquee-symbol {
+      font-size: calc({{ section.settings.separator_size }}px * 0.75);
+    }
+  }
+</style>
+{%- endcapture -%}
+{{- sh_scrolling_marquee_css | strip_newlines -}}
+
+<div id="sh-marquee-{{ section.id }}" class="sh-scrolling-marquee-section">
+  <div class="sh-marquee-outer">
+    <div class="sh-marquee-track">
+      {% comment %} Repeat group twice to achieve infinite seamless loop {% endcomment %}
+      {% for repeat in (1..2) %}
+        <div class="sh-marquee-group"{% if forloop.index == 2 %} aria-hidden="true"{% endif %}>
+          {% for block in section.blocks %}
+            {% assign has_link = false %}
+            {% if block.settings.link != blank %}
+              {% assign has_link = true %}
+            {% endif %}
+
+            <{% if has_link %}a href="{{ block.settings.link }}"{% else %}div{% endif %}
+              class="sh-marquee-item"
+              {{ block.shopify_attributes }}
+            >
+              <span
+                class="sh-marquee-text"
+                {% if block.settings.highlight_color != blank %}
+                  style="color: {{ block.settings.highlight_color }};{% if section.settings.outline_text %}-webkit-text-stroke-color: {{ block.settings.highlight_color }};{% endif %}"
+                {% endif %}
+              >
+                {{ block.settings.text }}
+              </span>
+
+              {% if section.settings.separator_type != 'none' %}
+                <span class="sh-marquee-separator" aria-hidden="true">
+                  {% if section.settings.separator_type == 'asterisk' %}
+                    {% comment %} Geometric 8-pointed Asterisk (Matches the screenshot exactly) {% endcomment %}
+                    <svg class="sh-marquee-asterisk-svg" viewBox="0 0 100 100">
+                      <path d="M43 0h14v35.8l25.3-25.3 9.9 9.9-25.3 25.3H100v14.6H67.2l25.3 25.3-9.9 9.9L57.3 64.2V100H43V64.2L17.7 89.5l-9.9-9.9 25.3-25.3H0V39.7h33.1L7.8 14.4l9.9-9.9L43 35.8V0z"/>
+                    </svg>
+                  {% elsif section.settings.separator_type == 'sparkle' %}
+                    <svg class="sh-marquee-sparkle-svg" viewBox="0 0 24 24">
+                      <path d="M12 0C12 6.627 17.373 12 24 12C17.373 12 12 17.373 12 24C12 17.373 6.627 12 0 12C6.627 12 12 6.627 12 0Z"/>
+                    </svg>
+                  {% elsif section.settings.separator_type == 'dot' %}
+                    <span class="sh-marquee-dot"></span>
+                  {% elsif section.settings.separator_type == 'dash' %}
+                    <span class="sh-marquee-symbol">—</span>
+                  {% elsif section.settings.separator_type == 'slash' %}
+                    <span class="sh-marquee-symbol">/</span>
+                  {% elsif section.settings.separator_type == 'custom_image' and section.settings.separator_image != blank %}
+                    {{ section.settings.separator_image | image_url: width: 80 | image_tag: loading: 'lazy', class: 'sh-marquee-img' }}
+                  {% endif %}
+                </span>
+              {% endif %}
+            </{% if has_link %}a{% else %}div{% endif %}>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "SH: Scrolling marquee",
+  "tag": "section",
+  "class": "sh-section-hub-main",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Scroll Animation"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Scroll Direction",
+      "options": [
+        { "value": "left", "label": "Right to Left (←)" },
+        { "value": "right", "label": "Left to Right (→)" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll Duration (Desktop)",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "unit": "s",
+      "default": 24,
+      "info": "Lower seconds = Faster scrolling"
+    },
+    {
+      "type": "range",
+      "id": "mob_speed",
+      "label": "Scroll Duration (Mobile)",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "s",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on Hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "font_size_desktop",
+      "label": "Font Size (Desktop)",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font Size (Mobile)",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" },
+        { "value": "900", "label": "Black (900)" }
+      ],
+      "default": "800"
+    },
+    {
+      "type": "select",
+      "id": "font_style",
+      "label": "Font Style",
+      "options": [
+        { "value": "theme", "label": "Theme Default" },
+        { "value": "sans-serif", "label": "Bold Sans-Serif" },
+        { "value": "serif", "label": "Editorial Serif" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "letter_case",
+      "label": "Text Transform",
+      "options": [
+        { "value": "uppercase", "label": "UPPERCASE" },
+        { "value": "capitalize", "label": "Capitalize" },
+        { "value": "none", "label": "Normal" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter Spacing",
+      "min": -1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "outline_text",
+      "label": "Outline / Hollow Text Effect",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Separator Icon"
+    },
+    {
+      "type": "select",
+      "id": "separator_type",
+      "label": "Separator Type",
+      "options": [
+        { "value": "asterisk", "label": "8-Point Asterisk Star (like image)" },
+        { "value": "sparkle", "label": "Sparkle Star (✦)" },
+        { "value": "dot", "label": "Bullet Dot (•)" },
+        { "value": "dash", "label": "Dash (—)" },
+        { "value": "slash", "label": "Slash (/)" },
+        { "value": "custom_image", "label": "Custom Icon Image" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "asterisk"
+    },
+    {
+      "type": "range",
+      "id": "separator_size",
+      "label": "Separator Icon Size",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "image_picker",
+      "id": "separator_image",
+      "label": "Custom Separator Image (if selected above)"
+    },
+    {
+      "type": "range",
+      "id": "gap_between_items",
+      "label": "Spacing Between Items (Desktop)",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "mob_gap",
+      "label": "Spacing Between Items (Mobile)",
+      "min": 14,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Colors & Borders"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Text Hover Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Icon Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "border_top",
+      "label": "Show Border Top",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "border_bottom",
+      "label": "Show Border Bottom",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Line Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "mob_padding_top",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mob_padding_bottom",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_item",
+      "name": "Marquee item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "DESIGNED TO MOVE"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Optional Link"
+        },
+        {
+          "type": "color",
+          "id": "highlight_color",
+          "label": "Custom Text Color (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SH: Scrolling marquee",
+      "blocks": [
+        {
+          "type": "text_item",
+          "settings": {
+            "text": "DESIGNED TO MOVE"
+          }
+        },
+        {
+          "type": "text_item",
+          "settings": {
+            "text": "MADE TO LAST"
+          }
+        },
+        {
+          "type": "text_item",
+          "settings": {
+            "text": "PREMIUM CRAFTSMANSHIP"
+          }
+        },
+        {
+          "type": "text_item",
+          "settings": {
+            "text": "NEW ARRIVALS"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

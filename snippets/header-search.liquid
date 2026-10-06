@@ -1,0 +1,188 @@
+{% comment %}
+  Renders a header search modal. Should be used with 'header.liquid'
+
+  Accepts:
+  - input_id: {String} Id for the search input element (required)
+
+  Usage:
+  {% render 'header-search', input_id: 'My-Id'%}
+{% endcomment %}
+
+<details-modal class="header__search">
+  <details>
+    <summary
+      class="header__icon header__icon--search header__icon--summary link focus-inset modal__toggle"
+      aria-haspopup="dialog"
+      aria-label="{{ 'general.search.search' | t }}"
+    >
+      <span>
+        <span class="svg-wrapper">
+          {{- 'icon-search.svg' | inline_asset_content -}}
+        </span>
+        <span class="svg-wrapper header__icon-close">
+          {{- 'icon-close.svg' | inline_asset_content -}}
+        </span>
+      </span>
+    </summary>
+    <div
+      class="search-modal modal__content gradient"
+      role="dialog"
+      aria-modal="true"
+      aria-label="{{ 'general.search.search' | t }}"
+    >
+      <div class="modal-overlay"></div>
+
+      <button
+        type="button"
+        class="search-modal__close-button modal__close-button link link--text focus-inset"
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="icon icon-close-clean">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div
+        class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}"
+        tabindex="-1"
+      >
+        {%- if settings.predictive_search_enabled -%}
+          <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+        {%- else -%}
+          <search-form class="search-modal__form">
+        {%- endif -%}
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+          <div class="field">
+            <input
+              class="search__input field__input"
+              id="{{ input_id }}"
+              type="search"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="Search"
+              {%- if settings.predictive_search_enabled -%}
+                role="combobox"
+                aria-expanded="false"
+                aria-owns="predictive-search-results"
+                aria-controls="predictive-search-results"
+                aria-haspopup="listbox"
+                aria-autocomplete="list"
+                autocorrect="off"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+              {%- endif -%}
+            >
+            <label class="field__label" for="{{ input_id }}">{{ 'general.search.search' | t }}</label>
+            <input type="hidden" name="options[prefix]" value="last">
+            <button
+              type="reset"
+              class="reset__button field__button{% if search.terms == blank %} hidden{% endif %}"
+              aria-label="{{ 'general.search.reset' | t }}"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-reset-clean">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <button type="submit" class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+              <span class="svg-wrapper">
+                {{- 'icon-search.svg' | inline_asset_content -}}
+              </span>
+            </button>
+          </div>
+
+          {%- assign popular_label = section.settings.search_popular_label | default: 'Popular searches:' -%}
+          {%- assign popular_tags_raw = section.settings.search_popular_tags | default: 'Featured, Trendy, Sale, New' -%}
+          {%- assign popular_tags = popular_tags_raw | split: ',' -%}
+          {%- if popular_tags.size > 0 -%}
+            <div class="header-search__popular">
+              {%- if popular_label != blank -%}
+                <span class="header-search__popular-label">{{ popular_label }}</span>
+              {%- endif -%}
+              <div class="header-search__popular-tags">
+                {%- for tag in popular_tags -%}
+                  {%- assign clean_tag = tag | strip -%}
+                  {%- if clean_tag != blank -%}
+                    <button type="button" class="header-search__tag-btn" data-search-term="{{ clean_tag | escape }}">{{ clean_tag }}</button>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if settings.predictive_search_enabled -%}
+            <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+              {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
+            </div>
+
+            <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+          {%- endif -%}
+        </form>
+        {%- if settings.predictive_search_enabled -%}
+          </predictive-search>
+        {%- else -%}
+          </search-form>
+        {%- endif -%}
+      </div>
+    </div>
+  </details>
+</details-modal>
+
+<script>
+  (function() {
+    function initSearchHandlers() {
+      // 1. Tag clicks: fill search input and trigger live predictive search
+      document.addEventListener('click', function(e) {
+        var tagBtn = e.target.closest('.header-search__tag-btn');
+        if (!tagBtn) return;
+        e.preventDefault();
+        var term = tagBtn.getAttribute('data-search-term');
+        var modal = tagBtn.closest('.search-modal');
+        if (!modal) return;
+        var input = modal.querySelector('input[type="search"]');
+        if (!input) return;
+        input.value = term;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.focus();
+      });
+
+      // 2. Search magnifying glass click: submit form and go to full search results
+      document.addEventListener('click', function(e) {
+        var searchBtn = e.target.closest('.search-modal .search__button');
+        if (!searchBtn) return;
+        var form = searchBtn.closest('form');
+        if (!form) return;
+        var input = form.querySelector('input[type="search"]');
+        if (input && input.value.trim().length > 0) {
+          e.preventDefault();
+          form.submit();
+        }
+      });
+
+      // 3. Enter key in search input: submit form if no option is selected with arrow keys
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          var input = e.target.closest('.search-modal input[type="search"]');
+          if (!input) return;
+          var form = input.closest('form');
+          if (!form) return;
+          if (input.value.trim().length > 0) {
+            var activeOption = form.querySelector('[aria-selected="true"] a');
+            if (!activeOption) {
+              e.preventDefault();
+              form.submit();
+            }
+          }
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSearchHandlers);
+    } else {
+      initSearchHandlers();
+    }
+  })();
+</script>

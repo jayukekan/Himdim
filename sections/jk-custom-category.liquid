@@ -1,0 +1,81 @@
+{% schema %}
+{
+  "name": "Custom Categories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Our Categories"
+    },
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "Collections to display"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Categories",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="custom-categories-section">
+  <div class="container">
+    <h2>{{ section.settings.title }}</h2>
+    <div class="categories-wrapper">
+      {% for collection in section.settings.collections %}
+        <div class="category">
+          <a href="{{ collection.url }}">
+            <img src="{{ collection.image | img_url: 'medium' }}" alt="{{ collection.title }}">
+            <h3>{{ collection.title }}</h3>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.custom-categories-section {
+  padding: 40px 0;
+  text-align: center;
+}
+
+.custom-categories-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.custom-categories-section h2 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.custom-categories-section .categories-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.custom-categories-section .category {
+  flex: 1 1 calc(25% - 20px);
+  max-width: calc(25% - 20px);
+  box-sizing: border-box;
+}
+
+.custom-categories-section .category img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.custom-categories-section .category h3 {
+  margin-top: 10px;
+  font-size: 1.25em;
+}
+</style>

@@ -1,0 +1,1027 @@
+{%- capture sh_media_gallery_5_css -%}
+<style>
+  #sh-media-gallery-5-{{ section.id }} {
+    position: relative;
+    background-color: {{ section.settings.bg_color }};
+    overflow: hidden;
+    width: 100%;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-main-wrapper {
+    position: relative;
+    height: 100vh;
+    min-height: 550px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Full Screen Hero Cover Media (Video or Image) */
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-video-wrapper {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+    z-index: 4;
+    overflow: hidden;
+    background-color: #111111;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-cover-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-video-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-desk-show {
+    display: block;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-mobile-show {
+    display: none;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-video-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity }}%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Floating Media Video Controls */
+  #sh-media-gallery-5-{{ section.id }} .sh-video-controls {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 5;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-video-ctrl-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-video-ctrl-btn:hover {
+    background: rgba(255, 255, 255, 0.95);
+    color: #121212;
+    transform: scale(1.08);
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-video-ctrl-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-video-ctrl-btn .sh-icon-pause,
+  #sh-media-gallery-5-{{ section.id }} .sh-video-ctrl-btn.is-playing .sh-icon-play {
+    display: none;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-video-ctrl-btn.is-playing .sh-icon-pause {
+    display: block;
+  }
+
+  /* Gallery Grid Behind Media */
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-gallery-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-color: {{ section.settings.bg_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-gallery-items {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    grid-template-columns: repeat(3, {{ section.settings.card_size_desktop }}px);
+    column-gap: {{ section.settings.column_gap_desktop }}px;
+    row-gap: 280px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    will-change: transform, row-gap;
+    z-index: 1;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-gallery-items li {
+    aspect-ratio: 1 / 1;
+    list-style: none;
+    will-change: transform;
+    overflow: hidden;
+    border-radius: {{ section.settings.card_border_radius }}px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    position: relative;
+    background-color: #e5e5e5;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-gallery-items a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-gallery-items img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-gallery-items li:hover img {
+    transform: scale(1.08);
+  }
+
+  /* Center Content (Heading, Description & Button) */
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-content-wrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: {{ section.settings.content_max_width }}px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-content-wrapper > * {
+    pointer-events: auto;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-heading {
+    font-size: {{ section.settings.heading_size_desktop }}px;
+    line-height: 1.15;
+    font-weight: {{ section.settings.heading_weight }};
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: {% if section.settings.heading_font_style == 'serif' %}Georgia, "Times New Roman", serif{% elsif section.settings.heading_font_style == 'sans-serif' %}sans-serif{% else %}var(--font-heading-family){% endif %};
+    letter-spacing: -0.5px;
+    word-break: break-word;
+  }
+
+  /* Expandable Description & Button Wrapper */
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-desc-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+    width: 100%;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-desc-inner {
+    overflow: hidden;
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-desc {
+    margin: 20px 0 0;
+    font-size: {{ section.settings.desc_font_size }}px;
+    line-height: 1.5;
+    color: {{ section.settings.desc_color }};
+    font-family: var(--font-body-family);
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-desc p {
+    margin: 0;
+  }
+
+  /* CTA Button */
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-btn {
+    display: inline-block;
+    margin-top: 26px;
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-body-family);
+    text-decoration: none;
+    border-radius: {{ section.settings.btn_border_radius }}px;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+    {% if section.settings.button_style == 'solid' %}
+      background-color: {{ section.settings.btn_bg_color }};
+      color: {{ section.settings.btn_text_color }};
+      border: 1px solid {{ section.settings.btn_bg_color }};
+    {% else %}
+      background-color: transparent;
+      color: {{ section.settings.btn_border_color }};
+      border: 2px solid {{ section.settings.btn_border_color }};
+    {% endif %}
+  }
+
+  #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-btn:hover {
+    {% if section.settings.button_style == 'solid' %}
+      background-color: {{ section.settings.btn_hover_bg }};
+      color: {{ section.settings.btn_hover_text }};
+      border-color: {{ section.settings.btn_bg_color }};
+    {% else %}
+      background-color: {{ section.settings.btn_border_color }};
+      color: #ffffff;
+      border-color: {{ section.settings.btn_border_color }};
+    {% endif %}
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+  }
+
+  /* Responsive Rules for Mobile */
+  @media only screen and (max-width: 767px) {
+    #sh-media-gallery-5-{{ section.id }} .sh-desk-show {
+      display: none;
+    }
+
+    #sh-media-gallery-5-{{ section.id }} .sh-mobile-show {
+      display: block;
+    }
+
+    #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-heading {
+      font-size: {{ section.settings.heading_size_mobile }}px;
+    }
+
+    #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-desc {
+      font-size: 14px;
+      margin-top: 14px;
+    }
+
+    #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-btn {
+      padding: 10px 24px;
+      font-size: 14px;
+      margin-top: 18px;
+    }
+
+    #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-content-wrapper {
+      max-width: 320px;
+      padding: 0 16px;
+    }
+
+    #sh-media-gallery-5-{{ section.id }} .sh-media-gallery-5-gallery-items {
+      grid-template-columns: repeat(3, {{ section.settings.card_size_mobile }}px);
+      column-gap: {{ section.settings.column_gap_mobile }}px;
+      row-gap: 200px;
+    }
+
+    #sh-media-gallery-5-{{ section.id }} .sh-video-controls {
+      bottom: 20px;
+      right: 20px;
+    }
+
+    #sh-media-gallery-5-{{ section.id }} .sh-video-ctrl-btn {
+      width: 38px;
+      height: 38px;
+    }
+  }
+</style>
+{%- endcapture -%}
+{{- sh_media_gallery_5_css | strip_newlines -}}
+
+<!-- Load GSAP & ScrollTrigger with auto-check -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<div id="sh-media-gallery-5-{{ section.id }}" class="sh-media-gallery-5-section">
+  <div class="sh-media-gallery-5-main-wrapper">
+    
+    <!-- Phase 1: Full-Screen Hero Cover Media -->
+    <div class="sh-media-gallery-5-video-wrapper" data-cover-wrapper>
+      {% if section.settings.cover_type == 'video' %}
+        {% if section.settings.video != blank %}
+          {{ section.settings.video | video_tag:
+            image_size: '1600x',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            playsinline: true,
+            preload: 'metadata',
+            class: 'sh-cover-media'
+          }}
+        {% elsif section.settings.video_url != blank %}
+          <video
+            playsinline="true"
+            loop="loop"
+            muted="muted"
+            autoplay="autoplay"
+            preload="metadata"
+            class="sh-cover-media"
+            {% if section.settings.video_poster != blank %}poster="{{ section.settings.video_poster | image_url: width: 1400 }}"{% endif %}
+          >
+            <source src="{{ section.settings.video_url }}" type="video/mp4">
+          </video>
+        {% elsif section.settings.cover_image != blank %}
+          {{ section.settings.cover_image | image_url: width: 2400 | image_tag:
+            loading: 'eager',
+            class: 'sh-cover-media sh-desk-show',
+            alt: section.settings.heading
+          }}
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'sh-cover-media' }}
+        {% endif %}
+
+        {% if section.settings.show_video_controls %}
+          <div class="sh-video-controls" aria-label="Media playback controls">
+            <button type="button" class="sh-video-ctrl-btn sh-play-pause-btn is-playing" data-play-btn aria-label="Pause or play video">
+              <svg class="sh-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="sh-icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+          </div>
+        {% endif %}
+
+      {% else %}
+        <!-- Image Cover Mode (Modern Tech style) -->
+        {% if section.settings.cover_image != blank %}
+          {{ section.settings.cover_image | image_url: width: 2400 | image_tag:
+            loading: 'eager',
+            class: 'sh-cover-media sh-desk-show',
+            alt: section.settings.heading
+          }}
+          {% if section.settings.cover_image_mobile != blank %}
+            {{ section.settings.cover_image_mobile | image_url: width: 1200 | image_tag:
+              loading: 'eager',
+              class: 'sh-cover-media sh-mobile-show',
+              alt: section.settings.heading
+            }}
+          {% else %}
+            {{ section.settings.cover_image | image_url: width: 1200 | image_tag:
+              loading: 'eager',
+              class: 'sh-cover-media sh-mobile-show',
+              alt: section.settings.heading
+            }}
+          {% endif %}
+        {% else %}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'sh-cover-media' }}
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- Phase 2 & 3: Floating 3-Column Background Gallery -->
+    <div class="sh-media-gallery-5-gallery-wrapper">
+      <ul class="sh-media-gallery-5-gallery-items" data-gallery-grid>
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <li {{ block.shopify_attributes }}>
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}">
+              {% endif %}
+
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 600 | image_tag:
+                  loading: 'lazy',
+                  alt: block.settings.alt_text | default: section.settings.heading,
+                  widths: '200, 400, 600',
+                  sizes: '(max-width: 767px) 100px, 240px'
+                }}
+              {% else %}
+                {% assign p_idx = forloop.index | modulo: 6 | plus: 1 %}
+                {{ 'product-' | append: p_idx | placeholder_svg_tag }}
+              {% endif %}
+
+              {% if block.settings.link != blank %}
+                </a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        {% else %}
+          {% for i in (1..9) %}
+            <li>
+              {% assign p_idx = i | modulo: 6 | plus: 1 %}
+              {{ 'product-' | append: p_idx | placeholder_svg_tag }}
+            </li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
+
+    <!-- Phase 4: Center Content (Heading, Description & CTA Button) -->
+    <div class="sh-media-gallery-5-content-wrapper">
+      {% if section.settings.heading != blank %}
+        <h2 class="sh-media-gallery-5-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      <div class="sh-media-gallery-5-desc-wrapper" data-desc-wrapper>
+        <div class="sh-media-gallery-5-desc-inner">
+          {% if section.settings.description != blank %}
+            <div class="sh-media-gallery-5-desc">
+              {{ section.settings.description }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+            <a href="{{ section.settings.button_link }}" class="sh-media-gallery-5-btn">
+              {{ section.settings.button_label }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initSectionScript() {
+      if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+        setTimeout(initSectionScript, 100);
+        return;
+      }
+      gsap.registerPlugin(ScrollTrigger);
+
+      var section = document.getElementById("sh-media-gallery-5-{{ section.id }}");
+      if (!section) return;
+
+      // Video Controls
+      var video = section.querySelector("video");
+      var playBtn = section.querySelector("[data-play-btn]");
+      if (video && playBtn) {
+        playBtn.onclick = function(e) {
+          e.stopPropagation();
+          if (video.paused) {
+            video.play();
+            playBtn.classList.add("is-playing");
+          } else {
+            video.pause();
+            playBtn.classList.remove("is-playing");
+          }
+        };
+      }
+
+      // Kill previous ScrollTriggers for this section on re-init
+      ScrollTrigger.getAll().forEach(function(st) {
+        if (st.trigger && section.contains(st.trigger)) {
+          st.kill();
+        }
+      });
+
+      var mainWrapper = section.querySelector(".sh-media-gallery-5-main-wrapper");
+      var grid = section.querySelector("[data-gallery-grid]");
+      var items = gsap.utils.toArray(section.querySelectorAll(".sh-media-gallery-5-gallery-items li"));
+      var coverWrapper = section.querySelector("[data-cover-wrapper]");
+      var descWrapper = section.querySelector("[data-desc-wrapper]");
+
+      if (!grid || !items.length || !mainWrapper || !coverWrapper) return;
+
+      var mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          isMobile: "(max-width: 767px)",
+          isDesktop: "(min-width: 768px)"
+        },
+        function(context) {
+          var isMobile = context.conditions.isMobile;
+          var vh = window.innerHeight;
+
+          var FINAL_X = isMobile ? 50 : 40;
+          var FINAL_Y = isMobile ? 70 : 40;
+          var ROW_GAP_START = isMobile ? 180 : 280;
+          var ROW_GAP_END = isMobile ? 20 : 40;
+          var GRID_SCALE = isMobile ? 1.6 : 2.0;
+
+          var gridHeight = grid.offsetHeight;
+          var baseY = Math.max(vh, gridHeight || vh);
+
+          var configs = items.map(function(item, i) {
+            var col = i % 3;
+            return {
+              el: item,
+              fromY: col === 1 ? baseY : -baseY,
+              toY: 0,
+              fromX: 0,
+              toX: col === 0 ? "-8%" : col === 2 ? "8%" : "0%",
+              finalX: col === 0 ? ("-" + FINAL_X + "%") : col === 2 ? (FINAL_X + "%") : "0%",
+              finalY: col === 1 ? (i < items.length / 2 ? ("-" + FINAL_Y + "%") : (FINAL_Y + "%")) : 0
+            };
+          });
+
+          configs.forEach(function(cfg) {
+            gsap.set(cfg.el, {
+              x: cfg.fromX,
+              y: cfg.fromY
+            });
+          });
+
+          gsap.set(items, {
+            force3D: true,
+            backfaceVisibility: "hidden"
+          });
+
+          var BASE_ITEMS = 12;
+          var scaleFactor = Math.max(0.6, items.length / BASE_ITEMS);
+          var scrollLength = vh * ({{ section.settings.scroll_duration | default: 4 }} * scaleFactor);
+
+          var tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: "+=" + scrollLength,
+              scrub: 1.5,
+              pin: mainWrapper,
+              anticipatePin: 1,
+              invalidateOnRefresh: true
+            }
+          });
+
+          // 1. Cover media lifts out of view
+          tl.to(coverWrapper, {
+            yPercent: -100,
+            ease: "power2.inOut",
+            duration: 0.4
+          }, 0);
+
+          var GRID_START = 0.4;
+
+          // 2. Gallery cards fly into center
+          configs.forEach(function(cfg) {
+            tl.fromTo(cfg.el,
+              { y: cfg.fromY },
+              { y: cfg.toY, ease: "none" },
+              GRID_START
+            );
+
+            tl.fromTo(cfg.el,
+              { x: cfg.fromX },
+              { x: cfg.toX, ease: "none" },
+              GRID_START
+            );
+
+            // 3. Gallery cards fan out to edges
+            tl.to(cfg.el, {
+              x: cfg.finalX,
+              y: cfg.finalY,
+              ease: "none"
+            }, GRID_START + 0.55);
+          });
+
+          tl.fromTo(grid,
+            { scale: 1 },
+            {
+              scale: GRID_SCALE,
+              ease: "none",
+              duration: 0.5
+            },
+            GRID_START + 0.3
+          );
+
+          tl.fromTo(grid,
+            { rowGap: ROW_GAP_START + "px" },
+            {
+              rowGap: ROW_GAP_END + "px",
+              ease: "none"
+            },
+            GRID_START + 0.1
+          );
+
+          // 4. Description and button reveal
+          if (descWrapper) {
+            tl.to(descWrapper, {
+              gridTemplateRows: "1fr",
+              duration: 0.4,
+              ease: "power2.out"
+            }, GRID_START + 0.7);
+          }
+        }
+      );
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initSectionScript);
+    } else {
+      initSectionScript();
+    }
+
+    window.addEventListener("resize", function() {
+      if (typeof ScrollTrigger !== "undefined") {
+        ScrollTrigger.refresh();
+      }
+    });
+
+    document.addEventListener("shopify:section:load", function(e) {
+      if (e.target.querySelector("#sh-media-gallery-5-{{ section.id }}")) {
+        initSectionScript();
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "SH: Media Gallery 5",
+  "tag": "section",
+  "class": "sh-section-media-gallery-5",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Cover Media"
+    },
+    {
+      "type": "select",
+      "id": "cover_type",
+      "label": "Cover Media Type",
+      "options": [
+        { "value": "video", "label": "Video (Beauty Studio Style)" },
+        { "value": "image", "label": "Static Image (Modern Tech Style)" }
+      ],
+      "default": "video"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify Hosted Video",
+      "info": "Upload an MP4 video directly in Shopify"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "External Video MP4 URL",
+      "info": "Fallback URL if not using Shopify video upload"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video Poster / Fallback Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_video_controls",
+      "label": "Show Play / Pause Control Button",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Cover Image (Desktop)",
+      "info": "Used when 'Static Image' is selected"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image_mobile",
+      "label": "Cover Image (Mobile)",
+      "info": "Optional separate portrait image for mobile screens"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Media Overlay Darkness",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Center Content (Heading & Text)"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Beauty Studio"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_style",
+      "label": "Heading Font Style",
+      "options": [
+        { "value": "theme", "label": "Theme Default" },
+        { "value": "serif", "label": "Editorial Serif" },
+        { "value": "sans-serif", "label": "Modern Sans-Serif" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Heading Size (Desktop)",
+      "min": 40,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading Size (Mobile)",
+      "min": 24,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#3E2507"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>From premium skincare and luxurious spa treatments to professional haircare and cosmetics, discover everything you need for a complete beauty experience.</p>"
+    },
+    {
+      "type": "color",
+      "id": "desc_color",
+      "label": "Description Color",
+      "default": "#3c3c3c"
+    },
+    {
+      "type": "range",
+      "id": "desc_font_size",
+      "label": "Description Font Size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content Max Width",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "default": 750
+    },
+    {
+      "type": "header",
+      "content": "Call-to-Action Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Explore Beauty"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link",
+      "default": "/"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button Style",
+      "options": [
+        { "value": "solid", "label": "Solid Button (Beauty Studio)" },
+        { "value": "outline", "label": "Outline Button (Modern Tech)" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button Background Color",
+      "default": "#50320d"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_border_color",
+      "label": "Button Border Color",
+      "default": "#50320d"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_bg",
+      "label": "Button Hover Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_text",
+      "label": "Button Hover Text",
+      "default": "#50320d"
+    },
+    {
+      "type": "range",
+      "id": "btn_border_radius",
+      "label": "Button Corner Radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Floating Gallery Dimensions"
+    },
+    {
+      "type": "range",
+      "id": "card_size_desktop",
+      "label": "Gallery Card Width (Desktop)",
+      "min": 160,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "default": 240
+    },
+    {
+      "type": "range",
+      "id": "card_size_mobile",
+      "label": "Gallery Card Width (Mobile)",
+      "min": 60,
+      "max": 140,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "column_gap_desktop",
+      "label": "Column Gap (Desktop)",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "column_gap_mobile",
+      "label": "Column Gap (Mobile)",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Gallery Card Corner Radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section & Gallery Background Color",
+      "default": "#FAF3EC",
+      "info": "Use #FAF3EC for Beauty Studio, #F4F4F6 for Modern Tech"
+    },
+    {
+      "type": "header",
+      "content": "Scroll Animation Duration"
+    },
+    {
+      "type": "range",
+      "id": "scroll_duration",
+      "label": "Scroll Depth Speed Factor",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "info": "Controls how many scroll turns it takes to complete the reveal"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gallery_item",
+      "name": "Gallery Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Optional Image Link"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SH: Media Gallery 5 (Beauty Studio)",
+      "settings": {
+        "cover_type": "video",
+        "video_url": "https://demo.sectionhub.store/cdn/shop/videos/c/vp/f0d84fe7e3d14aa69e1bf1da473ea9e9/f0d84fe7e3d14aa69e1bf1da473ea9e9.HD-1080p-7.2Mbps-83495419.mp4",
+        "heading": "Beauty Studio",
+        "heading_color": "#3E2507",
+        "description": "<p>From premium skincare and luxurious spa treatments to professional haircare and cosmetics, discover everything you need for a complete beauty experience.</p>",
+        "desc_color": "#3c3c3c",
+        "button_label": "Explore Beauty",
+        "button_style": "solid",
+        "btn_bg_color": "#50320d",
+        "btn_text_color": "#ffffff",
+        "bg_color": "#FAF3EC"
+      },
+      "blocks": [
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" }
+      ]
+    },
+    {
+      "name": "SH: Media Gallery 5 (Modern Tech)",
+      "settings": {
+        "cover_type": "image",
+        "heading": "Modern Tech",
+        "heading_color": "#121212",
+        "description": "<p>Experience the perfect blend of modern design, powerful technology, and dependable performance with smart devices built to simplify your daily routine.</p>",
+        "desc_color": "#4a4a4a",
+        "button_label": "Explore More",
+        "button_style": "outline",
+        "btn_border_color": "#121212",
+        "bg_color": "#F4F4F6"
+      },
+      "blocks": [
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" },
+        { "type": "gallery_item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

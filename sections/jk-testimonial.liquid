@@ -1,0 +1,214 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+<style>
+  .testimonial-top-bar, .testimonial-bottom-bar{
+    background: {{ section.settings.color-bg }};
+  }
+
+   .main-container-testimonial-section-gm {
+       width: 100%;
+       display: flex;
+       gap: 20px;
+       padding: 20px 20px 20px 20px;
+       overflow-x: auto;
+       /* overflow: auto; */
+       scroll-behavior: smooth;
+       -webkit-overflow-scrolling: touch;
+   }
+
+   .card-testimonial-section-gm {
+       flex-grow: 0;
+       flex-shrink: 0;
+       flex-basis: auto;
+       width: 320px;
+       height: 450px;
+       background-color: {{section.settings.color-bg-1}};
+       border-radius: 10px;
+       box-shadow: 0px 4px 20px 1px rgba(0, 60, 60, 0.3);
+   }
+
+   .testimonial-top-bar {
+       width: 100%;
+       height: 25%;
+       /* background-color: #e53935d4; */
+
+       clip-path: polygon(0 1%, 100% 0, 100% 80%, 0% 100%);
+       border-radius: 10px 10px 0px 0px;
+   }
+
+   .testimonial-content-bar {
+       width: 100%;
+       height: 50%;
+       position: relative;
+       padding: 10px 20px;
+   }
+
+
+    .testimonial-content-bar img {
+       width: 100px;
+       height: 100px;
+       border-radius: 50%;
+       box-shadow: 0px 0px 10px 1px #d4d4d4d4;
+       position: absolute;
+       top: -30%;
+       left: 50%;
+       transform: translateX(-50%);
+   }
+
+     .testimonial-content-bar h2, .testimonial-content-bar p {
+       text-align: center;
+     }
+
+   .testimonial-bottom-bar {
+       width: 100%;
+       height: 25%;
+       /* background-color: #e53935d4; */
+       clip-path: polygon(0 20%, 100% 0, 100% 100%, 0% 100%);
+       border-radius: 0px 0px 10px 10px;
+   }
+
+   .stars-container-gm {
+       display: block;
+       width: 90%;
+       margin: auto;
+       text-align: center;
+   }
+
+   .star-fa-icons-testimonials {
+       display: inline-block;
+       padding: 45px 3px;
+       color: gold;
+       font-size: 24px;
+   }
+
+   @media only screen and (min-width: 1380px){
+       .main-container-testimonial-section-gm {
+           justify-content: center;
+       }
+   }
+
+   @media only screen and (max-width: 800px){
+       .main-container-testimonial-section-gm {
+           scrollbar-width: none;
+           -ms-overflow-style: none;
+       }
+
+       .main-container-testimonial-section-gm::-webkit-scrollbar {
+           display: none;
+       }
+   }
+
+   @media only screen and (max-width: 380px){
+       .card-testimonial-section-gm {
+           width: 300px;
+       }
+   }
+
+   @media only screen and (max-width: 360px){
+       .card-testimonial-section-gm {
+           width: 280px;
+       }
+   }
+
+   @media only screen and (max-width: 340px){
+       .card-testimonial-section-gm {
+           width: 250px;
+       }
+   }
+</style>
+
+<script>
+    $(".main-container-testimonial-section-gm ").on('mouseover', function() {
+    if ($(this).hasClass('scrolling')) return;
+    var maxscroll = $(this)[0].scrollHeight
+    $(this).animate({
+      scrollTop: maxscroll
+    }, 450);
+  });
+
+  $(".main-container-testimonial-section-gm ").on('mouseout', function() {
+    $(this).stop();
+    $(this).addClass('scrolling');
+    $(this).animate({
+      scrollTop: 0
+    }, 425, "linear", function() {
+      $(this).removeClass('scrolling')
+    });
+  });
+</script>
+
+<div class="main-container-testimonial-section-gm page-width">
+  {% for block in section.blocks %}
+    {%- liquid
+      assign customer_image = block.settings.customer_image
+      assign customer_name = block.settings.customer_name
+      assign customer_review = block.settings.customer_review
+    -%}
+    <div class="card-testimonial-section-gm">
+      <div class="testimonial-top-bar">&nbsp;</div>
+      <div class="testimonial-content-bar">
+        <img src="{{ customer_image | img_url: 'master' }}" alt="">
+        <h2>{{ customer_name }}</h2>
+        <p>{{ customer_review }}</p>
+      </div>
+      <div class="testimonial-bottom-bar">
+        <div class="stars-container-gm">
+          <i class="fa-solid fa-star star-fa-icons-testimonials"></i>
+          <i class="fa-solid fa-star star-fa-icons-testimonials"></i>
+          <i class="fa-solid fa-star star-fa-icons-testimonials"></i>
+          <i class="fa-solid fa-star star-fa-icons-testimonials"></i>
+          <i class="fa-solid fa-star star-fa-icons-testimonials"></i>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% schema %}
+{
+   "name": "Testimonial YT Live",
+  "settings": [
+    {
+      "type": "color",
+      "id" : "color-bg",
+      "label": "BG-Color"
+    },
+    {
+      "type": "color",
+      "id" : "color-bg-1",
+      "label": "BG-Color"
+    },
+  ],
+
+  "blocks": [
+
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+
+        {
+          "type": "image_picker",
+          "id": "customer_image",
+          "label": "Customer Photo"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer Name",
+          "default": "Genius Maker"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "customer_review",
+          "label": "Review Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial YT Live"
+    }
+  ]
+}
+{% endschema %}

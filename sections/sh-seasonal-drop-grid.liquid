@@ -1,0 +1,902 @@
+{% liquid
+  assign first_card_aspect_ratio = blank
+  if section.blocks.size > 0
+    for block in section.blocks
+      if block.settings.custom_image != blank
+        assign first_card_aspect_ratio = block.settings.custom_image.aspect_ratio
+        break
+      elsif block.settings.product != blank and block.settings.product.featured_image != blank
+        assign first_card_aspect_ratio = block.settings.product.featured_image.aspect_ratio
+        break
+      endif
+    endfor
+  elsif section.settings.product_collection != blank and section.settings.product_collection.products.first.featured_image != blank
+    assign first_card_aspect_ratio = section.settings.product_collection.products.first.featured_image.aspect_ratio
+  endif
+%}
+
+{%- capture sh_seasonal_drop_css -%}
+<style>
+  #sh-drop-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    position: relative;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-container {
+    max-width: {{ section.settings.section_max_width }}px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-container.sh-drop-full-width {
+    max-width: 100%;
+    padding: 0 24px;
+  }
+
+  /* Main Flex Layout */
+  #sh-drop-{{ section.id }} .sh-drop-wrapper {
+    display: flex;
+    gap: {{ section.settings.grid_gap }}px;
+    align-items: stretch;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-wrapper.banner-right {
+    flex-direction: row-reverse;
+  }
+
+  /* Banner Column */
+  #sh-drop-{{ section.id }} .sh-drop-banner {
+    flex: 0 0 {{ section.settings.banner_width }}%;
+    max-width: {{ section.settings.banner_width }}%;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 520px;
+    overflow: hidden;
+    display: flex;
+    background-color: #f2f0ea;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner:hover .sh-drop-banner-img {
+    transform: scale(1.03);
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: {{ section.settings.banner_overlay_color }};
+    opacity: {{ section.settings.banner_overlay_opacity | divided_by: 100.0 }};
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Banner Content */
+  #sh-drop-{{ section.id }} .sh-drop-banner-content {
+    position: absolute;
+    inset: 0;
+    padding: 40px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-content.position-top-left {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-content.position-center-left {
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-content.position-bottom-left {
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-heading {
+    margin: 0 0 24px;
+    font-size: {{ section.settings.heading_font_size }}px;
+    line-height: 1.08;
+    color: {{ section.settings.heading_color }};
+    font-family: {% if section.settings.heading_font_style == 'serif' %}Georgia, "Times New Roman", serif{% elsif section.settings.heading_font_style == 'sans-serif' %}sans-serif{% else %}var(--font-heading-family){% endif %};
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1.2;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-banner-link-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: block;
+  }
+
+  /* Products Grid Column */
+  #sh-drop-{{ section.id }} .sh-drop-products {
+    flex: 1;
+    min-width: 0;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ section.settings.grid_gap }}px;
+    height: 100%;
+  }
+
+  /* Product Card */
+  #sh-drop-{{ section.id }} .sh-drop-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    group: relative;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-card-media {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    {% if section.settings.product_image_ratio == 'square' %}
+      aspect-ratio: 1 / 1;
+    {% elsif section.settings.product_image_ratio == 'portrait' %}
+      aspect-ratio: 4 / 5;
+    {% elsif section.settings.product_image_ratio == 'tall' %}
+      aspect-ratio: 2 / 3;
+    {% elsif section.settings.product_image_ratio == 'adapt' and first_card_aspect_ratio != blank %}
+      aspect-ratio: {{ first_card_aspect_ratio }};
+    {% elsif section.settings.product_image_ratio == 'adapt' %}
+      aspect-ratio: 3 / 4;
+    {% endif %}
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.product_image_fit }};
+    object-position: {{ section.settings.product_image_position }} center;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-card-img-secondary {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.product_image_fit }};
+    object-position: {{ section.settings.product_image_position }} center;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-card:hover .sh-drop-card-img {
+    transform: scale(1.04);
+  }
+
+  {% if section.settings.show_secondary_image %}
+    #sh-drop-{{ section.id }} .sh-drop-card:hover .sh-drop-card-img-secondary {
+      opacity: 1;
+      transform: scale(1.04);
+    }
+  {% endif %}
+
+  #sh-drop-{{ section.id }} .sh-drop-card-info {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-card-title {
+    font-size: {{ section.settings.product_title_size }}px;
+    font-family: var(--font-heading-family);
+    font-weight: 500;
+    color: {{ section.settings.product_title_color }};
+    line-height: 1.3;
+    margin: 0;
+    transition: color 0.2s ease;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-card:hover .sh-drop-card-title {
+    opacity: 0.7;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-card-prices {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: var(--font-body-family);
+    font-size: {{ section.settings.product_title_size }}px;
+    line-height: 1.2;
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-price {
+    font-weight: 600;
+    color: {{ section.settings.price_color }};
+  }
+
+  #sh-drop-{{ section.id }} .sh-drop-compare-price {
+    font-weight: 400;
+    color: {{ section.settings.compare_price_color }};
+    text-decoration: line-through;
+    font-size: 0.9em;
+  }
+
+  /* Mobile & Tablet Styles */
+  @media only screen and (max-width: 989px) {
+    #sh-drop-{{ section.id }} .sh-drop-wrapper {
+      flex-direction: column !important;
+      gap: 24px;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-banner {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-banner-inner {
+      min-height: 440px;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-banner-content {
+      padding: 30px;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-banner-heading {
+      font-size: {{ section.settings.mob_heading_font_size }}px;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    #sh-drop-{{ section.id }} {
+      padding-top: {{ section.settings.mob_padding_top }}px;
+      padding-bottom: {{ section.settings.mob_padding_bottom }}px;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-container {
+      padding: 0 16px;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-banner-inner {
+      min-height: 380px;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-banner-content {
+      padding: 24px 20px;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-grid {
+      gap: {{ section.settings.mob_grid_gap }}px;
+    }
+
+    #sh-drop-{{ section.id }} .sh-drop-card-title,
+    #sh-drop-{{ section.id }} .sh-drop-card-prices {
+      font-size: 13px;
+    }
+  }
+</style>
+{%- endcapture -%}
+{{- sh_seasonal_drop_css | strip_newlines -}}
+
+<div id="sh-drop-{{ section.id }}" class="sh-seasonal-drop-section">
+  <div class="sh-drop-container{% if section.settings.full_width %} sh-drop-full-width{% endif %}">
+    <div class="sh-drop-wrapper banner-{{ section.settings.banner_position }}">
+
+      <!-- Left Hero Banner -->
+      <div class="sh-drop-banner">
+        <div class="sh-drop-banner-inner">
+          {% if section.settings.banner_image != blank %}
+            {% if section.settings.mob_banner_image != blank %}
+              {{ section.settings.banner_image | image_url: width: 1400 | image_tag:
+                loading: 'lazy',
+                class: 'sh-drop-banner-img sp-desk-show',
+                alt: section.settings.banner_heading,
+                widths: '600, 800, 1000, 1200, 1400',
+                sizes: '(max-width: 989px) 100vw, 50vw'
+              }}
+              {{ section.settings.mob_banner_image | image_url: width: 800 | image_tag:
+                loading: 'lazy',
+                class: 'sh-drop-banner-img sp-mobile-show',
+                alt: section.settings.banner_heading,
+                widths: '400, 600, 800',
+                sizes: '100vw'
+              }}
+            {% else %}
+              {{ section.settings.banner_image | image_url: width: 1400 | image_tag:
+                loading: 'lazy',
+                class: 'sh-drop-banner-img',
+                alt: section.settings.banner_heading,
+                widths: '600, 800, 1000, 1200, 1400',
+                sizes: '(max-width: 989px) 100vw, 50vw'
+              }}
+            {% endif %}
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'sh-drop-banner-img' }}
+          {% endif %}
+
+          <div class="sh-drop-banner-overlay"></div>
+
+          <div class="sh-drop-banner-content position-{{ section.settings.banner_content_position }}">
+            {% if section.settings.banner_heading != blank %}
+              <h2 class="sh-drop-banner-heading">
+                {{ section.settings.banner_heading }}
+              </h2>
+            {% endif %}
+
+            {% if section.settings.button_label != blank %}
+              <a href="{{ section.settings.button_link | default: '#' }}" class="sh-drop-banner-btn">
+                {{ section.settings.button_label }}
+              </a>
+            {% endif %}
+          </div>
+
+          {% if section.settings.button_label == blank and section.settings.button_link != blank %}
+            <a href="{{ section.settings.button_link }}" class="sh-drop-banner-link-overlay" aria-label="{{ section.settings.banner_heading }}"></a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Right 2x2 Product Grid -->
+      <div class="sh-drop-products">
+        <div class="sh-drop-grid">
+          {% if section.blocks.size > 0 %}
+            {% for block in section.blocks %}
+              {% liquid
+                assign item_product = block.settings.product
+                if item_product != blank
+                  assign item_title = item_product.title
+                  assign item_link = item_product.url
+                  assign item_image = item_product.featured_image
+                  if block.settings.custom_image != blank
+                    assign item_image = block.settings.custom_image
+                  endif
+                  assign item_price = item_product.price | money
+                  if item_product.compare_at_price > item_product.price
+                    assign item_compare_price = item_product.compare_at_price | money
+                  else
+                    assign item_compare_price = blank
+                  endif
+                  assign item_secondary_image = blank
+                  if item_product.images.size > 1
+                    assign item_secondary_image = item_product.images[1]
+                  endif
+                else
+                  assign item_title = block.settings.custom_title
+                  if item_title == blank
+                    assign item_title = 'Product ' | append: forloop.index
+                  endif
+                  assign item_link = block.settings.custom_link
+                  if item_link == blank
+                    assign item_link = '#'
+                  endif
+                  assign item_image = block.settings.custom_image
+                  assign item_secondary_image = blank
+                  assign item_price = block.settings.custom_price
+                  assign item_compare_price = block.settings.custom_compare_price
+                endif
+              %}
+
+              <a href="{{ item_link }}" class="sh-drop-card" {{ block.shopify_attributes }}>
+                <div class="sh-drop-card-media"{% if section.settings.product_image_ratio == 'adapt' and item_image != blank %} style="aspect-ratio: {{ item_image.aspect_ratio }};"{% endif %}>
+                  {% if item_image != blank %}
+                    {{ item_image | image_url: width: 800 | image_tag:
+                      loading: 'lazy',
+                      class: 'sh-drop-card-img',
+                      alt: item_title,
+                      widths: '300, 400, 600, 800',
+                      sizes: '(max-width: 767px) 50vw, 25vw'
+                    }}
+                    {% if section.settings.show_secondary_image and item_secondary_image != blank %}
+                      {{ item_secondary_image | image_url: width: 800 | image_tag:
+                        loading: 'lazy',
+                        class: 'sh-drop-card-img-secondary',
+                        alt: item_title,
+                        widths: '300, 400, 600, 800',
+                        sizes: '(max-width: 767px) 50vw, 25vw'
+                      }}
+                    {% endif %}
+                  {% else %}
+                    {% assign placeholder_num = forloop.index | modulo: 6 | plus: 1 %}
+                    {{ 'product-' | append: placeholder_num | placeholder_svg_tag: 'sh-drop-card-img' }}
+                  {% endif %}
+                </div>
+
+                <div class="sh-drop-card-info">
+                  <h3 class="sh-drop-card-title">{{ item_title }}</h3>
+                  {% if item_price != blank or item_compare_price != blank %}
+                    <div class="sh-drop-card-prices">
+                      {% if item_price != blank %}
+                        <span class="sh-drop-price">{{ item_price }}</span>
+                      {% endif %}
+                      {% if item_compare_price != blank %}
+                        <span class="sh-drop-compare-price">{{ item_compare_price }}</span>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+              </a>
+            {% endfor %}
+          {% elsif section.settings.product_collection != blank %}
+            {% for item_product in section.settings.product_collection.products limit: 4 %}
+              <a href="{{ item_product.url }}" class="sh-drop-card">
+                <div class="sh-drop-card-media"{% if section.settings.product_image_ratio == 'adapt' and item_product.featured_image != blank %} style="aspect-ratio: {{ item_product.featured_image.aspect_ratio }};"{% endif %}>
+                  {% if item_product.featured_image != blank %}
+                    {{ item_product.featured_image | image_url: width: 800 | image_tag:
+                      loading: 'lazy',
+                      class: 'sh-drop-card-img',
+                      alt: item_product.title,
+                      widths: '300, 400, 600, 800',
+                      sizes: '(max-width: 767px) 50vw, 25vw'
+                    }}
+                    {% if section.settings.show_secondary_image and item_product.images.size > 1 %}
+                      {{ item_product.images[1] | image_url: width: 800 | image_tag:
+                        loading: 'lazy',
+                        class: 'sh-drop-card-img-secondary',
+                        alt: item_product.title,
+                        widths: '300, 400, 600, 800',
+                        sizes: '(max-width: 767px) 50vw, 25vw'
+                      }}
+                    {% endif %}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'sh-drop-card-img' }}
+                  {% endif %}
+                </div>
+
+                <div class="sh-drop-card-info">
+                  <h3 class="sh-drop-card-title">{{ item_product.title }}</h3>
+                  <div class="sh-drop-card-prices">
+                    <span class="sh-drop-price">{{ item_product.price | money }}</span>
+                    {% if item_product.compare_at_price > item_product.price %}
+                      <span class="sh-drop-compare-price">{{ item_product.compare_at_price | money }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "SH: Seasonal drop & grid",
+  "tag": "section",
+  "class": "sh-section-hub-main",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner Layout"
+    },
+    {
+      "type": "select",
+      "id": "banner_position",
+      "label": "Banner Position",
+      "options": [
+        { "value": "left", "label": "Banner on Left (like reference)" },
+        { "value": "right", "label": "Banner on Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "banner_width",
+      "label": "Banner Width Percentage (Desktop)",
+      "min": 35,
+      "max": 55,
+      "step": 1,
+      "unit": "%",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Banner Image & Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mob_banner_image",
+      "label": "Banner Mobile Image (Optional)"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "banner_heading",
+      "label": "Banner Heading",
+      "default": "Seasonal Drop"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_style",
+      "label": "Heading Font Style",
+      "options": [
+        { "value": "theme", "label": "Theme Default" },
+        { "value": "serif", "label": "Editorial Serif" },
+        { "value": "sans-serif", "label": "Modern Sans-Serif" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "Heading Font Size (Desktop)",
+      "min": 28,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "mob_heading_font_size",
+      "label": "Heading Font Size (Mobile)",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "select",
+      "id": "banner_content_position",
+      "label": "Banner Content Position",
+      "options": [
+        { "value": "top-left", "label": "Top Left (like image)" },
+        { "value": "center-left", "label": "Center Left" },
+        { "value": "bottom-left", "label": "Bottom Left" }
+      ],
+      "default": "top-left"
+    },
+    {
+      "type": "range",
+      "id": "banner_overlay_opacity",
+      "label": "Banner Overlay Opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "banner_overlay_color",
+      "label": "Banner Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Products Grid Settings"
+    },
+    {
+      "type": "collection",
+      "id": "product_collection",
+      "label": "Auto-populate from Collection",
+      "info": "Used if no blocks are added below"
+    },
+    {
+      "type": "select",
+      "id": "product_image_ratio",
+      "label": "Product Image Aspect Ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image (Full height / No crop)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (2:3)" },
+        { "value": "square", "label": "Square (1:1)" }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "product_image_position",
+      "label": "Product Image Focus / Position",
+      "options": [
+        { "value": "top", "label": "Top (Keeps model heads/faces visible)" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "select",
+      "id": "product_image_fit",
+      "label": "Product Image Fit",
+      "options": [
+        { "value": "cover", "label": "Cover (Fill space)" },
+        { "value": "contain", "label": "Contain (Show full image without cropping)" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show Secondary Image on Hover",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "label": "Product Title Font Size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Product Title Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare-at Price Color",
+      "default": "#888888"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid Gap (Desktop)",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mob_grid_gap",
+      "label": "Grid Gap (Mobile)",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing & Background"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "section_max_width",
+      "label": "Container Max Width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "mob_padding_top",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mob_padding_bottom",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_item",
+      "name": "Product item",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product",
+          "info": "Automatically fetches title, price, compare price, image, and link"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom Image (Optional override)"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom Title",
+          "info": "Used only if no product is selected"
+        },
+        {
+          "type": "text",
+          "id": "custom_price",
+          "label": "Custom Price",
+          "info": "Used only if no product is selected (e.g., $1345)"
+        },
+        {
+          "type": "text",
+          "id": "custom_compare_price",
+          "label": "Custom Strikethrough Price",
+          "info": "Used only if no product is selected (e.g., $1600)"
+        },
+        {
+          "type": "url",
+          "id": "custom_link",
+          "label": "Custom Link",
+          "info": "Used only if no product is selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SH: Seasonal drop & grid",
+      "settings": {
+        "banner_heading": "Seasonal Drop",
+        "button_label": "Shop Now"
+      },
+      "blocks": [
+        {
+          "type": "product_item",
+          "settings": {
+            "custom_title": "Sterling Suede shirt",
+            "custom_price": "$1345",
+            "custom_compare_price": "$1600"
+          }
+        },
+        {
+          "type": "product_item",
+          "settings": {
+            "custom_title": "Hudson Leather Coat",
+            "custom_price": "$1445",
+            "custom_compare_price": "$1700"
+          }
+        },
+        {
+          "type": "product_item",
+          "settings": {
+            "custom_title": "Axel Leather Bomber",
+            "custom_price": "$1545",
+            "custom_compare_price": "$1900"
+          }
+        },
+        {
+          "type": "product_item",
+          "settings": {
+            "custom_title": "Lennox Utility Jacket",
+            "custom_price": "$2045",
+            "custom_compare_price": "$2900"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

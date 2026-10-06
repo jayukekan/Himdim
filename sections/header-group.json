@@ -1,0 +1,99 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "Get 10% OFF on Prepaid Orders",
+            "link": ""
+          }
+        },
+        "announcement_N8Ae4W": {
+          "type": "announcement",
+          "settings": {
+            "text": "30% off on prepaid orders only.",
+            "link": ""
+          }
+        },
+        "announcement_BbtTyy": {
+          "type": "announcement",
+          "settings": {
+            "text": "Welcome to our store",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-0",
+        "announcement_N8Ae4W",
+        "announcement_BbtTyy"
+      ],
+      "settings": {
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "color_scheme": "scheme-5",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "middle-center",
+        "mobile_logo_position": "center",
+        "menu": "bt-manu",
+        "menu_type_desktop": "drawer",
+        "enable_transparent_header": true,
+        "transparent_header_home_only": true,
+        "enable_icon_white_bg": true,
+        "header_icon_bg": "#ffffff",
+        "header_icon_color": "#121212",
+        "search_modal_bg": "#f4f0ec",
+        "search_popular_label": "Popular searches:",
+        "search_popular_label_color": "#9c5436",
+        "search_popular_tags": "Featured, Trendy, Sale, New",
+        "drawer_width_desktop": 800,
+        "drawer_layout_desktop": "side_by_side",
+        "drawer_image_fit": "cover",
+        "drawer_view_all_text": "VIEW ALL",
+        "drawer_view_all_link": "",
+        "drawer_btn_position": "center",
+        "drawer_btn_style": "solid",
+        "drawer_btn_bg": "#121212",
+        "drawer_btn_text": "#ffffff",
+        "drawer_overlay_opacity": 0,
+        "drawer_menu_brackets": false,
+        "drawer_show_counts": true,
+        "drawer_menu_font_size": 20,
+        "sticky_header_type": "reduce-logo-size",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "margin_bottom": 0,
+        "padding_top": 4,
+        "padding_bottom": 4
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

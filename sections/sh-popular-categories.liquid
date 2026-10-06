@@ -1,0 +1,1120 @@
+{%- capture sh_popular_categories_css -%}
+<style>
+  #sh-cat-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-container {
+    max-width: {{ section.settings.section_max_width }}px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-container.sh-cat-full-width {
+    max-width: 100%;
+    padding: 0 24px;
+  }
+
+  /* Main Flex / Grid Wrapper */
+  #sh-cat-{{ section.id }} .sh-cat-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-wrapper.layout-top-left,
+  #sh-cat-{{ section.id }} .sh-cat-wrapper.layout-top-center {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+  }
+
+  /* Header Column */
+  #sh-cat-{{ section.id }} .sh-cat-header-col {
+    flex: 0 0 {{ section.settings.left_column_width }}%;
+    max-width: {{ section.settings.left_column_width }}%;
+    box-sizing: border-box;
+    padding-right: 15px;
+  }
+
+  #sh-cat-{{ section.id }} .layout-top-left .sh-cat-header-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+    text-align: left;
+    padding-right: 0;
+  }
+
+  #sh-cat-{{ section.id }} .layout-top-center .sh-cat-header-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+    text-align: center;
+    padding-right: 0;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-heading {
+    margin: 0;
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+    letter-spacing: 1px;
+    line-height: 1.15;
+    text-transform: uppercase;
+    word-break: break-word;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-subheading {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: {{ section.settings.heading_color }};
+    opacity: 0.75;
+    line-height: 1.4;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: {{ section.settings.heading_color }};
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: opacity 0.2s ease;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-view-all:hover {
+    opacity: 0.65;
+  }
+
+  /* Slider Column */
+  #sh-cat-{{ section.id }} .sh-cat-slider-col {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+  }
+
+  /* Navigation Arrows */
+  #sh-cat-{{ section.id }} .sh-cat-arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: {{ section.settings.arrow_bg_color }};
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    padding: 0;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-arrow-btn:hover:not(:disabled) {
+    background: {{ section.settings.arrow_color }};
+    border-color: {{ section.settings.arrow_color }};
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-arrow-btn:hover:not(:disabled) svg {
+    fill: {{ section.settings.arrow_bg_color }};
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-arrow-btn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-arrow-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: {{ section.settings.arrow_color }};
+    transition: fill 0.2s ease;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-arrow-prev {
+    left: -18px;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-arrow-next {
+    right: -18px;
+  }
+
+  /* Header-integrated arrows */
+  #sh-cat-{{ section.id }} .sh-cat-header-arrows {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-header-arrows .sh-cat-arrow-btn {
+    position: static;
+    transform: none;
+  }
+
+  /* Slider Track */
+  #sh-cat-{{ section.id }} .sh-cat-track {
+    display: flex;
+    gap: {{ section.settings.gap_desktop }}px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 10px 4px 14px 4px;
+    margin: -10px -4px -14px -4px;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-track.is-dragging {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  /* Category Item Card */
+  #sh-cat-{{ section.id }} .sh-cat-item {
+    flex: 0 0 auto;
+    width: {{ section.settings.circle_size_desktop }}px;
+    scroll-snap-align: start;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  /* Circle Media Container */
+  #sh-cat-{{ section.id }} .sh-cat-media-wrap {
+    width: {{ section.settings.circle_size_desktop }}px;
+    height: {{ section.settings.circle_size_desktop }}px;
+    border-radius: {{ section.settings.item_border_radius }};
+    position: relative;
+    background-color: #f7f7f7;
+    border: {{ section.settings.circle_border_width }}px solid {{ section.settings.circle_border_color }};
+    padding: {{ section.settings.circle_border_offset }}px;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-item:hover .sh-cat-media-wrap {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-media-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-media-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: inherit;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  {% if section.settings.enable_hover_zoom %}
+    {% assign zoom_factor = section.settings.hover_zoom_scale | divided_by: 100.0 %}
+    #sh-cat-{{ section.id }} .sh-cat-item:hover .sh-cat-media-inner img {
+      transform: scale({{ zoom_factor }});
+    }
+  {% endif %}
+
+  #sh-cat-{{ section.id }} .sh-cat-media-inner svg {
+    width: 100%;
+    height: 100%;
+    fill: #cccccc;
+    background: #f4f4f4;
+  }
+
+  /* Badge */
+  #sh-cat-{{ section.id }} .sh-cat-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    z-index: 2;
+    line-height: 1;
+    pointer-events: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  }
+
+  /* Text Details */
+  #sh-cat-{{ section.id }} .sh-cat-info {
+    margin-top: {{ section.settings.title_margin_top }}px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-title {
+    font-size: {{ section.settings.title_font_size }}px;
+    font-weight: {{ section.settings.title_font_weight }};
+    color: {{ section.settings.title_color }};
+    line-height: 1.3;
+    transition: color 0.25s ease;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-item:hover .sh-cat-title {
+    color: {{ section.settings.title_hover_color }};
+  }
+
+  #sh-cat-{{ section.id }} .sh-cat-count {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #777777;
+  }
+
+  /* Responsive Mobile Settings */
+  @media only screen and (max-width: 989px) {
+    #sh-cat-{{ section.id }} .sh-cat-wrapper {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-header-col {
+      flex: 0 0 100%;
+      max-width: 100%;
+      padding-right: 0;
+      text-align: left;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-arrow-prev {
+      left: -10px;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-arrow-next {
+      right: -10px;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    #sh-cat-{{ section.id }} {
+      padding-top: {{ section.settings.mob_padding_top }}px;
+      padding-bottom: {{ section.settings.mob_padding_bottom }}px;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-container {
+      padding: 0 16px;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-heading {
+      font-size: {{ section.settings.mob_heading_size }}px;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-track {
+      gap: {{ section.settings.gap_mobile }}px;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-item {
+      width: {{ section.settings.circle_size_mobile }}px;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-media-wrap {
+      width: {{ section.settings.circle_size_mobile }}px;
+      height: {{ section.settings.circle_size_mobile }}px;
+    }
+
+    #sh-cat-{{ section.id }} .sh-cat-title {
+      font-size: 13px;
+    }
+
+    /* Mobile Grid Option */
+    {% if section.settings.mobile_layout == 'grid_2' %}
+      #sh-cat-{{ section.id }} .sh-cat-track {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        overflow-x: visible;
+        scroll-snap-type: none;
+      }
+      #sh-cat-{{ section.id }} .sh-cat-item {
+        width: 100%;
+      }
+      #sh-cat-{{ section.id }} .sh-cat-media-wrap {
+        width: 100%;
+        max-width: {{ section.settings.circle_size_desktop }}px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+      }
+    {% elsif section.settings.mobile_layout == 'grid_3' %}
+      #sh-cat-{{ section.id }} .sh-cat-track {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        overflow-x: visible;
+        scroll-snap-type: none;
+      }
+      #sh-cat-{{ section.id }} .sh-cat-item {
+        width: 100%;
+      }
+      #sh-cat-{{ section.id }} .sh-cat-media-wrap {
+        width: 100%;
+        max-width: {{ section.settings.circle_size_mobile }}px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+      }
+    {% endif %}
+
+    {% unless section.settings.show_arrows_mobile %}
+      #sh-cat-{{ section.id }} .sh-cat-arrow-btn {
+        display: none !important;
+      }
+    {% endunless %}
+  }
+
+  {% unless section.settings.show_arrows_desktop %}
+    @media only screen and (min-width: 768px) {
+      #sh-cat-{{ section.id }} .sh-cat-arrow-btn {
+        display: none !important;
+      }
+    }
+  {% endunless %}
+</style>
+{%- endcapture -%}
+{{- sh_popular_categories_css | strip_newlines -}}
+
+<div id="sh-cat-{{ section.id }}" class="sh-popular-categories-section">
+  <div class="sh-cat-container{% if section.settings.full_width %} sh-cat-full-width{% endif %}">
+    <div class="sh-cat-wrapper layout-{{ section.settings.header_layout }}">
+      
+      <!-- Header Column -->
+      {% if section.settings.heading != blank or section.settings.subheading != blank or section.settings.view_all_text != blank %}
+        <div class="sh-cat-header-col">
+          {% if section.settings.heading != blank %}
+            <{{ section.settings.heading_tag }} class="sh-cat-heading">
+              {{ section.settings.heading }}
+            </{{ section.settings.heading_tag }}>
+          {% endif %}
+
+          {% if section.settings.subheading != blank %}
+            <p class="sh-cat-subheading">{{ section.settings.subheading }}</p>
+          {% endif %}
+
+          {% if section.settings.view_all_text != blank and section.settings.view_all_link != blank %}
+            <a href="{{ section.settings.view_all_link }}" class="sh-cat-view-all">
+              {{ section.settings.view_all_text }}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          {% endif %}
+
+          {% if section.settings.arrow_placement == 'header' and section.settings.show_arrows_desktop %}
+            <div class="sh-cat-header-arrows">
+              <button type="button" class="sh-cat-arrow-btn sh-cat-arrow-prev" aria-label="Previous categories">
+                {% render 'sh-arrows', arrow: 'prev' %}
+              </button>
+              <button type="button" class="sh-cat-arrow-btn sh-cat-arrow-next" aria-label="Next categories">
+                {% render 'sh-arrows', arrow: 'next' %}
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <!-- Slider Column -->
+      <div class="sh-cat-slider-col">
+        {% if section.settings.arrow_placement == 'slider' and section.settings.show_arrows_desktop %}
+          <button type="button" class="sh-cat-arrow-btn sh-cat-arrow-prev" aria-label="Previous categories">
+            {% render 'sh-arrows', arrow: 'prev' %}
+          </button>
+        {% endif %}
+
+        <div class="sh-cat-track" data-sh-track id="Track-{{ section.id }}">
+          {% for block in section.blocks %}
+            {% liquid
+              assign item_collection = block.settings.collection
+              assign item_title = block.settings.title
+              if item_title == blank and item_collection != blank
+                assign item_title = item_collection.title
+              elsif item_title == blank
+                assign item_title = 'Category ' | append: forloop.index
+              endif
+
+              assign item_link = block.settings.link
+              if item_link == blank and item_collection != blank
+                assign item_link = item_collection.url
+              elsif item_link == blank
+                assign item_link = '#'
+              endif
+
+              assign item_image = block.settings.image
+              if item_image == blank and item_collection != blank
+                if item_collection.featured_image != blank
+                  assign item_image = item_collection.featured_image
+                elsif item_collection.image != blank
+                  assign item_image = item_collection.image
+                endif
+              endif
+            %}
+
+            <a href="{{ item_link }}" class="sh-cat-item sh-cat-item-{{ block.id }}" {{ block.shopify_attributes }}>
+              <div class="sh-cat-media-wrap">
+                <div class="sh-cat-media-inner">
+                  {% if block.settings.badge_text != blank %}
+                    <span class="sh-cat-badge" style="background-color: {{ block.settings.badge_bg_color }}; color: {{ block.settings.badge_color }};">
+                      {{ block.settings.badge_text }}
+                    </span>
+                  {% endif %}
+
+                  {% if item_image != blank %}
+                    {{ item_image | image_url: width: 480 | image_tag: 
+                      loading: 'lazy', 
+                      class: 'sh-cat-img', 
+                      alt: item_title,
+                      widths: '180, 240, 360, 480',
+                      sizes: '(max-width: 767px) 140px, 240px'
+                    }}
+                  {% else %}
+                    {% assign svg_index = forloop.index | modulo: 6 | plus: 1 %}
+                    {{ 'collection-' | append: svg_index | placeholder_svg_tag }}
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="sh-cat-info">
+                <span class="sh-cat-title">{{ item_title }}</span>
+                {% if section.settings.show_product_count and item_collection != blank %}
+                  <span class="sh-cat-count">{{ item_collection.products_count }} {{ 'products' }}</span>
+                {% endif %}
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+
+        {% if section.settings.arrow_placement == 'slider' and section.settings.show_arrows_desktop %}
+          <button type="button" class="sh-cat-arrow-btn sh-cat-arrow-next" aria-label="Next categories">
+            {% render 'sh-arrows', arrow: 'next' %}
+          </button>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initShCategoriesSlider(sectionEl) {
+      if (!sectionEl) return;
+      var track = sectionEl.querySelector('[data-sh-track]');
+      if (!track) return;
+
+      var prevBtns = sectionEl.querySelectorAll('.sh-cat-arrow-prev');
+      var nextBtns = sectionEl.querySelectorAll('.sh-cat-arrow-next');
+
+      function updateArrowStates() {
+        var maxScroll = track.scrollWidth - track.clientWidth;
+        var currentScroll = track.scrollLeft;
+
+        prevBtns.forEach(function(btn) {
+          btn.disabled = currentScroll <= 2;
+        });
+
+        nextBtns.forEach(function(btn) {
+          btn.disabled = currentScroll >= maxScroll - 2;
+        });
+      }
+
+      function scrollByAmount(direction) {
+        var firstItem = track.querySelector('.sh-cat-item');
+        var itemWidth = firstItem ? firstItem.offsetWidth + 20 : 200;
+        var scrollDistance = itemWidth * (direction === 'next' ? 2 : -2);
+
+        track.scrollBy({
+          left: scrollDistance,
+          behavior: 'smooth'
+        });
+      }
+
+      prevBtns.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          scrollByAmount('prev');
+        });
+      });
+
+      nextBtns.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          scrollByAmount('next');
+        });
+      });
+
+      track.addEventListener('scroll', function() {
+        requestAnimationFrame(updateArrowStates);
+      }, { passive: true });
+
+      // Mouse drag to scroll feature
+      var isDown = false;
+      var startX;
+      var scrollLeft;
+      var hasMoved = false;
+
+      track.addEventListener('mousedown', function(e) {
+        isDown = true;
+        hasMoved = false;
+        track.classList.add('is-dragging');
+        startX = e.pageX - track.offsetLeft;
+        scrollLeft = track.scrollLeft;
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (!isDown) return;
+        isDown = false;
+        track.classList.remove('is-dragging');
+      });
+
+      track.addEventListener('mousemove', function(e) {
+        if (!isDown) return;
+        e.preventDefault();
+        var x = e.pageX - track.offsetLeft;
+        var walk = (x - startX) * 1.5;
+        if (Math.abs(walk) > 5) {
+          hasMoved = true;
+        }
+        track.scrollLeft = scrollLeft - walk;
+      });
+
+      track.addEventListener('click', function(e) {
+        if (hasMoved) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }, true);
+
+      // Initial check
+      setTimeout(updateArrowStates, 100);
+      window.addEventListener('resize', updateArrowStates);
+    }
+
+    // Initialize all instances
+    var currentSection = document.getElementById('sh-cat-{{ section.id }}');
+    if (currentSection) {
+      initShCategoriesSlider(currentSection);
+    }
+
+    // Theme Editor support
+    document.addEventListener('shopify:section:load', function(e) {
+      if (e.target.querySelector('#sh-cat-{{ section.id }}')) {
+        initShCategoriesSlider(e.target.querySelector('#sh-cat-{{ section.id }}'));
+      }
+    });
+
+    document.addEventListener('shopify:block:select', function(e) {
+      var blockEl = e.target.closest('.sh-cat-item');
+      if (blockEl && blockEl.closest('#sh-cat-{{ section.id }}')) {
+        blockEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "SH: Popular categories",
+  "tag": "section",
+  "class": "sh-section-hub-main",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "select",
+      "id": "header_layout",
+      "label": "Section Layout",
+      "options": [
+        {
+          "value": "left-header",
+          "label": "Side Header on Left (like image)"
+        },
+        {
+          "value": "top-left",
+          "label": "Top Header - Left Aligned"
+        },
+        {
+          "value": "top-center",
+          "label": "Top Header - Center Aligned"
+        }
+      ],
+      "default": "left-header"
+    },
+    {
+      "type": "range",
+      "id": "left_column_width",
+      "label": "Left Header Column Width",
+      "min": 15,
+      "max": 35,
+      "step": 1,
+      "unit": "%",
+      "default": 22,
+      "info": "Applies when 'Side Header on Left' layout is selected"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "section_max_width",
+      "label": "Container Max Width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Heading & Text"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "POPULAR CATEGORIES"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "div", "label": "div" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size (Desktop)",
+      "min": 18,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "mob_heading_size",
+      "label": "Heading Font Size (Mobile)",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading & Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All Link Text"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All Link"
+    },
+    {
+      "type": "header",
+      "content": "Circle Category Items Style"
+    },
+    {
+      "type": "range",
+      "id": "circle_size_desktop",
+      "label": "Circle Size (Desktop)",
+      "min": 100,
+      "max": 260,
+      "step": 5,
+      "unit": "px",
+      "default": 165
+    },
+    {
+      "type": "range",
+      "id": "circle_size_mobile",
+      "label": "Circle Size (Mobile)",
+      "min": 70,
+      "max": 180,
+      "step": 5,
+      "unit": "px",
+      "default": 115
+    },
+    {
+      "type": "select",
+      "id": "item_border_radius",
+      "label": "Image Shape",
+      "options": [
+        { "value": "50%", "label": "Full Circle (50%)" },
+        { "value": "24px", "label": "Rounded Square (24px)" },
+        { "value": "12px", "label": "Slightly Rounded (12px)" },
+        { "value": "0px", "label": "Square (0px)" }
+      ],
+      "default": "50%"
+    },
+    {
+      "type": "range",
+      "id": "circle_border_width",
+      "label": "Circle Border Width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "circle_border_color",
+      "label": "Circle Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "range",
+      "id": "circle_border_offset",
+      "label": "Circle Border Padding / Offset",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "Creates spacing between image and outer ring border"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hover_zoom",
+      "label": "Enable Image Hover Zoom",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hover_zoom_scale",
+      "label": "Hover Zoom Scale (%)",
+      "min": 100,
+      "max": 125,
+      "step": 1,
+      "unit": "%",
+      "default": 108
+    },
+    {
+      "type": "header",
+      "content": "Item Title"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title Font Size (Desktop)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Title Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "title_hover_color",
+      "label": "Title Hover Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_margin_top",
+      "label": "Spacing Between Circle & Title",
+      "min": 4,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "Show Product Count (if collection selected)",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Slider & Spacing Settings"
+    },
+    {
+      "type": "range",
+      "id": "gap_desktop",
+      "label": "Gap Between Items (Desktop)",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Gap Between Items (Mobile)",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile Layout Mode",
+      "options": [
+        { "value": "scroll", "label": "Horizontal Swipe / Scroll" },
+        { "value": "grid_2", "label": "2 Columns Grid" },
+        { "value": "grid_3", "label": "3 Columns Grid" }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Arrows"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows_desktop",
+      "label": "Show Arrows on Desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows_mobile",
+      "label": "Show Arrows on Mobile",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "arrow_placement",
+      "label": "Arrow Position",
+      "options": [
+        { "value": "slider", "label": "On Sides of Slider" },
+        { "value": "header", "label": "Below Header Text" }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow Icon Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg_color",
+      "label": "Arrow Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "mob_padding_top",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "mob_padding_bottom",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category item",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection",
+          "info": "Automatically populates title, link and image if left blank below"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Category Image",
+          "info": "Overrides collection image. Recommended 1:1 square ratio"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom Title",
+          "info": "Overrides collection title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Custom Link",
+          "info": "Overrides collection link"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge Text",
+          "info": "Optional (e.g., SALE, NEW, HOT)"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg_color",
+          "label": "Badge Background Color",
+          "default": "#d91212"
+        },
+        {
+          "type": "color",
+          "id": "badge_color",
+          "label": "Badge Text Color",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SH: Popular categories",
+      "settings": {
+        "heading": "POPULAR CATEGORIES",
+        "header_layout": "left-header"
+      },
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Sale"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Casual Pret"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Corporate Chic"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Bakhtaawer Exclusive"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Dupattas"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

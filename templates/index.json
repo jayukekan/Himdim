@@ -1,0 +1,1153 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "sh_hero_slideshow_mqQh7m": {
+      "type": "sh-hero-slideshow",
+      "blocks": {
+        "image_slide_aBpXFX": {
+          "type": "image_slide",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPTImageAug30_2026_10_20_51PM_636f5db5-96d1-4106-ae4f-05db6d17f76e.png",
+            "heading": "GRACE IN EVERY THREAD",
+            "subheading": "<p>Celebrate timeless silhouettes crafted for modern elegance.</p>",
+            "button_label": "SHOP ALL",
+            "button_link": "/",
+            "btn_outline": false,
+            "outline_btn_text_color": "#ffffff",
+            "border_radius": 0,
+            "button_size": 16,
+            "desktop_content_position": "bottom-left",
+            "desktop_content_alignment": "left",
+            "show_text_box": false,
+            "mobile_content_position": "middle",
+            "mobile_content_alignment": "center",
+            "heading_font_size": 36,
+            "content_font_size": 18,
+            "opacity": 0,
+            "overlay_color": "#121212",
+            "box_bg_color": "#ffffff",
+            "heading_color": "#ffffff",
+            "content_color": "#ffffff",
+            "btn_bg_color": "#000000",
+            "btn_text_color": "#ffffff",
+            "btn_border_color": "#121212",
+            "btn_hover_bg_color": "#ffffff",
+            "btn_hover_text_color": "#121212",
+            "btn_hover_border_color": "#121212",
+            "outline_btn_shadow_color": "rgba(0,0,0,0)"
+          }
+        },
+        "image_slide_iqP3Y3": {
+          "type": "image_slide",
+          "disabled": true,
+          "settings": {
+            "heading": "FESTIVE STYLES",
+            "subheading": "",
+            "button_label": "SHOP ALL",
+            "button_link": "/",
+            "btn_outline": false,
+            "outline_btn_text_color": "#121212",
+            "border_radius": 0,
+            "button_size": 16,
+            "desktop_content_position": "bottom-left",
+            "desktop_content_alignment": "left",
+            "show_text_box": false,
+            "mobile_content_position": "middle",
+            "mobile_content_alignment": "left",
+            "heading_font_size": 36,
+            "content_font_size": 18,
+            "opacity": 0,
+            "overlay_color": "#121212",
+            "box_bg_color": "#ffffff",
+            "heading_color": "#ffffff",
+            "content_color": "#ffffff",
+            "btn_bg_color": "#000000",
+            "btn_text_color": "#ffffff",
+            "btn_border_color": "#121212",
+            "btn_hover_bg_color": "#ffffff",
+            "btn_hover_text_color": "#121212",
+            "btn_hover_border_color": "#121212",
+            "outline_btn_shadow_color": "rgba(0,0,0,0)"
+          }
+        }
+      },
+      "block_order": [
+        "image_slide_aBpXFX",
+        "image_slide_iqP3Y3"
+      ],
+      "name": "SH: Hero slideshow",
+      "settings": {
+        "slide_height": "large",
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "show_arrows": false,
+        "show_pagination": true,
+        "pagination_type": "dots",
+        "show_text_below_mob": false,
+        "sec_bg_color": "#ffffff",
+        "dots_color": "#121212",
+        "arrow_color": "#121212",
+        "arrow_bg_color": "#ffffff",
+        "arrow_border_color": "#121212",
+        "hover_arrow_color": "#ffffff",
+        "hover_arrow_bg_color": "#121212",
+        "hover_arrow_border_color": "#ffffff",
+        "arrow_size": 16,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mob_padding_top": 0,
+        "mob_padding_bottom": 0,
+        "full_width": true,
+        "section_max_width": "1280"
+      }
+    },
+    "sh_popular_categories_6xbHxW": {
+      "type": "sh-popular-categories",
+      "blocks": {
+        "category_NnRYL9": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Sale",
+            "link": "",
+            "badge_text": "",
+            "badge_bg_color": "#d91212",
+            "badge_color": "#ffffff"
+          }
+        },
+        "category_pKtyHH": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Casual Pret",
+            "link": "",
+            "badge_text": "",
+            "badge_bg_color": "#d91212",
+            "badge_color": "#ffffff"
+          }
+        },
+        "category_ypiarR": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Corporate Chic",
+            "link": "",
+            "badge_text": "",
+            "badge_bg_color": "#d91212",
+            "badge_color": "#ffffff"
+          }
+        },
+        "category_wYYcE9": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Bakhtaawer Exclusive",
+            "link": "",
+            "badge_text": "",
+            "badge_bg_color": "#d91212",
+            "badge_color": "#ffffff"
+          }
+        },
+        "category_a9mxN9": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Dupattas",
+            "link": "",
+            "badge_text": "",
+            "badge_bg_color": "#d91212",
+            "badge_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "category_NnRYL9",
+        "category_pKtyHH",
+        "category_ypiarR",
+        "category_wYYcE9",
+        "category_a9mxN9"
+      ],
+      "name": "SH: Popular categories",
+      "settings": {
+        "header_layout": "left-header",
+        "left_column_width": 22,
+        "full_width": false,
+        "section_max_width": 1400,
+        "bg_color": "#ffffff",
+        "heading": "POPULAR CATEGORIES",
+        "heading_tag": "h2",
+        "heading_size": 28,
+        "mob_heading_size": 22,
+        "heading_color": "#000000",
+        "subheading": "",
+        "view_all_text": "",
+        "view_all_link": "",
+        "circle_size_desktop": 165,
+        "circle_size_mobile": 115,
+        "item_border_radius": "50%",
+        "circle_border_width": 0,
+        "circle_border_color": "#e5e5e5",
+        "circle_border_offset": 0,
+        "enable_hover_zoom": true,
+        "hover_zoom_scale": 108,
+        "title_font_size": 14,
+        "title_font_weight": "600",
+        "title_color": "#111111",
+        "title_hover_color": "#000000",
+        "title_margin_top": 12,
+        "show_product_count": false,
+        "gap_desktop": 24,
+        "gap_mobile": 16,
+        "mobile_layout": "scroll",
+        "show_arrows_desktop": true,
+        "show_arrows_mobile": false,
+        "arrow_placement": "slider",
+        "arrow_color": "#111111",
+        "arrow_bg_color": "#ffffff",
+        "padding_top": 45,
+        "padding_bottom": 45,
+        "mob_padding_top": 25,
+        "mob_padding_bottom": 25
+      }
+    },
+    "sh_arch_product_cards_xDB4HM": {
+      "type": "sh-arch-product-cards",
+      "blocks": {
+        "arch_card_rD3aXB": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "coral-blush-tissue-chanderi-pakistani-suit-set",
+            "custom_title": "Printemps - Été",
+            "custom_desc": "Crisp tailoring for everyday versatility",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_Rm7HhP": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "ivory-sage-chanderi-suit-set",
+            "custom_title": "Automne - Hiver",
+            "custom_desc": "The look of a classic oxford with added stretch for comfort",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_bT8Nzj": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "olive-moss-chanderi-suit-set",
+            "custom_title": "Édition Limitée",
+            "custom_desc": "Signature outerwear crafted from premium leather",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_tCApNU": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "pearl-royale-silk-chanderi-suit-set-of-3",
+            "custom_title": "",
+            "custom_desc": "",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_QHQKdW": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "resham-gota-chanderi-suit-set",
+            "custom_title": "",
+            "custom_desc": "",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "arch_card_rD3aXB",
+        "arch_card_Rm7HhP",
+        "arch_card_bT8Nzj",
+        "arch_card_tCApNU",
+        "arch_card_QHQKdW"
+      ],
+      "name": "SH: Arch cards & slider",
+      "settings": {
+        "layout_mode": "slider",
+        "grid_columns": "3",
+        "mob_grid_columns": "2",
+        "collection": "best-sellers",
+        "products_to_show": 6,
+        "show_secondary_image": true,
+        "show_badges": true,
+        "show_vendor": false,
+        "show_arrows": true,
+        "arrow_position": "floating",
+        "show_progress_bar": true,
+        "card_shape": "arch",
+        "card_width_desktop": 320,
+        "card_height_desktop": 460,
+        "card_width_mobile": 240,
+        "card_height_mobile": 340,
+        "card_gap_desktop": 22,
+        "card_gap_mobile": 16,
+        "heading": "Best Choice",
+        "heading_font_style": "theme",
+        "heading_size": 48,
+        "mob_heading_size": 30,
+        "heading_weight": "400",
+        "heading_color": "#1e1e1e",
+        "heading_align": "center",
+        "subheading": "",
+        "show_sparkles": true,
+        "sparkle_color": "#2b343d",
+        "card_title_size": 14,
+        "card_title_font": "theme",
+        "card_text_color": "#000000",
+        "show_price": true,
+        "see_all_text": "See All Collection",
+        "see_all_link": "shopify://collections/best-sellers",
+        "bg_color": "#ede9e2",
+        "full_width": false,
+        "section_max_width": 1400,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "mob_padding_top": 35,
+        "mob_padding_bottom": 35
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "disabled": true,
+      "settings": {
+        "collection": "himdim",
+        "products_to_show": 4,
+        "title": "Featured products",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 44,
+        "padding_bottom": 36
+      }
+    },
+    "sh_featured_banner_image_Ra4WyJ": {
+      "type": "sh-featured-banner-image",
+      "name": "SH: Featured banner image",
+      "settings": {
+        "image": "shopify://shop_images/WhatsAppImage2026-08-30at22.18.36_411ad59d-26b4-4336-a0f6-247a75885169.jpg",
+        "image_height": "medium",
+        "image_border_radius": 0,
+        "heading": "<p>NEW SEASON EDIT</p>",
+        "text": "<p>Get the perfect look for your fall classic wardrobe.</p>",
+        "button_label_1": "SHOP ALL",
+        "button_link_1": "/",
+        "btn_outline": false,
+        "outline_btn_text_color": "#121212",
+        "button_label_2": "",
+        "button_link_2": "/",
+        "btn_outline2": true,
+        "outline_btn_text_color2": "#ffffff",
+        "border_radius1": 0,
+        "desktop_content_position": "bottom-center",
+        "desktop_content_alignment": "center",
+        "mobile_content_position": "middle",
+        "mobile_content_alignment": "center",
+        "heading_font_size": 50,
+        "heading_font_weight": "500",
+        "content_font_size": 16,
+        "opacity": 0,
+        "overlay_color": "#121212",
+        "heading_color": "#ffffff",
+        "heading_highlight_color": "#ffffff",
+        "content_color": "#ffffff",
+        "btn_bg_color": "#121212",
+        "btn_text_color": "#ffffff",
+        "btn_border_color": "#121212",
+        "btn_hover_bg_color": "#ffffff",
+        "btn_hover_text_color": "#121212",
+        "btn_hover_border_color": "#121212",
+        "btn_shadow_color": "#121212",
+        "btn_bg_color2": "#121212",
+        "btn_text_color2": "#ffffff",
+        "btn_border_color2": "#121212",
+        "btn_hover_bg_color2": "#ffffff",
+        "btn_hover_text_color2": "#121212",
+        "btn_hover_border_color2": "#121212",
+        "btn_shadow_color2": "#121212",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mob_padding_top": 0,
+        "mob_padding_bottom": 0,
+        "full_width": true,
+        "section_max_width": "1440"
+      }
+    },
+    "sh_upcoming_products_showcase_UxqHtU": {
+      "type": "sh-upcoming-products-showcase",
+      "blocks": {
+        "showcase_item_Nzhqfc": {
+          "type": "showcase_item",
+          "settings": {
+            "product": "pink-petal-gathered-cotton-top-for-women-stylish-floral-everyday-top",
+            "image": "shopify://shop_images/WhatsAppImage2026-09-07at16.13.27_764e8396-8e08-464f-8db9-9931e13a3d5b.png",
+            "title": "Dresses",
+            "pill_bg_color": "#d7e6c4",
+            "link": "shopify://collections/dresses",
+            "button_label": ""
+          }
+        },
+        "showcase_item_NwFXyr": {
+          "type": "showcase_item",
+          "settings": {
+            "product": "vibrant-yellow-floral-cotton-kurta-set-with-palazzo",
+            "image": "shopify://shop_images/vibrant-yellow-floral-cotton-kurta-set-with-palazzo-1422497.png",
+            "title": "Kurta",
+            "pill_bg_color": "#f1dcc8",
+            "link": "shopify://collections/kurti",
+            "button_label": ""
+          }
+        },
+        "showcase_item_Cgr3mh": {
+          "type": "showcase_item",
+          "settings": {
+            "product": "ornate-paisley-handblock-cotton-suit-set",
+            "image": "shopify://shop_images/ornate-paisley-handblock-cotton-suit-set-1582808.png",
+            "title": "Suits",
+            "pill_bg_color": "#e1e8ee",
+            "link": "shopify://collections/suits",
+            "button_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "showcase_item_Nzhqfc",
+        "showcase_item_NwFXyr",
+        "showcase_item_Cgr3mh"
+      ],
+      "name": "SH: Upcoming showcase",
+      "settings": {
+        "heading_main": "Upcoming Products",
+        "heading_suffix": "— The Next Collection",
+        "heading_size": 34,
+        "mob_heading_size": 24,
+        "heading_color": "#111111",
+        "heading_alignment": "left",
+        "capsule_width": 75,
+        "capsule_height_desktop": 400,
+        "capsule_height_mobile": 320,
+        "capsule_border_radius": 300,
+        "default_capsule_bg": "#d7e6c4",
+        "image_fit": "contain",
+        "image_popout_desktop": 80,
+        "image_popout_mobile": 45,
+        "image_max_width": 85,
+        "show_side_list": true,
+        "side_list_font_size": 28,
+        "side_list_font_style": "theme",
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "autoplay_speed": 5,
+        "bg_color": "#ede9e2",
+        "section_max_width": 1400,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "mob_padding_top": 35,
+        "mob_padding_bottom": 35
+      }
+    },
+    "sh_scrolling_marquee_VHy8jA": {
+      "type": "sh-scrolling-marquee",
+      "blocks": {
+        "text_item_d7iUL8": {
+          "type": "text_item",
+          "settings": {
+            "text": "DESIGNED TO MOVE",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_P9BK39": {
+          "type": "text_item",
+          "settings": {
+            "text": "MADE TO LAST",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_WrhxUR": {
+          "type": "text_item",
+          "settings": {
+            "text": "PREMIUM CRAFTSMANSHIP",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_nk8cPA": {
+          "type": "text_item",
+          "settings": {
+            "text": "NEW ARRIVALS",
+            "link": "",
+            "highlight_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_item_d7iUL8",
+        "text_item_P9BK39",
+        "text_item_WrhxUR",
+        "text_item_nk8cPA"
+      ],
+      "name": "SH: Scrolling marquee",
+      "settings": {
+        "direction": "left",
+        "speed": 24,
+        "mob_speed": 16,
+        "pause_on_hover": true,
+        "font_size_desktop": 28,
+        "font_size_mobile": 20,
+        "font_weight": "800",
+        "font_style": "sans-serif",
+        "letter_case": "uppercase",
+        "letter_spacing": 1,
+        "outline_text": false,
+        "separator_type": "asterisk",
+        "separator_size": 22,
+        "gap_between_items": 45,
+        "mob_gap": 24,
+        "text_color": "#000000",
+        "text_hover_color": "#000000",
+        "separator_color": "#000000",
+        "bg_color": "#ffffff",
+        "border_top": false,
+        "border_bottom": false,
+        "border_color": "#e5e5e5",
+        "padding_top": 22,
+        "padding_bottom": 22,
+        "mob_padding_top": 14,
+        "mob_padding_bottom": 14
+      }
+    },
+    "sh_seasonal_drop_grid_e9bXUB": {
+      "type": "sh-seasonal-drop-grid",
+      "blocks": {
+        "product_item_jL6Y9D": {
+          "type": "product_item",
+          "settings": {
+            "product": "green-botanical-pink-cotton-shirt",
+            "custom_title": "Sterling Suede shirt",
+            "custom_price": "$1345",
+            "custom_compare_price": "$1600",
+            "custom_link": ""
+          }
+        },
+        "product_item_mTPDtk": {
+          "type": "product_item",
+          "settings": {
+            "product": "yellow-abstract-cotton-shirt-for-women-himdim",
+            "custom_title": "Hudson Leather Coat",
+            "custom_price": "$1445",
+            "custom_compare_price": "$1700",
+            "custom_link": ""
+          }
+        },
+        "product_item_WGxLFi": {
+          "type": "product_item",
+          "settings": {
+            "product": "magenta-safari-print-cotton-shirt-for-women-himdim",
+            "custom_title": "Axel Leather Bomber",
+            "custom_price": "$1545",
+            "custom_compare_price": "$1900",
+            "custom_link": ""
+          }
+        },
+        "product_item_4pNx3f": {
+          "type": "product_item",
+          "settings": {
+            "product": "pink-leopard-pink-cotton-shirt-himdim",
+            "custom_title": "Lennox Utility Jacket",
+            "custom_price": "$2045",
+            "custom_compare_price": "$2900",
+            "custom_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_item_jL6Y9D",
+        "product_item_mTPDtk",
+        "product_item_WGxLFi",
+        "product_item_4pNx3f"
+      ],
+      "name": "SH: Seasonal drop & grid",
+      "settings": {
+        "banner_position": "left",
+        "banner_width": 48,
+        "banner_image": "shopify://shop_images/ChatGPTImageAug30_2026_03_27_52PM.png",
+        "mob_banner_image": "shopify://shop_images/ChatGPTImageAug30_2026_03_27_52PM.png",
+        "banner_heading": "Seasonal Drop",
+        "heading_font_style": "theme",
+        "heading_font_size": 52,
+        "mob_heading_font_size": 36,
+        "heading_color": "#ffffff",
+        "button_label": "Shop Now",
+        "button_link": "",
+        "button_bg_color": "#ffffff",
+        "button_text_color": "#111111",
+        "banner_content_position": "center-left",
+        "banner_overlay_opacity": 10,
+        "banner_overlay_color": "#000000",
+        "product_collection": "kurta",
+        "product_image_ratio": "portrait",
+        "product_image_position": "top",
+        "product_image_fit": "cover",
+        "show_secondary_image": true,
+        "product_title_size": 14,
+        "product_title_color": "#111111",
+        "price_color": "#111111",
+        "compare_price_color": "#888888",
+        "grid_gap": 20,
+        "mob_grid_gap": 12,
+        "full_width": false,
+        "section_max_width": 1400,
+        "bg_color": "#ede9e2",
+        "padding_top": 50,
+        "padding_bottom": 50,
+        "mob_padding_top": 30,
+        "mob_padding_bottom": 30
+      }
+    },
+    "sh_scrolling_marquee_3fK3FG": {
+      "type": "sh-scrolling-marquee",
+      "blocks": {
+        "text_item_WCm7ML": {
+          "type": "text_item",
+          "settings": {
+            "text": "DESIGNED TO MOVE",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_dH6Nkw": {
+          "type": "text_item",
+          "settings": {
+            "text": "MADE TO LAST",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_J8b4R7": {
+          "type": "text_item",
+          "settings": {
+            "text": "PREMIUM CRAFTSMANSHIP",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_LxejB7": {
+          "type": "text_item",
+          "settings": {
+            "text": "NEW ARRIVALS",
+            "link": "",
+            "highlight_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_item_WCm7ML",
+        "text_item_dH6Nkw",
+        "text_item_J8b4R7",
+        "text_item_LxejB7"
+      ],
+      "name": "SH: Scrolling marquee",
+      "settings": {
+        "direction": "left",
+        "speed": 24,
+        "mob_speed": 16,
+        "pause_on_hover": true,
+        "font_size_desktop": 28,
+        "font_size_mobile": 20,
+        "font_weight": "800",
+        "font_style": "sans-serif",
+        "letter_case": "uppercase",
+        "letter_spacing": 1,
+        "outline_text": false,
+        "separator_type": "asterisk",
+        "separator_size": 22,
+        "gap_between_items": 45,
+        "mob_gap": 24,
+        "text_color": "#000000",
+        "text_hover_color": "#000000",
+        "separator_color": "#000000",
+        "bg_color": "#ffffff",
+        "border_top": false,
+        "border_bottom": false,
+        "border_color": "#e5e5e5",
+        "padding_top": 22,
+        "padding_bottom": 22,
+        "mob_padding_top": 14,
+        "mob_padding_bottom": 14
+      }
+    },
+    "sh_arch_product_cards_EXetzQ": {
+      "type": "sh-arch-product-cards",
+      "blocks": {
+        "arch_card_fFVFKY": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "coral-blush-tissue-chanderi-pakistani-suit-set",
+            "custom_title": "Printemps - Été",
+            "custom_desc": "Crisp tailoring for everyday versatility",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_NTrEcH": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "ivory-sage-chanderi-suit-set",
+            "custom_title": "Automne - Hiver",
+            "custom_desc": "The look of a classic oxford with added stretch for comfort",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_TNeKib": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "olive-moss-chanderi-suit-set",
+            "custom_title": "Édition Limitée",
+            "custom_desc": "Signature outerwear crafted from premium leather",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_3YpVxc": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "pearl-royale-silk-chanderi-suit-set-of-3",
+            "custom_title": "",
+            "custom_desc": "",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_Eb3hM8": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "resham-gota-chanderi-suit-set",
+            "custom_title": "",
+            "custom_desc": "",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "arch_card_fFVFKY",
+        "arch_card_NTrEcH",
+        "arch_card_TNeKib",
+        "arch_card_3YpVxc",
+        "arch_card_Eb3hM8"
+      ],
+      "name": "SH: Arch cards & slider",
+      "settings": {
+        "layout_mode": "slider",
+        "grid_columns": "3",
+        "mob_grid_columns": "2",
+        "collection": "kurti",
+        "products_to_show": 6,
+        "show_secondary_image": true,
+        "show_badges": true,
+        "show_vendor": false,
+        "show_arrows": true,
+        "arrow_position": "floating",
+        "show_progress_bar": true,
+        "card_shape": "arch",
+        "card_width_desktop": 320,
+        "card_height_desktop": 460,
+        "card_width_mobile": 240,
+        "card_height_mobile": 340,
+        "card_gap_desktop": 22,
+        "card_gap_mobile": 16,
+        "heading": "New Choice",
+        "heading_font_style": "theme",
+        "heading_size": 48,
+        "mob_heading_size": 30,
+        "heading_weight": "400",
+        "heading_color": "#1e1e1e",
+        "heading_align": "center",
+        "subheading": "",
+        "show_sparkles": true,
+        "sparkle_color": "#2b343d",
+        "card_title_size": 14,
+        "card_title_font": "theme",
+        "card_text_color": "#000000",
+        "show_price": true,
+        "see_all_text": "See All Collection",
+        "see_all_link": "shopify://collections/best-sellers",
+        "bg_color": "#ede9e2",
+        "full_width": false,
+        "section_max_width": 1400,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "mob_padding_top": 35,
+        "mob_padding_bottom": 35
+      }
+    },
+    "sh_customer_testimonials_bbrYGg": {
+      "type": "sh-customer-testimonials",
+      "blocks": {
+        "testimonial_ExfdVx": {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Farhan Rahman",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "Ordered a suit set for an office celebration, and honestly, I wasn't expecting this luxury at the price. The fabric was incredible.",
+            "product_name": "",
+            "product_link": "",
+            "review_date": ""
+          }
+        },
+        "testimonial_rkeijP": {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Sarah Ahmed",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "I've always struggled to find outfits that feel both stylish and comfortable — until I discovered this brand.",
+            "product_name": "",
+            "product_link": "",
+            "review_date": ""
+          }
+        },
+        "testimonial_n6Adp8": {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Tanvir Khan",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "My shopping experience felt so personal and warm. The website was easy to browse, the checkout seamless, and delivery arrived earlier than expected.",
+            "product_name": "",
+            "product_link": "",
+            "review_date": ""
+          }
+        },
+        "testimonial_yT4JMb": {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Meherun Nesa",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "I never thought an outfit could change how I felt about myself — until I wore this. The moment I put it on, I felt confident and effortlessly beautiful.",
+            "product_name": "",
+            "product_link": "",
+            "review_date": ""
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_ExfdVx",
+        "testimonial_rkeijP",
+        "testimonial_n6Adp8",
+        "testimonial_yT4JMb"
+      ],
+      "name": "SH: Customers Love",
+      "settings": {
+        "layout_mode": "slider",
+        "grid_columns": "3",
+        "mob_grid_columns": "1",
+        "heading": "Customers Love",
+        "subheading": "THEIR CONFIDENCE IS OUR GREATEST INSPIRATION.",
+        "heading_font_style": "theme",
+        "heading_size": 40,
+        "mob_heading_size": 28,
+        "heading_weight": "700",
+        "heading_color": "#111111",
+        "subheading_color": "#666666",
+        "heading_align": "left",
+        "show_arrows": true,
+        "arrow_position": "top",
+        "show_progress_bar": true,
+        "card_bg_color": "#ffffff",
+        "card_border_color": "#f0f0f0",
+        "card_text_color": "#1e293b",
+        "card_subtext_color": "#64748b",
+        "show_card_shadow": true,
+        "card_border_radius": 14,
+        "card_width_desktop": 360,
+        "card_width_mobile": 290,
+        "card_gap_desktop": 24,
+        "card_gap_mobile": 16,
+        "show_stars": false,
+        "star_color": "#111111",
+        "author_font_size": 16,
+        "text_font_size": 15,
+        "bg_color": "#fafafa",
+        "full_width": false,
+        "container_max_width": 1400,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "mob_padding_top": 35,
+        "mob_padding_bottom": 35
+      }
+    },
+    "sh_media_gallery_5_bykMmA": {
+      "type": "sh-media-gallery-5",
+      "blocks": {
+        "gallery_item_jTHWgU": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_9_2026_01_09_29_AM.png",
+            "link": "",
+            "alt_text": ""
+          }
+        },
+        "gallery_item_CwA6q3": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/WhatsAppImage2026-09-08at00.16.35.jpg",
+            "link": "",
+            "alt_text": ""
+          }
+        },
+        "gallery_item_gh7fih": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPTImageAug30_2026_03_27_52PM.png",
+            "link": "",
+            "alt_text": ""
+          }
+        },
+        "gallery_item_bCXBea": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPTImageAug30_2026_03_30_14PM.png",
+            "link": "",
+            "alt_text": ""
+          }
+        },
+        "gallery_item_kVKN6a": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPTImageAug30_2026_03_27_55PM.png",
+            "link": "",
+            "alt_text": ""
+          }
+        },
+        "gallery_item_YTPjw4": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPTImageAug30_2026_10_34_59PM_e0bfa0d0-1827-440e-bd9d-d76bd2bacd41.png",
+            "link": "",
+            "alt_text": ""
+          }
+        },
+        "gallery_item_dfd3dz": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_30_2026_10_25_36_PM.png",
+            "link": "",
+            "alt_text": ""
+          }
+        },
+        "gallery_item_yXQYXB": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/teal-blossom-print-kurta-set-2487914.webp",
+            "link": "",
+            "alt_text": ""
+          }
+        },
+        "gallery_item_FCg9QU": {
+          "type": "gallery_item",
+          "settings": {
+            "image": "shopify://shop_images/crimson-blossom-a-line-oversized-floral-cotton-kurta-set-5066055.webp",
+            "link": "",
+            "alt_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "gallery_item_jTHWgU",
+        "gallery_item_CwA6q3",
+        "gallery_item_gh7fih",
+        "gallery_item_bCXBea",
+        "gallery_item_kVKN6a",
+        "gallery_item_YTPjw4",
+        "gallery_item_dfd3dz",
+        "gallery_item_yXQYXB",
+        "gallery_item_FCg9QU"
+      ],
+      "name": "SH: Media Gallery 5 (Modern Tech)",
+      "settings": {
+        "cover_type": "image",
+        "video_url": "",
+        "video_poster": "shopify://shop_images/ChatGPTImageAug30_2026_10_20_51PM_636f5db5-96d1-4106-ae4f-05db6d17f76e.png",
+        "show_video_controls": true,
+        "cover_image": "shopify://shop_images/ChatGPTImageAug30_2026_10_20_51PM_636f5db5-96d1-4106-ae4f-05db6d17f76e.png",
+        "overlay_opacity": 10,
+        "overlay_color": "#000000",
+        "heading": "Modern Tech",
+        "heading_font_style": "theme",
+        "heading_size_desktop": 80,
+        "heading_size_mobile": 32,
+        "heading_weight": "600",
+        "heading_color": "#121212",
+        "description": "<p>Experience the perfect blend of modern design, powerful technology, and dependable performance with smart devices built to simplify your daily routine.</p>",
+        "desc_color": "#4a4a4a",
+        "desc_font_size": 18,
+        "content_max_width": 750,
+        "button_label": "Explore More",
+        "button_link": "/",
+        "button_style": "outline",
+        "btn_bg_color": "#50320d",
+        "btn_text_color": "#ffffff",
+        "btn_border_color": "#121212",
+        "btn_hover_bg": "#ffffff",
+        "btn_hover_text": "#50320d",
+        "btn_border_radius": 6,
+        "card_size_desktop": 250,
+        "card_size_mobile": 80,
+        "column_gap_desktop": 40,
+        "column_gap_mobile": 10,
+        "card_border_radius": 8,
+        "bg_color": "#f4f4f6",
+        "scroll_duration": 4
+      }
+    },
+    "sh_editorial_journal_main": {
+      "type": "sh-editorial-journal",
+      "blocks": {
+        "story_1": {
+          "type": "story",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/teal-blossom-print-kurta-set-2487914.webp",
+            "author": "REZA KHAN",
+            "date": "JANUARY 1, 2026",
+            "title": "Build a timeless and enduring capsule wardrobe",
+            "excerpt": "",
+            "link": ""
+          }
+        },
+        "story_2": {
+          "type": "story",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/crimson-blossom-a-line-oversized-floral-cotton-kurta-set-5066055.webp",
+            "author": "REZA KHAN",
+            "date": "JANUARY 1, 2026",
+            "title": "Adopt the new rules of minimal style today.",
+            "excerpt": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "story_1",
+        "story_2"
+      ],
+      "settings": {
+        "heading": "From The Journal",
+        "subheading": "Stories & Style",
+        "heading_size": 30,
+        "heading_size_mobile": 22,
+        "heading_alignment": "left",
+        "header_margin_bottom": 36,
+        "show_view_all": true,
+        "view_all_text": "View all stories",
+        "view_all_link": "shopify://blogs/news",
+        "blog": "news",
+        "post_limit": 4,
+        "columns_desktop": 4,
+        "card_gap": 24,
+        "image_aspect_ratio": "1-1",
+        "image_radius": 0,
+        "enable_image_zoom": true,
+        "mobile_layout": "swipe",
+        "show_author": true,
+        "show_meta_line": true,
+        "show_date": true,
+        "show_excerpt": false,
+        "title_size": 13,
+        "title_size_mobile": 12,
+        "title_weight": "500",
+        "color_scheme": "scheme-1",
+        "bg_color": "#ffffff",
+        "heading_color": "#121212",
+        "subheading_color": "#121212",
+        "meta_color": "#736c69",
+        "line_color": "#00000026",
+        "title_color": "#121212",
+        "title_hover_color": "#f1dcc8",
+        "full_width": false,
+        "max_width": 1600,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": [
+    "sh_hero_slideshow_mqQh7m",
+    "sh_popular_categories_6xbHxW",
+    "sh_arch_product_cards_xDB4HM",
+    "featured_collection",
+    "sh_featured_banner_image_Ra4WyJ",
+    "sh_upcoming_products_showcase_UxqHtU",
+    "sh_scrolling_marquee_VHy8jA",
+    "sh_seasonal_drop_grid_e9bXUB",
+    "sh_scrolling_marquee_3fK3FG",
+    "sh_arch_product_cards_EXetzQ",
+    "sh_customer_testimonials_bbrYGg",
+    "sh_media_gallery_5_bykMmA",
+    "sh_editorial_journal_main"
+  ]
+}

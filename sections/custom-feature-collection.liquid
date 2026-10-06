@@ -1,0 +1,82 @@
+{% schema %}
+{
+  "name": "Feature Collection Slider",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "number",
+      "id": "items_to_show",
+      "label": "Number of items to show",
+      "default": 5
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature Collection Slider",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="feature-collection-slider">
+  {% assign collection_handle = section.settings.collection %}
+  {% assign items_to_show = section.settings.items_to_show %}
+  {% assign collection = collections[collection_handle] %}
+
+  <!-- Debug Information -->
+  <p>Collection handle: {{ collection_handle }}</p>
+  {% if collection %}
+    <p>Collection title: {{ collection.title }}</p>
+    <p>Number of products in collection: {{ collection.products.size }}</p>
+    {% if collection.products.size > 0 %}
+      <div class="slider-container">
+        {% assign products_to_show = collection.products | slice: 0, items_to_show %}
+        {% for product in products_to_show %}
+          <div class="slider-item">
+            <a href="{{ product.url }}">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | img_url: '600x600' }}" alt="{{ product.title }}">
+              {% else %}
+                <img src="{{ 'placeholder-image-url' | img_url: '600x600' }}" alt="{{ product.title }}">
+              {% endif %}
+              <h3>{{ product.title }}</h3>
+              <p>{{ product.price | money }}</p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No products found in this collection.</p>
+    {% endif %}
+  {% else %}
+    <p>Collection not found.</p>
+  {% endif %}
+</div>
+
+<style>
+.feature-collection-slider .slider-container {
+  display: flex;
+  overflow-x: scroll;
+}
+.feature-collection-slider .slider-item {
+  flex: 0 0 auto;
+  width: 200px;
+  margin-right: 10px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Simple slider functionality (for example, with Flickity or another library)
+  var flkty = new Flickity('.slider-container', {
+    cellAlign: 'left',
+    contain: true,
+    pageDots: false
+  });
+});
+</script>
