@@ -12,15 +12,6 @@
     "main": {
       "type": "sh-editorial-product",
       "blocks": {
-        "description": {
-          "type": "description",
-          "disabled": true,
-          "settings": {
-            "title": "DESCRIPTION",
-            "content": "Black Wide Leg Pants In Technical Nylon\nElasticated Waist Band\nSide Slit Pockets With Zip\nDrawstring On Hem To Adjust The Leg\nZip-Off System Below The Knee",
-            "open_by_default": true
-          }
-        },
         "custom_r9CUpY": {
           "type": "custom",
           "settings": {
@@ -44,11 +35,11 @@
       ],
       "settings": {
         "product": "",
-        "show_breadcrumbs": true,
-        "breadcrumb_position": "top",
         "image_aspect_ratio": "2 / 3",
         "show_thumbnails": true,
         "enable_image_zoom": true,
+        "show_breadcrumbs": true,
+        "breadcrumb_position": "top",
         "card_bg_color": "#f6f6f4",
         "buy_now_label": "Buy Now",
         "buy_btn_bg": "#73816e",
@@ -61,6 +52,7 @@
         "packaging_text_right": "Complimentary and plastic-free",
         "show_contact_link": true,
         "contact_text": "Contact Us",
+        "contact_url": "",
         "show_fbt": false,
         "fbt_heading": "Frequently bought together",
         "fbt_products": [],
@@ -69,8 +61,8 @@
         "fbt_card_border": "#e6e6e6",
         "fbt_card_text": "#000000",
         "fbt_btn_bg": "#000000",
-        "fbt_btn_text_color": "#FFFFFF",
-        "bg_color": "#FFFFFF",
+        "fbt_btn_text_color": "#ffffff",
+        "bg_color": "#ffffff",
         "text_color": "#121212",
         "max_width": 1440,
         "padding_top": 30,
@@ -85,7 +77,7 @@
         "products_to_show": 4,
         "columns_desktop": 4,
         "columns_mobile": "2",
-        "color_scheme": "scheme-66e54e3c-e68c-4a01-b3d9-b8954f4a9575",
+        "color_scheme": "scheme-1",
         "image_ratio": "portrait",
         "image_shape": "default",
         "show_secondary_image": true,
