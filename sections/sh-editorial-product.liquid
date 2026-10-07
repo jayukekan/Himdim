@@ -1,11 +1,12 @@
 {%- comment -%}
-  Editorial Luxury Product Showcase (3-Column Asymmetric Fashion Layout)
-  Inspired by high-end luxury fashion e-commerce (Rick Owens, Balenciaga, Acne Studios).
+  Editorial Luxury Product Showcase (2-Up Responsive Gallery & Minimalist Card)
+  Inspired by high-end luxury fashion e-commerce (Burberry, The Row, Celine).
   Features:
-  - Left column: Secondary media carousel with arrows + Minimalist expandable accordions
-  - Center column: Tall portrait hero model image
-  - Right column: Bold condensed typography, dynamic variant swatches (Color & Size), dual CTA buttons
-  - 100% responsive for Desktop, Tablet, and Mobile
+  - Left: 2-up responsive image slider on desktop with circular navigation arrows (< >), 1-up swipeable on mobile
+  - Right: Minimalist luxury card with serif title, inline price, clean option dropdowns/swatches,
+           pill quantity + olive green pill Buy Now button, dotted dividers, shipping/packaging props,
+           collapsible accordions with (+) circular icons, and contact link.
+  - Fully responsive, accessible, and Online Store 2.0 theme editor compatible.
 {%- endcomment -%}
 
 {%- liquid
@@ -17,23 +18,11 @@
   assign product = editorial_product
 
   assign current_variant = product.selected_or_first_available_variant
-
-  assign color_option_index = -1
-  assign size_option_index = -1
-
-  for option in product.options_with_values
-    assign opt_name_down = option.name | downcase
-    if opt_name_down contains 'color' or opt_name_down contains 'colour' or opt_name_down contains 'shade'
-      assign color_option_index = forloop.index0
-    elsif opt_name_down contains 'size'
-      assign size_option_index = forloop.index0
-    endif
-  endfor
 -%}
 
 <div
   id="sh-editorial-{{ section.id }}"
-  class="sh-editorial-product-section sh-editorial-product-section--compact"
+  class="sh-editorial-product-section"
   data-section-id="{{ section.id }}"
   data-product-id="{{ product.id }}"
 >
@@ -42,36 +31,56 @@
       {% render 'breadcrumb', extra_classes: 'sh-breadcrumbs--top', product: product, collection: collection %}
     {%- endif -%}
 
-    {%- comment -%} Capture Thumbnails Carousel Markup {%- endcomment -%}
-    {%- capture thumbnails_html -%}
-      {%- if product.media.size > 1 or product == blank -%}
-        <div class="sh-editorial-carousel-wrapper">
-          <div class="sh-editorial-thumbs-track" id="sh-thumbs-track-{{ section.id }}">
-            {%- if product != blank -%}
+    <div class="sh-editorial-main-grid">
+
+      <!-- ================= LEFT: 2-UP GALLERY ================= -->
+      <div class="sh-editorial-gallery-col">
+        <div class="sh-editorial-gallery-wrapper" id="sh-gallery-wrap-{{ section.id }}">
+          
+          <!-- Prev Button (<) -->
+          <button
+            type="button"
+            class="sh-gallery-arrow sh-gallery-arrow--prev"
+            id="sh-gal-prev-{{ section.id }}"
+            aria-label="Previous image"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+
+          <!-- Slider Track: 2 images visible side-by-side on desktop -->
+          <div class="sh-editorial-gallery-track" id="sh-gal-track-{{ section.id }}">
+            {%- if product != blank and product.media.size > 0 -%}
               {%- for media in product.media -%}
-                {%- if media.media_type == 'image' -%}
-                  <div
-                    class="sh-editorial-thumb-slide{% if forloop.first %} is-active{% endif %}"
-                    data-media-id="{{ media.id }}"
-                    data-image-src="{{ media | image_url: width: 1200 }}"
-                    data-index="{{ forloop.index0 }}"
-                  >
-                    <div class="sh-editorial-thumb-inner">
+                <div
+                  class="sh-editorial-gallery-slide{% if media.id == current_variant.featured_media.id %} is-active{% endif %}"
+                  data-media-id="{{ media.id }}"
+                  data-index="{{ forloop.index0 }}"
+                >
+                  <div class="sh-editorial-slide-inner">
+                    {%- if media.media_type == 'image' -%}
                       <img
-                        src="{{ media | image_url: width: 350 }}"
+                        src="{{ media | image_url: width: 1000 }}"
                         alt="{{ media.alt | default: product.title | escape }}"
-                        loading="lazy"
-                        width="240"
-                        height="320"
+                        loading="{% if forloop.index <= 2 %}eager{% else %}lazy{% endif %}"
+                        width="800"
+                        height="1066"
+                        class="sh-editorial-slide-img"
                       >
-                    </div>
+                    {%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
+                      {{ media | media_tag: image_size: '1000x', autoplay: true, loop: true, controls: false, preload: 'none', class: 'sh-editorial-slide-video' }}
+                    {%- else -%}
+                      {{ media | media_tag: image_size: '1000x', class: 'sh-editorial-slide-img' }}
+                    {%- endif -%}
                   </div>
-                {%- endif -%}
+                </div>
               {%- endfor -%}
             {%- else -%}
+              <!-- Placeholders (2 images preview) -->
               {%- for i in (1..3) -%}
-                <div class="sh-editorial-thumb-slide{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}">
-                  <div class="sh-editorial-thumb-inner placeholder">
+                <div class="sh-editorial-gallery-slide" data-index="{{ forloop.index0 }}">
+                  <div class="sh-editorial-slide-inner placeholder">
                     {{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
                   </div>
                 </div>
@@ -79,652 +88,501 @@
             {%- endif -%}
           </div>
 
-          <!-- Arrows Underneath Carousel -->
-          <div class="sh-editorial-carousel-nav">
-            <button
-              type="button"
-              class="sh-editorial-nav-btn sh-nav-prev"
-              id="sh-prev-{{ section.id }}"
-              aria-label="Previous image"
-            >
-              <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="7" x2="1" y2="7"></line>
-                <polyline points="7 1 1 7 7 13"></polyline>
-              </svg>
-            </button>
-            <button
-              type="button"
-              class="sh-editorial-nav-btn sh-nav-next"
-              id="sh-next-{{ section.id }}"
-              aria-label="Next image"
-            >
-              <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="1" y1="7" x2="19" y2="7"></line>
-                <polyline points="13 1 19 7 13 13"></polyline>
-              </svg>
-            </button>
-          </div>
-        </div>
-      {%- endif -%}
-    {%- endcapture -%}
+          <!-- Next Button (>) -->
+          <button
+            type="button"
+            class="sh-gallery-arrow sh-gallery-arrow--next"
+            id="sh-gal-next-{{ section.id }}"
+            aria-label="Next image"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
 
-    <div class="sh-editorial-grid">
-
-      <!-- ================= LEFT COLUMN ================= -->
-      <div class="sh-editorial-col sh-editorial-col--left">
-        <!-- Desktop Thumbnail Gallery Carousel (Left Column) -->
-        <div class="sh-desktop-only-thumbnails">
-          {{ thumbnails_html }}
-        </div>
-
-        <!-- Expandable Minimalist Accordions -->
-        <div class="sh-editorial-accordions">
-          {%- if section.blocks.size > 0 -%}
-            {%- for block in section.blocks -%}
-              <details class="sh-editorial-accordion-item"{% if block.settings.open_by_default %} open{% endif %} {{ block.shopify_attributes }}>
-                <summary class="sh-editorial-accordion-summary">
-                  <span class="sh-editorial-accordion-title">{{ block.settings.title | escape }}</span>
-                  <span class="sh-editorial-accordion-chevron">
-                    <svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="1 2 7 8 13 2"></polyline>
-                    </svg>
-                  </span>
-                </summary>
-                <div class="sh-editorial-accordion-body rte">
-                  {%- if block.type == 'description' -%}
-                    {%- if product != blank and product.description != blank -%}
-                      {{ product.description }}
-                    {%- else -%}
-                      <p>{{ block.settings.content | default: 'Wide leg pants in technical fabric. Elasticated waist band with side slit pockets and drawstring on hem.' }}</p>
-                    {%- endif -%}
-                  {%- else -%}
-                    {{ block.settings.content }}
-                  {%- endif -%}
-                </div>
-              </details>
+          <!-- Mobile Dots Navigation -->
+          <div class="sh-gallery-dots" id="sh-gal-dots-{{ section.id }}">
+            {%- assign media_count = product.media.size | default: 3 -%}
+            {%- for i in (1..media_count) -%}
+              <span class="sh-gallery-dot{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}"></span>
             {%- endfor -%}
-          {%- else -%}
-            <details class="sh-editorial-accordion-item" open>
-              <summary class="sh-editorial-accordion-summary">
-                <span class="sh-editorial-accordion-title">DESCRIPTION</span>
-                <span class="sh-editorial-accordion-chevron">
-                  <svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="1 2 7 8 13 2"></polyline>
-                  </svg>
-                </span>
-              </summary>
-              <div class="sh-editorial-accordion-body rte">
-                {%- if product != blank and product.description != blank -%}
-                  {{ product.description }}
-                {%- else -%}
-                  <p>Black Wide Leg Pants In Technical Nylon<br>Elasticated Waist Band<br>Side Slit Pockets With Zip<br>Drawstring On Hem To Adjust The Leg<br>Zip-Off System Below The Knee</p>
-                {%- endif -%}
-              </div>
-            </details>
-            <details class="sh-editorial-accordion-item">
-              <summary class="sh-editorial-accordion-summary">
-                <span class="sh-editorial-accordion-title">DETAILS</span>
-                <span class="sh-editorial-accordion-chevron">
-                  <svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="1 2 7 8 13 2"></polyline>
-                  </svg>
-                </span>
-              </summary>
-              <div class="sh-editorial-accordion-body rte">
-                <p>100% Technical Nylon.<br>Dry clean or hand wash cold.<br>Made in Portugal.</p>
-              </div>
-            </details>
-          {%- endif -%}
+          </div>
+
         </div>
       </div>
 
-      <!-- ================= CENTER COLUMN ================= -->
-      <div class="sh-editorial-col sh-editorial-col--center">
-        <!-- Main Product Image -->
-        <div class="sh-editorial-hero-media" id="sh-hero-media-{{ section.id }}">
-          {%- assign hero_img = current_variant.featured_image | default: product.featured_image -%}
-          {%- if hero_img != blank -%}
-            <img
-              id="sh-hero-img-{{ section.id }}"
-              src="{{ hero_img | image_url: width: 1400 }}"
-              alt="{{ hero_img.alt | default: product.title | escape }}"
-              width="600"
-              height="850"
-              class="sh-editorial-main-img"
-              loading="eager"
-            >
-          {%- elsif product != blank and product.media.size > 0 -%}
-            <img
-              id="sh-hero-img-{{ section.id }}"
-              src="{{ product.media.first | image_url: width: 1400 }}"
-              alt="{{ product.title | escape }}"
-              width="600"
-              height="850"
-              class="sh-editorial-main-img"
-              loading="eager"
-            >
-          {%- else -%}
-            <div class="sh-editorial-hero-placeholder">
-              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-            </div>
+      <!-- ================= RIGHT: PRODUCT DETAILS CARD ================= -->
+      <div class="sh-editorial-info-col">
+        <div class="sh-editorial-card" id="sh-card-{{ section.id }}">
+
+          {%- if section.settings.show_breadcrumbs and section.settings.breadcrumb_position == 'right_col' -%}
+            {% render 'breadcrumb', extra_classes: 'sh-breadcrumbs--right-col', product: product, collection: collection %}
           {%- endif -%}
-        </div>
 
-        <!-- Thumbnail Gallery Carousel (Mobile only: Placed JUST BELOW Main Hero Image) -->
-        <div class="sh-mobile-only-thumbnails">
-          {{ thumbnails_html }}
-        </div>
-      </div>
+          <!-- Header Row: Title & Price -->
+          <div class="sh-editorial-card-header">
+            <h1 class="sh-editorial-title">
+              {%- if product != blank -%}
+                {{ product.title }}
+              {%- else -%}
+                Seasonal Layers
+              {%- endif -%}
+            </h1>
 
-      <!-- ================= RIGHT COLUMN ================= -->
-      <div class="sh-editorial-col sh-editorial-col--right">
-        {%- if section.settings.show_breadcrumbs and section.settings.breadcrumb_position == 'right_col' -%}
-          {% render 'breadcrumb', extra_classes: 'sh-breadcrumbs--right-col', product: product, collection: collection %}
-        {%- endif -%}
-
-        <!-- Title & Heading -->
-        <h2 class="sh-editorial-product-title">
-          {%- if product != blank -%}
-            {{ product.title }}
-          {%- else -%}
-            CAMILLE HENROT ARTWORK TROUSERS
-          {%- endif -%}
-        </h2>
-
-        <!-- Price -->
-        <div class="sh-editorial-price-container" id="sh-price-{{ section.id }}">
-          {%- if product != blank -%}
-            {% render 'price', product: product, use_variant: true, show_badges: false %}
-          {%- else -%}
-            <span class="price-item price-item--regular">1.150,00€</span>
-          {%- endif -%}
-        </div>
-
-        <!-- Variant Options Form -->
-        {%- assign product_form_id = 'sh-product-form-' | append: section.id -%}
-        {%- form 'product', product, id: product_form_id, class: 'sh-editorial-form' -%}
-          <input type="hidden" name="id" value="{{ current_variant.id | default: product.variants.first.id }}" id="sh-variant-id-{{ section.id }}">
-
-          {%- if product != blank and product.has_only_default_variant == false -%}
-            <div class="sh-editorial-options-wrapper">
-              {%- for option in product.options_with_values -%}
-                {%- assign opt_idx = forloop.index0 -%}
-                {%- assign opt_name_down = option.name | downcase -%}
-
-                {%- if opt_idx == color_option_index -%}
-                  <!-- Color Swatches -->
-                  <div class="sh-editorial-option-group" data-option-index="{{ opt_idx }}">
-                    <div class="sh-editorial-option-header">
-                      <span class="sh-editorial-option-name">{{ option.name | upcase }}</span>
-                      <span class="sh-editorial-option-divider">|</span>
-                      <span class="sh-editorial-option-selected" id="sh-selected-color-{{ section.id }}">{{ option.selected_value | upcase }}</span>
-                    </div>
-                    <div class="sh-editorial-swatch-list">
-                      {%- for value in option.values -%}
-                        {%- assign is_selected = false -%}
-                        {%- if option.selected_value == value -%}
-                          {%- assign is_selected = true -%}
-                        {%- endif -%}
-                        {%- assign color_css = value | downcase | replace: ' ', '' -%}
-                        <button
-                          type="button"
-                          class="sh-editorial-color-swatch{% if is_selected %} is-active{% endif %}"
-                          data-option-index="{{ opt_idx }}"
-                          data-option-value="{{ value | escape }}"
-                          title="{{ value | escape }}"
-                          aria-label="{{ value | escape }}"
-                        >
-                          <span
-                            class="sh-editorial-swatch-color"
-                            style="background-color: {{ color_css }};"
-                          ></span>
-                        </button>
-                      {%- endfor -%}
-                    </div>
-                  </div>
-
-                {%- elsif opt_idx == size_option_index -%}
-                  <!-- Size Selection Boxes -->
-                  <div class="sh-editorial-option-group" data-option-index="{{ opt_idx }}">
-                    <div class="sh-editorial-option-header">
-                      <span class="sh-editorial-option-name">{{ option.name | upcase }}</span>
-                      <span class="sh-editorial-option-divider">|</span>
-                      <span class="sh-editorial-option-selected" id="sh-selected-size-{{ section.id }}">{{ option.selected_value }}</span>
-                    </div>
-                    <div class="sh-editorial-size-list">
-                      {%- for value in option.values -%}
-                        {%- assign is_selected = false -%}
-                        {%- if option.selected_value == value -%}
-                          {%- assign is_selected = true -%}
-                        {%- endif -%}
-                        <button
-                          type="button"
-                          class="sh-editorial-size-box{% if is_selected %} is-active{% endif %}"
-                          data-option-index="{{ opt_idx }}"
-                          data-option-value="{{ value | escape }}"
-                        >
-                          {{ value }}
-                        </button>
-                      {%- endfor -%}
-                    </div>
-                  </div>
-
-                {%- else -%}
-                  <!-- Other Options (Pills) -->
-                  <div class="sh-editorial-option-group" data-option-index="{{ opt_idx }}">
-                    <div class="sh-editorial-option-header">
-                      <span class="sh-editorial-option-name">{{ option.name | upcase }}</span>
-                      <span class="sh-editorial-option-divider">|</span>
-                      <span class="sh-editorial-option-selected">{{ option.selected_value }}</span>
-                    </div>
-                    <div class="sh-editorial-size-list">
-                      {%- for value in option.values -%}
-                        {%- assign is_selected = false -%}
-                        {%- if option.selected_value == value -%}
-                          {%- assign is_selected = true -%}
-                        {%- endif -%}
-                        <button
-                          type="button"
-                          class="sh-editorial-size-box{% if is_selected %} is-active{% endif %}"
-                          data-option-index="{{ opt_idx }}"
-                          data-option-value="{{ value | escape }}"
-                        >
-                          {{ value }}
-                        </button>
-                      {%- endfor -%}
-                    </div>
-                  </div>
+            <div class="sh-editorial-price" id="sh-price-{{ section.id }}">
+              {%- if product != blank -%}
+                {%- if current_variant.compare_at_price > current_variant.price -%}
+                  <span class="sh-price-compare">{{ current_variant.compare_at_price | money }}</span>
                 {%- endif -%}
-              {%- endfor -%}
-            </div>
-          {%- elsif product == blank -%}
-            <!-- Placeholder Variant Options -->
-            <div class="sh-editorial-options-wrapper">
-              <div class="sh-editorial-option-group">
-                <div class="sh-editorial-option-header">
-                  <span class="sh-editorial-option-name">COLOR</span>
-                  <span class="sh-editorial-option-divider">|</span>
-                  <span class="sh-editorial-option-selected">BLACK</span>
-                </div>
-                <div class="sh-editorial-swatch-list">
-                  <button type="button" class="sh-editorial-color-swatch is-active" title="Black">
-                    <span class="sh-editorial-swatch-color" style="background-color: #000000;"></span>
-                  </button>
-                  <button type="button" class="sh-editorial-color-swatch" title="White">
-                    <span class="sh-editorial-swatch-color" style="background-color: #ffffff; border: 1px solid #ccc;"></span>
-                  </button>
-                </div>
-              </div>
-
-              <div class="sh-editorial-option-group">
-                <div class="sh-editorial-option-header">
-                  <span class="sh-editorial-option-name">SIZE</span>
-                  <span class="sh-editorial-option-divider">|</span>
-                  <span class="sh-editorial-option-selected">37</span>
-                </div>
-                <div class="sh-editorial-size-list">
-                  <button type="button" class="sh-editorial-size-box">36</button>
-                  <button type="button" class="sh-editorial-size-box is-active">38</button>
-                  <button type="button" class="sh-editorial-size-box">40</button>
-                </div>
-              </div>
-            </div>
-          {%- endif -%}
-
-          <div class="sh-editorial-quantity">
-            <label for="sh-quantity-{{ section.id }}">{{ 'products.product.quantity.label' | t }}</label>
-            <div class="sh-editorial-quantity-control">
-              <button type="button" class="sh-editorial-quantity-button" data-quantity-action="decrease" aria-label="{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}">−</button>
-              <input id="sh-quantity-{{ section.id }}" name="quantity" type="number" min="1" value="1">
-              <button type="button" class="sh-editorial-quantity-button" data-quantity-action="increase" aria-label="{{ 'products.product.quantity.increase' | t: product: product.title | escape }}">+</button>
+                <span class="sh-price-regular">{{ current_variant.price | money }}</span>
+              {%- else -%}
+                <span class="sh-price-regular">$86.99</span>
+              {%- endif -%}
             </div>
           </div>
 
-          <!-- CTA Buttons: Buy Product (Checkout) & Add to Cart -->
-          <div class="sh-editorial-actions">
-            <button
-              type="button"
-              class="sh-editorial-btn sh-editorial-btn--buy"
-              id="sh-buy-btn-{{ section.id }}"
-              {% unless current_variant.available %}disabled{% endunless %}
-            >
-              {%- if current_variant.available or product == blank -%}
-                {{ section.settings.buy_now_label | default: 'BUY PRODUCT' }}
-              {%- else -%}
-                {{ 'products.product.sold_out' | t }}
-              {%- endif -%}
-            </button>
+          <!-- Product Options Form -->
+          {%- assign product_form_id = 'sh-product-form-' | append: section.id -%}
+          {%- form 'product', product, id: product_form_id, class: 'sh-editorial-form' -%}
+            <input type="hidden" name="id" value="{{ current_variant.id | default: product.variants.first.id }}" id="sh-variant-id-{{ section.id }}">
 
-            <button
-              type="submit"
-              name="add"
-              class="sh-editorial-btn sh-editorial-btn--cart"
-              id="sh-cart-btn-{{ section.id }}"
-              {% unless current_variant.available %}disabled{% endunless %}
-            >
-              {%- if current_variant.available or product == blank -%}
-                {{ section.settings.add_to_cart_label | default: 'ADD TO CART' }}
-              {%- else -%}
-                {{ 'products.product.sold_out' | t }}
-              {%- endif -%}
-            </button>
-          </div>
-        {%- endform -%}
+            {%- if product != blank and product.has_only_default_variant == false -%}
+              <div class="sh-editorial-options-list">
+                {%- for option in product.options_with_values -%}
+                  {%- assign opt_idx = forloop.index0 -%}
+                  {%- assign opt_name_down = option.name | downcase -%}
 
-        <div class="sh-editorial-fulfilment">
-          <p><span>{{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}</span></p>
-          <p>{{ 'products.product.taxes_included' | t }}</p>
-        </div>
-
-        <!-- ================= FREQUENTLY BOUGHT TOGETHER ================= -->
-        {%- if section.settings.show_fbt -%}
-          {%- liquid
-            assign fbt_prod_1 = blank
-            assign fbt_prod_2 = blank
-
-            if section.settings.fbt_products != blank and section.settings.fbt_products.count > 0
-              for bp in section.settings.fbt_products
-                if bp.id != product.id and bp.available
-                  if fbt_prod_1 == blank
-                    assign fbt_prod_1 = bp
-                  elsif fbt_prod_2 == blank
-                    assign fbt_prod_2 = bp
-                    break
-                  endif
-                endif
-              endfor
-            endif
-
-            if fbt_prod_1 == blank and product != blank
-              assign target_coll = product.collections.first
-              if target_coll == blank or target_coll.products_count < 2
-                assign target_coll = collections.all
-              endif
-              for cp in target_coll.products
-                if cp.id != product.id and cp.available
-                  if fbt_prod_1 == blank
-                    assign fbt_prod_1 = cp
-                  elsif fbt_prod_2 == blank
-                    assign fbt_prod_2 = cp
-                    break
-                  endif
-                endif
-              endfor
-            endif
-
-            if fbt_prod_1 == blank and product != blank
-              for ap in collections.all.products
-                if ap.id != product.id and ap.available
-                  if fbt_prod_1 == blank
-                    assign fbt_prod_1 = ap
-                  elsif fbt_prod_2 == blank
-                    assign fbt_prod_2 = ap
-                    break
-                  endif
-                endif
-              endfor
-            endif
-
-            assign has_fbt = false
-            if fbt_prod_1 != blank or product == blank
-              assign has_fbt = true
-            endif
-          -%}
-
-          {%- if has_fbt -%}
-            {%- liquid
-              assign p0_price = current_variant.price | default: 64900
-              assign p0_comp = current_variant.compare_at_price | default: p0_price
-
-              if fbt_prod_1 != blank
-                assign p1_variant = fbt_prod_1.selected_or_first_available_variant
-                assign p1_price = p1_variant.price
-                assign p1_comp = p1_variant.compare_at_price | default: p1_price
-              else
-                assign p1_price = 84900
-                assign p1_comp = 84900
-              endif
-
-              assign bundle_init_total = p0_price | plus: p1_price
-              assign bundle_init_comp = p0_comp | plus: p1_comp
-
-              if fbt_prod_2 != blank
-                assign p2_variant = fbt_prod_2.selected_or_first_available_variant
-                assign p2_price = p2_variant.price
-                assign p2_comp = p2_variant.compare_at_price | default: p2_price
-                assign bundle_init_total = bundle_init_total | plus: p2_price
-                assign bundle_init_comp = bundle_init_comp | plus: p2_comp
-              endif
-            -%}
-
-            <div class="sh-fbt-wrapper" id="sh-fbt-{{ section.id }}">
-              <h3 class="sh-fbt-heading">{{ section.settings.fbt_heading | default: 'Frequently bought together' }}</h3>
-
-              <div class="sh-fbt-cards-list">
-                <!-- Card 0: Current Product -->
-                <div class="sh-fbt-card is-active" data-fbt-card="0">
-                  <div class="sh-fbt-card-check">
-                    <label class="sh-fbt-custom-check">
-                      <input
-                        type="checkbox"
-                        class="sh-fbt-checkbox"
-                        checked
-                        disabled
-                        data-fbt-index="0"
-                        data-price="{{ p0_price }}"
-                        data-compare-at="{{ p0_comp }}"
-                      >
-                      <span class="sh-fbt-check-box">
-                        <svg viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                          <polyline points="1.5 5.5 5 9 12.5 1.5"></polyline>
-                        </svg>
-                      </span>
+                  <div class="sh-editorial-option-row" data-option-index="{{ opt_idx }}">
+                    <label class="sh-editorial-option-label" for="sh-opt-select-{{ section.id }}-{{ opt_idx }}">
+                      {{ option.name }}{% unless option.name contains ':' %}:{% endunless %}
                     </label>
-                  </div>
 
-                  <div class="sh-fbt-card-media">
-                    {%- assign fbt_img_0 = current_variant.featured_image | default: product.featured_image -%}
-                    {%- if fbt_img_0 != blank -%}
-                      <img
-                        id="sh-fbt-thumb-0-{{ section.id }}"
-                        src="{{ fbt_img_0 | image_url: width: 200 }}"
-                        alt="{{ product.title | escape }}"
-                        loading="lazy"
-                        width="64"
-                        height="64"
-                      >
-                    {%- else -%}
-                      <div class="sh-fbt-placeholder-img">
-                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                      </div>
-                    {%- endif -%}
-                  </div>
-
-                  <div class="sh-fbt-card-content">
-                    <div class="sh-fbt-card-title">{{ product.title | default: 'Current Product' }}</div>
-                    <div class="sh-fbt-card-pricing">
-                      <span class="sh-fbt-card-price" id="sh-fbt-price-0-{{ section.id }}">{{ p0_price | money }}</span>
-                      {%- if p0_comp > p0_price -%}
-                        <span class="sh-fbt-card-compare" id="sh-fbt-compare-0-{{ section.id }}">{{ p0_comp | money }}</span>
-                      {%- else -%}
-                        <span class="sh-fbt-card-compare" id="sh-fbt-compare-0-{{ section.id }}" style="display: none;"></span>
-                      {%- endif -%}
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Card 1: Complementary Product 1 -->
-                <div class="sh-fbt-card is-active" data-fbt-card="1">
-                  <div class="sh-fbt-card-check">
-                    <label class="sh-fbt-custom-check">
-                      <input
-                        type="checkbox"
-                        class="sh-fbt-checkbox sh-fbt-toggle"
-                        checked
-                        data-fbt-index="1"
-                        data-price="{{ p1_price }}"
-                        data-compare-at="{{ p1_comp }}"
-                      >
-                      <span class="sh-fbt-check-box">
-                        <svg viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                          <polyline points="1.5 5.5 5 9 12.5 1.5"></polyline>
-                        </svg>
-                      </span>
-                    </label>
-                  </div>
-
-                  <div class="sh-fbt-card-media">
-                    {%- if fbt_prod_1 != blank and fbt_prod_1.featured_image != blank -%}
-                      <img
-                        id="sh-fbt-thumb-1-{{ section.id }}"
-                        src="{{ fbt_prod_1.featured_image | image_url: width: 200 }}"
-                        alt="{{ fbt_prod_1.title | escape }}"
-                        loading="lazy"
-                        width="64"
-                        height="64"
-                      >
-                    {%- else -%}
-                      <div class="sh-fbt-placeholder-img">
-                        {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
-                      </div>
-                    {%- endif -%}
-                  </div>
-
-                  <div class="sh-fbt-card-content">
-                    {%- if fbt_prod_1 != blank -%}
-                      <a href="{{ fbt_prod_1.url }}" target="_blank" class="sh-fbt-card-title">{{ fbt_prod_1.title }}</a>
-                    {%- else -%}
-                      <span class="sh-fbt-card-title">Complementary Fashion Piece</span>
-                    {%- endif -%}
-                    <div class="sh-fbt-card-pricing">
-                      <span class="sh-fbt-card-price" id="sh-fbt-price-1-{{ section.id }}">{{ p1_price | money }}</span>
-                      {%- if p1_comp > p1_price -%}
-                        <span class="sh-fbt-card-compare" id="sh-fbt-compare-1-{{ section.id }}">{{ p1_comp | money }}</span>
-                      {%- else -%}
-                        <span class="sh-fbt-card-compare" id="sh-fbt-compare-1-{{ section.id }}" style="display: none;"></span>
-                      {%- endif -%}
-                    </div>
-                    {%- if fbt_prod_1 != blank and fbt_prod_1.has_only_default_variant == false -%}
-                      <div class="sh-fbt-card-variant">
-                        <select
-                          class="sh-fbt-variant-select"
-                          data-fbt-index="1"
-                          aria-label="Select size or variant"
-                        >
-                          {%- for variant in fbt_prod_1.variants -%}
-                            <option
-                              value="{{ variant.id }}"
-                              data-price="{{ variant.price }}"
-                              data-compare-at="{{ variant.compare_at_price | default: variant.price }}"
-                              {% if variant.featured_image %}data-img="{{ variant.featured_image | image_url: width: 200 }}"{% endif %}
-                              {% if variant == p1_variant %}selected{% endif %}
-                              {% unless variant.available %}disabled{% endunless %}
+                    <div class="sh-editorial-option-control">
+                      {%- if opt_name_down contains 'pattern' and option.values.size > 0 -%}
+                        <!-- Pattern Swatch / Dropdown -->
+                        <div class="sh-pattern-swatches">
+                          {%- for value in option.values -%}
+                            {%- assign is_selected = false -%}
+                            {%- if option.selected_value == value -%}
+                              {%- assign is_selected = true -%}
+                            {%- endif -%}
+                            <button
+                              type="button"
+                              class="sh-pattern-swatch-btn{% if is_selected %} is-active{% endif %}"
+                              data-option-index="{{ opt_idx }}"
+                              data-option-value="{{ value | escape }}"
+                              title="{{ value | escape }}"
+                              aria-label="{{ value | escape }}"
                             >
-                              Size: {{ variant.title }} {% unless variant.available %}(Sold out){% endunless %}
+                              {%- assign pattern_variant = product.variants | where: option.name, value | first -%}
+                              {%- if pattern_variant.featured_image != blank -%}
+                                <img src="{{ pattern_variant.featured_image | image_url: width: 80 }}" alt="{{ value | escape }}" width="36" height="24">
+                              {%- else -%}
+                                <span class="sh-pattern-placeholder"></span>
+                              {%- endif -%}
+                            </button>
+                          {%- endfor -%}
+                        </div>
+                      {%- endif -%}
+
+                      <!-- Luxury Select Dropdown with custom caret (Matches "Archive Beige ▾" & "42 ▾") -->
+                      <div class="sh-custom-select-wrap">
+                        <select
+                          id="sh-opt-select-{{ section.id }}-{{ opt_idx }}"
+                          class="sh-editorial-select"
+                          data-option-index="{{ opt_idx }}"
+                          aria-label="{{ option.name }}"
+                        >
+                          {%- for value in option.values -%}
+                            <option
+                              value="{{ value | escape }}"
+                              {% if option.selected_value == value %}selected="selected"{% endif %}
+                            >
+                              {{ value }}
                             </option>
                           {%- endfor -%}
                         </select>
-                      </div>
-                    {%- elsif fbt_prod_1 != blank -%}
-                      <input type="hidden" class="sh-fbt-variant-id" data-fbt-index="1" value="{{ p1_variant.id }}">
-                    {%- endif -%}
-                  </div>
-                </div>
-
-                <!-- Card 2: Complementary Product 2 (if present) -->
-                {%- if fbt_prod_2 != blank -%}
-                  <div class="sh-fbt-card is-active" data-fbt-card="2">
-                    <div class="sh-fbt-card-check">
-                      <label class="sh-fbt-custom-check">
-                        <input
-                          type="checkbox"
-                          class="sh-fbt-checkbox sh-fbt-toggle"
-                          checked
-                          data-fbt-index="2"
-                          data-price="{{ p2_price }}"
-                          data-compare-at="{{ p2_comp }}"
-                        >
-                        <span class="sh-fbt-check-box">
-                          <svg viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="1.5 5.5 5 9 12.5 1.5"></polyline>
+                        <span class="sh-select-caret" aria-hidden="true">
+                          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="1 1 5 5 9 1"></polyline>
                           </svg>
                         </span>
-                      </label>
-                    </div>
-
-                    <div class="sh-fbt-card-media">
-                      {%- if fbt_prod_2.featured_image != blank -%}
-                        <img
-                          id="sh-fbt-thumb-2-{{ section.id }}"
-                          src="{{ fbt_prod_2.featured_image | image_url: width: 200 }}"
-                          alt="{{ fbt_prod_2.title | escape }}"
-                          loading="lazy"
-                          width="64"
-                          height="64"
-                        >
-                      {%- else -%}
-                        <div class="sh-fbt-placeholder-img">
-                          {{ 'product-3' | placeholder_svg_tag: 'placeholder-svg' }}
-                        </div>
-                      {%- endif -%}
-                    </div>
-
-                    <div class="sh-fbt-card-content">
-                      <a href="{{ fbt_prod_2.url }}" target="_blank" class="sh-fbt-card-title">{{ fbt_prod_2.title }}</a>
-                      <div class="sh-fbt-card-pricing">
-                        <span class="sh-fbt-card-price" id="sh-fbt-price-2-{{ section.id }}">{{ p2_price | money }}</span>
-                        {%- if p2_comp > p2_price -%}
-                          <span class="sh-fbt-card-compare" id="sh-fbt-compare-2-{{ section.id }}">{{ p2_comp | money }}</span>
-                        {%- else -%}
-                          <span class="sh-fbt-card-compare" id="sh-fbt-compare-2-{{ section.id }}" style="display: none;"></span>
-                        {%- endif -%}
                       </div>
-                      {%- if fbt_prod_2.has_only_default_variant == false -%}
-                        <div class="sh-fbt-card-variant">
-                          <select
-                            class="sh-fbt-variant-select"
-                            data-fbt-index="2"
-                            aria-label="Select size or variant"
-                          >
-                            {%- for variant in fbt_prod_2.variants -%}
-                              <option
-                                value="{{ variant.id }}"
-                                data-price="{{ variant.price }}"
-                                data-compare-at="{{ variant.compare_at_price | default: variant.price }}"
-                                {% if variant.featured_image %}data-img="{{ variant.featured_image | image_url: width: 200 }}"{% endif %}
-                                {% if variant == p2_variant %}selected{% endif %}
-                                {% unless variant.available %}disabled{% endunless %}
-                              >
-                                Size: {{ variant.title }} {% unless variant.available %}(Sold out){% endunless %}
-                              </option>
-                            {%- endfor -%}
-                          </select>
-                        </div>
-                      {%- else -%}
-                        <input type="hidden" class="sh-fbt-variant-id" data-fbt-index="2" value="{{ p2_variant.id }}">
-                      {%- endif -%}
                     </div>
+                  </div>
+                {%- endfor -%}
+              </div>
+            {%- elsif product == blank -%}
+              <!-- Preview Demo Options -->
+              <div class="sh-editorial-options-list">
+                <div class="sh-editorial-option-row">
+                  <span class="sh-editorial-option-label">Pattern:</span>
+                  <div class="sh-pattern-swatches">
+                    <span class="sh-pattern-placeholder is-active"></span>
+                  </div>
+                </div>
+                <div class="sh-editorial-option-row">
+                  <span class="sh-editorial-option-label">Colors:</span>
+                  <div class="sh-custom-select-wrap">
+                    <select class="sh-editorial-select">
+                      <option selected>Archive Beige</option>
+                      <option>Classic Black</option>
+                      <option>Pure White</option>
+                    </select>
+                    <span class="sh-select-caret">
+                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="1 1 5 5 9 1"></polyline></svg>
+                    </span>
+                  </div>
+                </div>
+                <div class="sh-editorial-option-row">
+                  <span class="sh-editorial-option-label">Select Size:</span>
+                  <div class="sh-custom-select-wrap">
+                    <select class="sh-editorial-select">
+                      <option selected>42</option>
+                      <option>40</option>
+                      <option>44</option>
+                    </select>
+                    <span class="sh-select-caret">
+                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="1 1 5 5 9 1"></polyline></svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            <!-- Actions Row: Pill Quantity & Olive Pill Buy Now Button -->
+            <div class="sh-editorial-actions-row">
+              <div class="sh-editorial-quantity-pill">
+                <button
+                  type="button"
+                  class="sh-qty-btn sh-qty-decrease"
+                  data-quantity-action="decrease"
+                  aria-label="{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                  </svg>
+                </button>
+                <input
+                  id="sh-quantity-{{ section.id }}"
+                  name="quantity"
+                  type="number"
+                  min="1"
+                  value="1"
+                  class="sh-qty-input"
+                  aria-label="{{ 'products.product.quantity.label' | t }}"
+                >
+                <button
+                  type="button"
+                  class="sh-qty-btn sh-qty-increase"
+                  data-quantity-action="increase"
+                  aria-label="{{ 'products.product.quantity.increase' | t: product: product.title | escape }}"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                  </svg>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                class="sh-editorial-buy-now-btn"
+                id="sh-buy-btn-{{ section.id }}"
+                {% unless current_variant.available %}disabled{% endunless %}
+              >
+                {%- if current_variant.available or product == blank -%}
+                  {{ section.settings.buy_now_label | default: 'Buy Now' }}
+                {%- else -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- endif -%}
+              </button>
+            </div>
+          {%- endform -%}
+
+          <!-- Dotted Separator -->
+          <div class="sh-editorial-dotted-divider" aria-hidden="true"></div>
+
+          <!-- Value Props: Delivery & Packaging -->
+          {%- if section.settings.show_value_props -%}
+            <div class="sh-editorial-value-props">
+              <div class="sh-value-prop-row">
+                <span class="sh-prop-label">{{ section.settings.delivery_text_left | default: 'Free Delivery & Returns' }}</span>
+                <span class="sh-prop-value">{{ section.settings.delivery_text_right | default: 'Available on all orders' }}</span>
+              </div>
+              <div class="sh-value-prop-row">
+                <span class="sh-prop-label">{{ section.settings.packaging_text_left | default: 'Gift Packaging' }}</span>
+                <span class="sh-prop-value">{{ section.settings.packaging_text_right | default: 'Complimentary and plastic-free' }}</span>
+              </div>
+            </div>
+
+            <!-- Dotted Separator -->
+            <div class="sh-editorial-dotted-divider" aria-hidden="true"></div>
+          {%- endif -%}
+
+          <!-- Accordions: Collapsible Tabs with (+) Circular Icons -->
+          <div class="sh-editorial-accordions">
+            {%- if section.blocks.size > 0 -%}
+              {%- for block in section.blocks -%}
+                <details class="sh-editorial-accordion-item"{% if block.settings.open_by_default %} open{% endif %} {{ block.shopify_attributes }}>
+                  <summary class="sh-editorial-accordion-summary">
+                    <span class="sh-editorial-accordion-title">{{ block.settings.title | escape }}</span>
+                    <span class="sh-editorial-accordion-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line class="sh-icon-v-line" x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                      </svg>
+                    </span>
+                  </summary>
+                  <div class="sh-editorial-accordion-body rte">
+                    {%- if block.type == 'description' -%}
+                      {%- if product != blank and product.description != blank -%}
+                        {{ product.description }}
+                      {%- else -%}
+                        <p>{{ block.settings.content | default: 'Wide leg pants in technical fabric. Elasticated waist band with side slit pockets and drawstring on hem.' }}</p>
+                      {%- endif -%}
+                    {%- else -%}
+                      {{ block.settings.content }}
+                    {%- endif -%}
+                  </div>
+                </details>
+              {%- endfor -%}
+            {%- else -%}
+              <!-- Fallback Default Accordions -->
+              <details class="sh-editorial-accordion-item">
+                <summary class="sh-editorial-accordion-summary">
+                  <span class="sh-editorial-accordion-title">Product Details</span>
+                  <span class="sh-editorial-accordion-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"></circle><line class="sh-icon-v-line" x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                  </span>
+                </summary>
+                <div class="sh-editorial-accordion-body rte">
+                  {%- if product != blank and product.description != blank -%}
+                    {{ product.description }}
+                  {%- else -%}
+                    <p>Standard fit with lightweight cotton blend fabric, crafted for breathability and effortless daily wear.</p>
+                  {%- endif -%}
+                </div>
+              </details>
+              <details class="sh-editorial-accordion-item">
+                <summary class="sh-editorial-accordion-summary">
+                  <span class="sh-editorial-accordion-title">Fabric & Care</span>
+                  <span class="sh-editorial-accordion-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"></circle><line class="sh-icon-v-line" x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                  </span>
+                </summary>
+                <div class="sh-editorial-accordion-body rte">
+                  <p>100% Organic Cotton. Machine wash cold with like colors. Do not bleach. Lay flat to dry.</p>
+                </div>
+              </details>
+            {%- endif -%}
+          </div>
+
+          <!-- Contact Us Link -->
+          {%- if section.settings.show_contact_link -%}
+            <div class="sh-editorial-card-footer">
+              <a href="{{ section.settings.contact_url | default: '/pages/contact' }}" class="sh-editorial-contact-link">
+                {{ section.settings.contact_text | default: 'Contact Us' }}
+              </a>
+            </div>
+          {%- endif -%}
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= FREQUENTLY BOUGHT TOGETHER ================= -->
+    {%- if section.settings.show_fbt -%}
+      {%- liquid
+        assign fbt_prod_1 = blank
+        assign fbt_prod_2 = blank
+
+        if section.settings.fbt_products != blank and section.settings.fbt_products.count > 0
+          for bp in section.settings.fbt_products
+            if bp.id != product.id and bp.available
+              if fbt_prod_1 == blank
+                assign fbt_prod_1 = bp
+              elsif fbt_prod_2 == blank
+                assign fbt_prod_2 = bp
+                break
+              endif
+            endif
+          endfor
+        endif
+
+        if fbt_prod_1 == blank and product != blank
+          assign target_coll = product.collections.first
+          if target_coll == blank or target_coll.products_count < 2
+            assign target_coll = collections.all
+          endif
+          for cp in target_coll.products
+            if cp.id != product.id and cp.available
+              if fbt_prod_1 == blank
+                assign fbt_prod_1 = cp
+              elsif fbt_prod_2 == blank
+                assign fbt_prod_2 = cp
+                break
+              endif
+            endif
+          endfor
+        endif
+
+        assign has_fbt = false
+        if fbt_prod_1 != blank or product == blank
+          assign has_fbt = true
+        endif
+      -%}
+
+      {%- if has_fbt -%}
+        {%- liquid
+          assign p0_price = current_variant.price | default: 64900
+          assign p0_comp = current_variant.compare_at_price | default: p0_price
+
+          if fbt_prod_1 != blank
+            assign p1_variant = fbt_prod_1.selected_or_first_available_variant
+            assign p1_price = p1_variant.price
+            assign p1_comp = p1_variant.compare_at_price | default: p1_price
+          else
+            assign p1_price = 84900
+            assign p1_comp = 84900
+          endif
+
+          assign bundle_init_total = p0_price | plus: p1_price
+          assign bundle_init_comp = p0_comp | plus: p1_comp
+
+          if fbt_prod_2 != blank
+            assign p2_variant = fbt_prod_2.selected_or_first_available_variant
+            assign p2_price = p2_variant.price
+            assign p2_comp = p2_variant.compare_at_price | default: p2_price
+            assign bundle_init_total = bundle_init_total | plus: p2_price
+            assign bundle_init_comp = bundle_init_comp | plus: p2_comp
+          endif
+        -%}
+
+        <div class="sh-fbt-wrapper" id="sh-fbt-{{ section.id }}">
+          <h3 class="sh-fbt-heading">{{ section.settings.fbt_heading | default: 'Frequently bought together' }}</h3>
+
+          <div class="sh-fbt-cards-list">
+            <!-- Card 0: Current Product -->
+            <div class="sh-fbt-card is-active" data-fbt-card="0">
+              <div class="sh-fbt-card-check">
+                <label class="sh-fbt-custom-check">
+                  <input
+                    type="checkbox"
+                    class="sh-fbt-checkbox"
+                    checked
+                    disabled
+                    data-fbt-index="0"
+                    data-price="{{ p0_price }}"
+                    data-compare-at="{{ p0_comp }}"
+                  >
+                  <span class="sh-fbt-check-box">
+                    <svg viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="1.5 5.5 5 9 12.5 1.5"></polyline>
+                    </svg>
+                  </span>
+                </label>
+              </div>
+
+              <div class="sh-fbt-card-media">
+                {%- assign fbt_img_0 = current_variant.featured_image | default: product.featured_image -%}
+                {%- if fbt_img_0 != blank -%}
+                  <img
+                    id="sh-fbt-thumb-0-{{ section.id }}"
+                    src="{{ fbt_img_0 | image_url: width: 200 }}"
+                    alt="{{ product.title | escape }}"
+                    loading="lazy"
+                    width="64"
+                    height="64"
+                  >
+                {%- else -%}
+                  <div class="sh-fbt-placeholder-img">
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
                   </div>
                 {%- endif -%}
               </div>
 
-              <!-- Claim Offer CTA Button (matching reference image) -->
-              <button
-                type="button"
-                class="sh-fbt-claim-btn"
-                id="sh-fbt-btn-{{ section.id }}"
-              >
-                <span class="sh-fbt-claim-label">{{ section.settings.fbt_btn_text | default: 'Claim Offer' }}</span>
-                <span class="sh-fbt-claim-dot">•</span>
-                <span class="sh-fbt-claim-total" id="sh-fbt-bundle-total-{{ section.id }}">{{ bundle_init_total | money }}</span>
-                <span class="sh-fbt-claim-compare" id="sh-fbt-bundle-compare-{{ section.id }}"{% unless bundle_init_comp > bundle_init_total %} style="display: none;"{% endunless %}>{{ bundle_init_comp | money }}</span>
-              </button>
+              <div class="sh-fbt-card-content">
+                <div class="sh-fbt-card-title">{{ product.title | default: 'Current Product' }}</div>
+                <div class="sh-fbt-card-pricing">
+                  <span class="sh-fbt-card-price" id="sh-fbt-price-0-{{ section.id }}">{{ p0_price | money }}</span>
+                  {%- if p0_comp > p0_price -%}
+                    <span class="sh-fbt-card-compare" id="sh-fbt-compare-0-{{ section.id }}">{{ p0_comp | money }}</span>
+                  {%- endif -%}
+                </div>
+              </div>
             </div>
-          {%- endif -%}
-        {%- endif -%}
-      </div>
 
-    </div>
+            <!-- Card 1: Complementary Product 1 -->
+            <div class="sh-fbt-card is-active" data-fbt-card="1">
+              <div class="sh-fbt-card-check">
+                <label class="sh-fbt-custom-check">
+                  <input
+                    type="checkbox"
+                    class="sh-fbt-checkbox sh-fbt-toggle"
+                    checked
+                    data-fbt-index="1"
+                    data-price="{{ p1_price }}"
+                    data-compare-at="{{ p1_comp }}"
+                  >
+                  <span class="sh-fbt-check-box">
+                    <svg viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="1.5 5.5 5 9 12.5 1.5"></polyline>
+                    </svg>
+                  </span>
+                </label>
+              </div>
+
+              <div class="sh-fbt-card-media">
+                {%- if fbt_prod_1 != blank and fbt_prod_1.featured_image != blank -%}
+                  <img
+                    id="sh-fbt-thumb-1-{{ section.id }}"
+                    src="{{ fbt_prod_1.featured_image | image_url: width: 200 }}"
+                    alt="{{ fbt_prod_1.title | escape }}"
+                    loading="lazy"
+                    width="64"
+                    height="64"
+                  >
+                {%- else -%}
+                  <div class="sh-fbt-placeholder-img">
+                    {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {%- endif -%}
+              </div>
+
+              <div class="sh-fbt-card-content">
+                {%- if fbt_prod_1 != blank -%}
+                  <a href="{{ fbt_prod_1.url }}" target="_blank" class="sh-fbt-card-title">{{ fbt_prod_1.title }}</a>
+                {%- else -%}
+                  <span class="sh-fbt-card-title">Complementary Fashion Piece</span>
+                {%- endif -%}
+                <div class="sh-fbt-card-pricing">
+                  <span class="sh-fbt-card-price" id="sh-fbt-price-1-{{ section.id }}">{{ p1_price | money }}</span>
+                  {%- if p1_comp > p1_price -%}
+                    <span class="sh-fbt-card-compare" id="sh-fbt-compare-1-{{ section.id }}">{{ p1_comp | money }}</span>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="sh-fbt-claim-btn"
+            id="sh-fbt-btn-{{ section.id }}"
+          >
+            <span class="sh-fbt-claim-label">{{ section.settings.fbt_btn_text | default: 'Claim Offer' }}</span>
+            <span class="sh-fbt-claim-dot">•</span>
+            <span class="sh-fbt-claim-total" id="sh-fbt-bundle-total-{{ section.id }}">{{ bundle_init_total | money }}</span>
+          </button>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
   </div>
 </div>
 
@@ -737,15 +595,18 @@
 
 <style>
   #sh-editorial-{{ section.id }} {
-    font-family: var(--font-body-family);
-    font-style: var(--font-body-style);
-    font-weight: var(--font-body-weight);
     background-color: {{ section.settings.bg_color | default: '#ffffff' }};
-    padding-top: {{ section.settings.padding_top | default: 60 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+    padding-top: {{ section.settings.padding_top | default: 40 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | default: 60 }}px;
     width: 100%;
-    position: relative;
     color: {{ section.settings.text_color | default: '#121212' }};
+    font-family: var(--font-body-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  #sh-editorial-{{ section.id }} * {
+    box-sizing: border-box;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-container {
@@ -754,41 +615,28 @@
     padding: 0 40px;
   }
 
-  /* Breadcrumbs Navigation */
+  /* Breadcrumbs */
   #sh-editorial-{{ section.id }} .sh-breadcrumbs {
-    margin: 0 0 24px 0;
-    padding: 0;
-    width: 100%;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-breadcrumbs--right-col {
-    margin: 0 0 16px 0;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-breadcrumbs__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-body-family);
+    margin: 0 0 20px 0;
     font-size: 11.5px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: #888888;
   }
 
-  #sh-editorial-{{ section.id }} .sh-breadcrumbs__item {
-    display: inline-flex;
+  #sh-editorial-{{ section.id }} .sh-breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
 
   #sh-editorial-{{ section.id }} .sh-breadcrumbs__link {
-    color: #666666;
+    color: #666;
     text-decoration: none;
-    transition: color 0.15s ease;
   }
 
   #sh-editorial-{{ section.id }} .sh-breadcrumbs__link:hover {
@@ -796,132 +644,425 @@
     text-decoration: underline;
   }
 
-  #sh-editorial-{{ section.id }} .sh-breadcrumbs__separator {
-    color: #bbbbbb;
-    user-select: none;
-    font-size: 11px;
-    margin: 0 1px;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-breadcrumbs__current {
-    color: #121212;
-    font-weight: 600;
-    max-width: 420px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-  }
-
-  /* 3-Column Editorial Grid */
-  #sh-editorial-{{ section.id }} .sh-editorial-grid {
+  /* ================= MAIN SPLIT GRID ================= */
+  #sh-editorial-{{ section.id }} .sh-editorial-main-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(25rem, 32rem);
-    column-gap: 2.4rem;
+    grid-template-columns: minmax(0, 1.45fr) minmax(360px, 1fr);
+    column-gap: 36px;
     align-items: start;
   }
 
-  /* LEFT COLUMN */
-  #sh-editorial-{{ section.id }} .sh-editorial-col--left {
-    display: flex;
-    flex-direction: column;
-    gap: 2.8rem;
-  }
-
-  /* Thumbnails Carousel */
-  #sh-editorial-{{ section.id }} .sh-editorial-carousel-wrapper {
-    width: 100%;
-    position: relative;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-thumbs-track {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    padding-bottom: 4px;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-thumbs-track::-webkit-scrollbar {
-    display: none; /* Chrome */
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-thumb-slide {
-    flex: 0 0 100%;
-    cursor: pointer;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-thumb-inner {
+  /* ================= LEFT GALLERY (2-UP SLIDER) ================= */
+  #sh-editorial-{{ section.id }} .sh-editorial-gallery-col {
     position: relative;
     width: 100%;
-    aspect-ratio: 3 / 4;
-    background: #f7f7f7;
+    min-width: 0;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-gallery-wrapper {
+    position: relative;
+    width: 100%;
     overflow: hidden;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-thumb-inner img {
+  #sh-editorial-{{ section.id }} .sh-editorial-gallery-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-gallery-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 2 images visible side-by-side on desktop */
+  #sh-editorial-{{ section.id }} .sh-editorial-gallery-slide {
+    flex: 0 0 calc(50% - 8px);
+    scroll-snap-align: start;
+    position: relative;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-slide-inner {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background-color: #f7f7f7;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-slide-img,
+  #sh-editorial-{{ section.id }} .sh-editorial-slide-video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
     transition: transform 0.3s ease;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-thumb-slide:hover .sh-editorial-thumb-inner img {
-    transform: scale(1.04);
+  #sh-editorial-{{ section.id }} .sh-editorial-slide-inner.placeholder svg {
+    width: 70%;
+    height: 70%;
+    opacity: 0.5;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-thumb-slide.is-active .sh-editorial-thumb-inner {
-    outline: 1.5px solid #121212;
-    outline-offset: -1px;
-  }
-
-  /* Carousel Navigation Arrows */
-  #sh-editorial-{{ section.id }} .sh-editorial-carousel-nav {
+  /* Circular Navigation Arrows */
+  #sh-editorial-{{ section.id }} .sh-gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 24px;
-    margin-top: 14px;
-    padding-right: 4px;
+    justify-content: center;
+    color: #121212;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    padding: 0;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-nav-btn {
-    background: none;
-    border: none;
-    padding: 6px;
+  #sh-editorial-{{ section.id }} .sh-gallery-arrow:hover {
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+    transform: translateY(-50%) scale(1.06);
+  }
+
+  #sh-editorial-{{ section.id }} .sh-gallery-arrow--prev {
+    left: 12px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-gallery-arrow--next {
+    right: 12px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-gallery-dots {
+    display: none;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-gallery-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #cccccc;
+    transition: all 0.2s ease;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-gallery-dot.is-active {
+    background: #121212;
+    transform: scale(1.3);
+  }
+
+  /* ================= RIGHT PRODUCT CARD ================= */
+  #sh-editorial-{{ section.id }} .sh-editorial-info-col {
+    position: sticky;
+    top: 24px;
+    width: 100%;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-card {
+    background-color: {{ section.settings.card_bg_color | default: '#f6f6f4' }};
+    padding: 34px 30px;
+    border-radius: 4px;
+    width: 100%;
+  }
+
+  /* Header Row: Title & Price */
+  #sh-editorial-{{ section.id }} .sh-editorial-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-title {
+    font-family: Didot, "Playfair Display", "Bodoni MT", "Times New Roman", Georgia, serif;
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: {{ section.settings.text_color | default: '#121212' }};
+    margin: 0;
+    text-transform: none;
+    flex: 1;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-price {
+    font-family: Didot, "Playfair Display", "Bodoni MT", Georgia, serif;
+    font-size: 21px;
+    font-weight: 600;
+    color: {{ section.settings.text_color | default: '#121212' }};
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-price-compare {
+    font-size: 15px;
+    color: #888888;
+    text-decoration: line-through;
+    margin-right: 6px;
+    font-weight: 400;
+  }
+
+  /* Options Form */
+  #sh-editorial-{{ section.id }} .sh-editorial-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-option-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-option-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #404040;
+    margin: 0;
+    cursor: default;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-option-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Pattern Swatches */
+  #sh-editorial-{{ section.id }} .sh-pattern-swatches {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-pattern-swatch-btn {
+    width: 38px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid #c8c8c4;
+    border-radius: 2px;
+    background: #ffffff;
     cursor: pointer;
-    color: #121212;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.15s ease, opacity 0.15s ease;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-nav-btn:hover {
+  #sh-editorial-{{ section.id }} .sh-pattern-swatch-btn.is-active {
+    outline: 1.5px solid #121212;
+    outline-offset: 1px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-pattern-swatch-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-pattern-placeholder {
+    width: 36px;
+    height: 22px;
+    background: repeating-linear-gradient(45deg, #bbb, #bbb 4px, #eee 4px, #eee 8px);
+    display: block;
+  }
+
+  /* Custom Luxury Dropdowns ("Archive Beige ▾" & "42 ▾") */
+  #sh-editorial-{{ section.id }} .sh-custom-select-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    border: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #222222;
+    cursor: pointer;
+    text-align: right;
+    padding: 4px 22px 4px 8px;
+    font-family: inherit;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-select:focus {
+    outline: none;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-select-caret {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    color: #444444;
+  }
+
+  /* Actions Row: Pill Quantity & Olive Pill Buy Now Button */
+  #sh-editorial-{{ section.id }} .sh-editorial-actions-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-top: 22px;
+    width: 100%;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-quantity-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 110px;
+    height: 42px;
+    border: 1px solid #c8c8c4;
+    border-radius: 9999px;
+    background: #ffffff;
+    padding: 0 10px;
+    flex-shrink: 0;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-qty-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #222222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s ease;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-qty-btn:hover {
     opacity: 0.6;
-    transform: scale(1.1);
   }
 
-  /* Accordions / Collapsible Info */
+  #sh-editorial-{{ section.id }} .sh-qty-input {
+    width: 32px;
+    height: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #121212;
+    padding: 0;
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-qty-input::-webkit-outer-spin-button,
+  #sh-editorial-{{ section.id }} .sh-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-buy-now-btn {
+    flex: 1;
+    height: 42px;
+    border-radius: 9999px;
+    background-color: {{ section.settings.buy_btn_bg | default: '#73816e' }};
+    color: {{ section.settings.buy_btn_text_color | default: '#ffffff' }};
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    font-family: inherit;
+    text-transform: none;
+    padding: 0 20px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-buy-now-btn:hover:not([disabled]) {
+    filter: brightness(0.92);
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-buy-now-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #a8a8a4 !important;
+  }
+
+  /* Dotted Divider */
+  #sh-editorial-{{ section.id }} .sh-editorial-dotted-divider {
+    border-top: 1px dotted #c8c8c4;
+    margin: 22px 0 18px 0;
+    width: 100%;
+  }
+
+  /* Value Props: Delivery & Gift Packaging */
+  #sh-editorial-{{ section.id }} .sh-editorial-value-props {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-value-prop-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-prop-label {
+    color: #222222;
+    font-weight: 500;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-prop-value {
+    color: #666666;
+    text-align: right;
+  }
+
+  /* Accordions / Collapsible Tabs */
   #sh-editorial-{{ section.id }} .sh-editorial-accordions {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    gap: 12px;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-accordion-item {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border: none;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-accordion-summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 0;
+    padding: 6px 0;
     cursor: pointer;
     user-select: none;
     list-style: none;
@@ -932,588 +1073,72 @@
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-accordion-title {
-    font-family: var(--font-heading-family);
-    font-style: var(--font-heading-style);
-    font-size: calc(var(--font-heading-scale) * 1.6rem);
-    font-weight: var(--font-heading-weight, 700);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #121212;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #222222;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-accordion-chevron {
-    transition: transform 0.25s ease;
+  #sh-editorial-{{ section.id }} .sh-editorial-accordion-icon {
     display: flex;
     align-items: center;
-    color: #121212;
+    justify-content: center;
+    color: #444444;
+    transition: transform 0.25s ease;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-accordion-item[open] .sh-editorial-accordion-chevron {
-    transform: rotate(180deg);
+  #sh-editorial-{{ section.id }} .sh-editorial-accordion-item[open] .sh-icon-v-line {
+    display: none;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-accordion-body {
-    padding-bottom: 22px;
-    font-size: 14px;
+    padding: 10px 0 14px 0;
+    font-size: 13px;
     line-height: 1.6;
-    color: #333333;
+    color: #4a4a4a;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-accordion-body p {
-    margin: 0 0 10px 0;
+    margin: 0 0 8px 0;
   }
 
-  /* CENTER COLUMN: Hero Portrait Image */
-  #sh-editorial-{{ section.id }} .sh-editorial-col--center {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+  /* Contact Us Link */
+  #sh-editorial-{{ section.id }} .sh-editorial-card-footer {
+    margin-top: 26px;
+    padding-top: 4px;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-hero-media {
-    width: 100%;
-    position: relative;
-    background: #f7f7f7;
-    overflow: hidden;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-main-img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 2 / 3;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    transition: opacity 0.25s ease;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-hero-placeholder {
-    width: 100%;
-    aspect-ratio: 2 / 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #eee;
-  }
-
-  /* RIGHT COLUMN: Product Title, Variants & Action */
-  #sh-editorial-{{ section.id }} .sh-editorial-col--right {
-    display: flex;
-    flex-direction: column;
-    padding-top: 10px;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-product-title {
-    font-family: var(--font-heading-family);
-    font-style: var(--font-heading-style);
-    font-size: calc(var(--font-heading-scale) * 2rem);
-    font-weight: var(--font-heading-weight, 700);
-    line-height: 1.25;
-    letter-spacing: calc(var(--font-heading-scale) * 0.04rem);
-    text-transform: none;
-    color: #121212;
-    margin: 0 0 16px 0;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-price-container {
-    font-size: 1.5rem;
+  #sh-editorial-{{ section.id }} .sh-editorial-contact-link {
+    font-size: 12px;
     font-weight: 500;
-    color: #121212;
-    margin-bottom: 2.4rem;
+    color: #222222;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-price-container .price {
-    font-size: 20px !important;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-options-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-    margin-bottom: 36px;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-quantity {
-    align-items: center;
-    display: flex;
-    gap: 1.2rem;
-    justify-content: space-between;
-    margin: 0 0 1.6rem;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-quantity label {
-    font-size: 1.1rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-quantity-control {
-    align-items: center;
-    border: .1rem solid rgba(18, 18, 18, .45);
-    display: flex;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-quantity-button {
-    background: transparent;
-    border: 0;
-    color: inherit;
-    cursor: pointer;
-    font-size: 1.8rem;
-    height: 3.4rem;
-    width: 3.4rem;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-quantity input {
-    appearance: textfield;
-    border: 0;
-    font: inherit;
-    height: 3.4rem;
-    padding: 0;
-    text-align: center;
-    width: 3.6rem;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-quantity input::-webkit-inner-spin-button,
-  #sh-editorial-{{ section.id }} .sh-editorial-quantity input::-webkit-outer-spin-button {
-    appearance: none;
-    margin: 0;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-fulfilment {
-    border-bottom: .1rem solid rgba(18, 18, 18, .12);
-    border-top: .1rem solid rgba(18, 18, 18, .12);
-    font-size: 1.1rem;
-    margin: 2.4rem 0;
-    padding: 1.4rem 0;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-fulfilment p {
-    display: flex;
-    justify-content: space-between;
-    margin: .5rem 0;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-option-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-option-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-option-name {
-    color: #121212;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-option-divider {
-    color: #888888;
-    font-weight: 300;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-option-selected {
-    color: #666666;
-    font-weight: 400;
-  }
-
-  /* Color Swatches (Square) */
-  #sh-editorial-{{ section.id }} .sh-editorial-swatch-list {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-color-swatch {
-    width: 38px;
-    height: 38px;
-    padding: 3px;
-    background: #ffffff;
-    border: 1px solid #121212;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s ease, border-color 0.15s ease;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-color-swatch:hover {
-    transform: scale(1.08);
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-color-swatch.is-active {
-    outline: 2px solid #121212;
-    outline-offset: 1px;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-swatch-color {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  /* Size Boxes (Square buttons) */
-  #sh-editorial-{{ section.id }} .sh-editorial-size-list {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-size-box {
-    min-width: 44px;
-    height: 44px;
-    padding: 0 12px;
-    background: #ffffff;
-    color: #121212;
-    border: 1px solid #121212;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.18s ease, color 0.18s ease, transform 0.15s ease;
-    font-family: inherit;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-size-box:hover {
-    background-color: #f2f2f2;
-    transform: translateY(-1px);
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-size-box.is-active {
-    background-color: #121212 !important;
-    color: #ffffff !important;
-  }
-
-  /* Dual Action Buttons: Buy Product & Add To Cart */
-  #sh-editorial-{{ section.id }} .sh-editorial-actions {
-    display: flex;
-    gap: 14px;
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-btn {
-    flex: 1;
-    height: 52px;
-    padding: 0 20px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    font-family: inherit;
-    text-align: center;
-  }
-
-  /* Buy Product: Solid Black */
-  #sh-editorial-{{ section.id }} .sh-editorial-btn--buy {
-    background-color: #000000;
-    color: #ffffff;
-    border: 1.5px solid #000000;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-btn--buy:hover:not([disabled]) {
-    background-color: #2b2b2b;
-    border-color: #2b2b2b;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Add to Cart: White with black border */
-  #sh-editorial-{{ section.id }} .sh-editorial-btn--cart {
-    background-color: #ffffff;
+  #sh-editorial-{{ section.id }} .sh-editorial-contact-link:hover {
     color: #000000;
-    border: 1.5px solid #000000;
   }
 
-  #sh-editorial-{{ section.id }} .sh-editorial-btn--cart:hover:not([disabled]) {
-    background-color: #000000;
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  }
-
-  #sh-editorial-{{ section.id }} .sh-editorial-btn[disabled] {
-    opacity: 0.4;
-    cursor: not-allowed;
-    background-color: #e5e5e5 !important;
-    border-color: #e5e5e5 !important;
-    color: #888888 !important;
-  }
-
-  @media screen and (min-width: 991px) {
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-grid {
-      grid-template-areas:
-        "gallery hero panel"
-        "gallery hero details";
-      grid-template-rows: auto 1fr;
-      min-height: 66rem;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-col--left {
-      display: contents;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-desktop-only-thumbnails {
-      grid-area: gallery;
-      height: 100%;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-carousel-wrapper,
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-thumbs-track {
-      height: 100%;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-thumbs-track {
-      overflow: hidden;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-thumb-slide {
-      height: 100%;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-carousel-nav {
-      left: 0;
-      margin: 0;
-      padding: 0 1.2rem;
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      justify-content: space-between;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-col--center {
-      grid-area: hero;
-      height: 100%;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-hero-media,
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-main-img {
-      height: 100%;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-col--right {
-      background: #ffffff;
-      grid-area: panel;
-      padding: 1.8rem 1.6rem 0;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-accordions {
-      background: #ffffff;
-      grid-area: details;
-      margin: 0;
-      padding: 1.2rem 1.6rem 1.8rem;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-form {
-      display: grid;
-      grid-template-columns: minmax(8rem, .35fr) minmax(0, .65fr);
-      gap: 1rem;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-options-wrapper {
-      grid-column: 1 / -1;
-      gap: 1.4rem;
-      margin-bottom: 1.8rem;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-quantity {
-      grid-column: 1;
-      margin: 0;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-quantity label {
-      display: none;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-actions {
-      grid-column: 2;
-      margin: 0;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-btn--buy {
-      background: #879073;
-      border-color: #879073;
-      border-radius: 2rem;
-      height: 3.4rem;
-    }
-
-    #sh-editorial-{{ section.id }}.sh-editorial-product-section--compact .sh-editorial-btn--cart { display: none; }
-  }
-
-  /* ================= RESPONSIVE ================= */
-  @media screen and (max-width: 1100px) {
-    #sh-editorial-{{ section.id }} .sh-editorial-grid {
-      column-gap: 30px;
-    }
-    #sh-editorial-{{ section.id }} .sh-editorial-product-title {
-      font-size: calc(var(--font-heading-scale) * 2.4rem);
-    }
-    #sh-editorial-{{ section.id }} .sh-editorial-thumb-slide {
-      flex: 0 0 calc(50% - 6px);
-    }
-  }
-
-  @media screen and (max-width: 990px) {
-    #sh-editorial-{{ section.id }} {
-      padding-top: 40px;
-      padding-bottom: 60px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-container {
-      padding: 0 20px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-breadcrumbs {
-      margin-bottom: 16px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-breadcrumbs__list {
-      font-size: 11px;
-      gap: 6px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-breadcrumbs__current {
-      max-width: 220px;
-    }
-
-    /* Stack on tablet & mobile: Hero Center -> Right Info -> Left Carousel & Accordions */
-    #sh-editorial-{{ section.id }} .sh-editorial-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 36px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-col--center {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      order: 1;
-      width: 100%;
-      max-width: 540px;
-      margin: 0 auto;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-mobile-only-thumbnails {
-      display: block !important;
-      width: 100%;
-      margin-top: 14px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-desktop-only-thumbnails {
-      display: none !important;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-col--right {
-      order: 2;
-      width: 100%;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-col--left {
-      display: flex;
-      order: 3;
-      width: 100%;
-      gap: 30px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-product-title {
-      font-size: calc(var(--font-heading-scale) * 2.2rem);
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-thumb-slide {
-      flex: 0 0 140px;
-    }
-  }
-
-  @media screen and (min-width: 991px) {
-    #sh-editorial-{{ section.id }} .sh-mobile-only-thumbnails {
-      display: none !important;
-    }
-    #sh-editorial-{{ section.id }} .sh-desktop-only-thumbnails {
-      display: block !important;
-    }
-  }
-
-  @media screen and (max-width: 550px) {
-    #sh-editorial-{{ section.id }} .sh-breadcrumbs__current {
-      max-width: 150px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-product-title {
-      font-size: calc(var(--font-heading-scale) * 1.9rem);
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-actions {
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-btn {
-      width: 100%;
-      height: 48px;
-      flex: auto;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-editorial-thumb-slide {
-      flex: 0 0 120px;
-    }
-
-    #sh-editorial-{{ section.id }} .sh-fbt-card {
-      padding: 10px 12px;
-      gap: 10px;
-    }
-    #sh-editorial-{{ section.id }} .sh-fbt-card-media {
-      width: 54px;
-      height: 54px;
-      min-width: 54px;
-    }
-    #sh-editorial-{{ section.id }} .sh-fbt-card-title {
-      font-size: 12.5px;
-    }
-    #sh-editorial-{{ section.id }} .sh-fbt-claim-btn {
-      font-size: 13.5px;
-      height: 48px;
-    }
-  }
-
-  /* ================= FREQUENTLY BOUGHT TOGETHER (PURPLE CARDS DESIGN) ================= */
+  /* ================= FREQUENTLY BOUGHT TOGETHER ================= */
   #sh-editorial-{{ section.id }} .sh-fbt-wrapper {
-    margin-top: 32px;
-    padding-top: 24px;
+    margin-top: 40px;
+    padding-top: 28px;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
     width: 100%;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-heading {
-    font-family: var(--font-heading-family);
     font-size: 18px;
     font-weight: 600;
-    letter-spacing: -0.01em;
-    color: #121212;
-    margin: 0 0 14px 0;
-    text-transform: none;
+    margin: 0 0 16px 0;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-cards-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 16px;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-card {
@@ -1521,71 +1146,35 @@
     align-items: center;
     gap: 14px;
     padding: 12px 14px;
-    border-radius: 12px;
+    border-radius: 8px;
     background: {{ section.settings.fbt_card_bg | default: '#fafafa' }};
     border: 1px solid {{ section.settings.fbt_card_border | default: 'rgba(0, 0, 0, 0.08)' }};
-    color: {{ section.settings.fbt_card_text | default: '#121212' }};
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    transition: all 0.25s ease;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-card:hover {
-    border-color: rgba(0, 0, 0, 0.16);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-card.is-inactive {
-    opacity: 0.45;
-    filter: grayscale(80%);
-    background: #f5f5f5;
-    border-color: rgba(0, 0, 0, 0.05);
-    box-shadow: none;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-card-check {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-custom-check {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
-    user-select: none;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-checkbox {
     position: absolute;
     opacity: 0;
-    width: 0;
-    height: 0;
-    margin: 0;
-    pointer-events: none;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-check-box {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-    border: 1.5px solid #b0b0b0;
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 1.5px solid #999;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ffffff;
-    transition: all 0.2s ease;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-check-box svg {
-    width: 12px;
-    height: 10px;
-    stroke: #ffffff;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    background: #fff;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-checkbox:checked + .sh-fbt-check-box {
@@ -1593,24 +1182,17 @@
     border-color: #121212;
   }
 
-  #sh-editorial-{{ section.id }} .sh-fbt-checkbox:checked + .sh-fbt-check-box svg {
-    opacity: 1;
-    transform: scale(1);
+  #sh-editorial-{{ section.id }} .sh-fbt-check-box svg {
+    width: 11px;
+    stroke: #fff;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-card-media {
-    width: 62px;
-    height: 62px;
-    min-width: 62px;
-    border-radius: 8px;
-    background: #ffffff;
+    width: 58px;
+    height: 58px;
+    border-radius: 6px;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    background: #eee;
     flex-shrink: 0;
   }
 
@@ -1618,145 +1200,116 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 6px;
-    display: block;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-placeholder-img {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f0f0f0;
-    border-radius: 6px;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-card-content {
     flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-card-title {
-    font-family: var(--font-body-family);
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 500;
-    color: {{ section.settings.fbt_card_text | default: '#121212' }};
-    line-height: 1.35;
+    color: #121212;
     text-decoration: none;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-card-title:hover {
-    text-decoration: underline;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-card-pricing {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    font-size: 13.5px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 4px;
   }
 
-  #sh-editorial-{{ section.id }} .sh-fbt-card-price {
-    font-weight: 700;
-    color: #121212;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-card-compare {
-    font-size: 12.5px;
-    color: #888888;
-    text-decoration: line-through;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-card-variant {
-    margin-top: 2px;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-variant-select {
-    padding: 4px 8px;
-    font-size: 11.5px;
-    font-family: var(--font-body-family);
-    color: #121212;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.18);
-    border-radius: 4px;
-    cursor: pointer;
-    outline: none;
-    max-width: 160px;
-    transition: all 0.2s ease;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-variant-select:hover,
-  #sh-editorial-{{ section.id }} .sh-fbt-variant-select:focus {
-    border-color: #121212;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-variant-select option {
-    background: #ffffff;
-    color: #121212;
-  }
-
-  /* Claim Offer CTA Button */
   #sh-editorial-{{ section.id }} .sh-fbt-claim-btn {
     width: 100%;
-    height: 52px;
-    border-radius: 8px;
-    background: {{ section.settings.fbt_btn_bg | default: '#000000' }};
-    color: {{ section.settings.fbt_btn_text_color | default: '#ffffff' }};
-    border: 1.5px solid {{ section.settings.fbt_btn_bg | default: '#000000' }};
-    font-family: var(--font-body-family);
+    max-width: 320px;
+    height: 44px;
+    border-radius: 9999px;
+    background: #121212;
+    color: #fff;
+    border: none;
     font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    margin-top: 4px;
   }
 
-  #sh-editorial-{{ section.id }} .sh-fbt-claim-btn:hover:not([disabled]) {
-    background: #2b2b2b;
-    border-color: #2b2b2b;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  /* ================= RESPONSIVE MEDIA QUERIES ================= */
+  @media screen and (max-width: 1024px) {
+    #sh-editorial-{{ section.id }} .sh-editorial-main-grid {
+      column-gap: 24px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
+    }
+    #sh-editorial-{{ section.id }} .sh-editorial-card {
+      padding: 28px 22px;
+    }
   }
 
-  #sh-editorial-{{ section.id }} .sh-fbt-claim-btn[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: #e5e5e5;
-    border-color: #e5e5e5;
-    color: #888888;
-    box-shadow: none;
+  @media screen and (max-width: 900px) {
+    #sh-editorial-{{ section.id }} {
+      padding-top: 24px;
+      padding-bottom: 40px;
+    }
+
+    #sh-editorial-{{ section.id }} .sh-editorial-container {
+      padding: 0 16px;
+    }
+
+    /* Stack layout on mobile / tablet */
+    #sh-editorial-{{ section.id }} .sh-editorial-main-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 1 image visible full-width on mobile */
+    #sh-editorial-{{ section.id }} .sh-editorial-gallery-slide {
+      flex: 0 0 100%;
+    }
+
+    #sh-editorial-{{ section.id }} .sh-editorial-slide-inner {
+      aspect-ratio: 4 / 5;
+    }
+
+    #sh-editorial-{{ section.id }} .sh-gallery-dots {
+      display: flex;
+    }
+
+    #sh-editorial-{{ section.id }} .sh-editorial-info-col {
+      position: static;
+    }
+
+    #sh-editorial-{{ section.id }} .sh-editorial-card {
+      padding: 24px 18px;
+    }
+
+    #sh-editorial-{{ section.id }} .sh-editorial-title {
+      font-size: 22px;
+    }
+
+    #sh-editorial-{{ section.id }} .sh-editorial-price {
+      font-size: 19px;
+    }
   }
 
-  #sh-editorial-{{ section.id }} .sh-fbt-claim-dot {
-    font-size: 14px;
-    opacity: 0.7;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-claim-total {
-    font-weight: 700;
-  }
-
-  #sh-editorial-{{ section.id }} .sh-fbt-claim-compare {
-    font-size: 13px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: line-through;
-    margin-left: 2px;
+  @media screen and (max-width: 480px) {
+    #sh-editorial-{{ section.id }} .sh-editorial-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    #sh-editorial-{{ section.id }} .sh-editorial-price {
+      text-align: left;
+    }
+    #sh-editorial-{{ section.id }} .sh-editorial-actions-row {
+      gap: 10px;
+    }
+    #sh-editorial-{{ section.id }} .sh-editorial-quantity-pill {
+      width: 98px;
+      padding: 0 6px;
+    }
   }
 </style>
 
@@ -1766,53 +1319,59 @@
       const sectionEl = document.getElementById('sh-editorial-{{ section.id }}');
       if (!sectionEl) return;
 
-      const heroImg = sectionEl.querySelector('#sh-hero-img-{{ section.id }}');
-      const carouselWrappers = sectionEl.querySelectorAll('.sh-editorial-carousel-wrapper');
+      const track = sectionEl.querySelector('#sh-gal-track-{{ section.id }}');
+      const prevBtn = sectionEl.querySelector('#sh-gal-prev-{{ section.id }}');
+      const nextBtn = sectionEl.querySelector('#sh-gal-next-{{ section.id }}');
+      const slides = sectionEl.querySelectorAll('.sh-editorial-gallery-slide');
+      const dots = sectionEl.querySelectorAll('.sh-gallery-dot');
 
-      // Carousel navigation
-      carouselWrappers.forEach(wrapper => {
-        const track = wrapper.querySelector('.sh-editorial-thumbs-track');
-        const prev = wrapper.querySelector('.sh-nav-prev');
-        const next = wrapper.querySelector('.sh-nav-next');
-        const slides = wrapper.querySelectorAll('.sh-editorial-thumb-slide');
-
-        if (track && prev && next) {
-          prev.addEventListener('click', function() {
-            const slideWidth = slides[0] ? slides[0].offsetWidth + 12 : 140;
-            track.scrollBy({ left: -slideWidth, behavior: 'smooth' });
-          });
-          next.addEventListener('click', function() {
-            const slideWidth = slides[0] ? slides[0].offsetWidth + 12 : 140;
-            track.scrollBy({ left: slideWidth, behavior: 'smooth' });
-          });
+      // Gallery Slider Controls
+      if (track && prevBtn && nextBtn && slides.length > 0) {
+        function getSlideScrollAmount() {
+          const firstSlide = slides[0];
+          return firstSlide ? firstSlide.offsetWidth + 16 : track.clientWidth / 2;
         }
-      });
 
-      // Thumbnail click -> update center hero image
-      const allThumbSlides = sectionEl.querySelectorAll('.sh-editorial-thumb-slide');
-      allThumbSlides.forEach(slide => {
-        slide.addEventListener('click', function() {
-          const mediaId = this.getAttribute('data-media-id');
-          const newSrc = this.getAttribute('data-image-src');
+        prevBtn.addEventListener('click', function() {
+          track.scrollBy({ left: -getSlideScrollAmount(), behavior: 'smooth' });
+        });
 
-          allThumbSlides.forEach(s => s.classList.remove('is-active'));
-          if (mediaId) {
-            sectionEl.querySelectorAll(`.sh-editorial-thumb-slide[data-media-id="${mediaId}"]`).forEach(s => s.classList.add('is-active'));
+        nextBtn.addEventListener('click', function() {
+          track.scrollBy({ left: getSlideScrollAmount(), behavior: 'smooth' });
+        });
+
+        // Update mobile dots on scroll
+        track.addEventListener('scroll', function() {
+          if (dots.length === 0) return;
+          const scrollLeft = track.scrollLeft;
+          const slideWidth = slides[0].offsetWidth;
+          const activeIndex = Math.round(scrollLeft / slideWidth);
+
+          dots.forEach((dot, idx) => {
+            if (idx === activeIndex) {
+              dot.classList.add('is-active');
+            } else {
+              dot.classList.remove('is-active');
+            }
+          });
+        }, { passive: true });
+      }
+
+      // Quantity controls
+      const quantityInput = sectionEl.querySelector('#sh-quantity-{{ section.id }}');
+      sectionEl.querySelectorAll('[data-quantity-action]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (!quantityInput) return;
+          const currentVal = Math.max(1, parseInt(quantityInput.value, 10) || 1);
+          if (this.getAttribute('data-quantity-action') === 'increase') {
+            quantityInput.value = currentVal + 1;
           } else {
-            this.classList.add('is-active');
-          }
-
-          if (newSrc && heroImg) {
-            heroImg.style.opacity = '0.3';
-            setTimeout(() => {
-              heroImg.src = newSrc;
-              heroImg.style.opacity = '1';
-            }, 120);
+            quantityInput.value = Math.max(1, currentVal - 1);
           }
         });
       });
 
-      // Variants management
+      // Variants Data & Switching
       const variantsDataEl = sectionEl.querySelector('#sh-variants-data-{{ section.id }}');
       let variantsData = [];
       if (variantsDataEl) {
@@ -1824,137 +1383,124 @@
       }
 
       const variantInput = sectionEl.querySelector('#sh-variant-id-{{ section.id }}');
-      const quantityInput = sectionEl.querySelector('#sh-quantity-{{ section.id }}');
-      const colorSwatches = sectionEl.querySelectorAll('.sh-editorial-color-swatch');
-      const sizeBoxes = sectionEl.querySelectorAll('.sh-editorial-size-box');
-      const selectedColorLabel = sectionEl.querySelector('#sh-selected-color-{{ section.id }}');
-      const selectedSizeLabel = sectionEl.querySelector('#sh-selected-size-{{ section.id }}');
+      const selects = sectionEl.querySelectorAll('.sh-editorial-select');
+      const patternBtns = sectionEl.querySelectorAll('.sh-pattern-swatch-btn');
+      const priceContainer = sectionEl.querySelector('#sh-price-{{ section.id }}');
       const buyBtn = sectionEl.querySelector('#sh-buy-btn-{{ section.id }}');
-      const cartBtn = sectionEl.querySelector('#sh-cart-btn-{{ section.id }}');
 
-      sectionEl.querySelectorAll('[data-quantity-action]').forEach(button => {
-        button.addEventListener('click', function() {
-          if (!quantityInput) return;
-          const currentQuantity = Math.max(1, parseInt(quantityInput.value, 10) || 1);
-          quantityInput.value = this.dataset.quantityAction === 'increase' ? currentQuantity + 1 : Math.max(1, currentQuantity - 1);
-        });
-      });
+      function formatMoney(cents) {
+        if (window.Shopify && typeof Shopify.formatMoney === 'function') {
+          return Shopify.formatMoney(cents);
+        }
+        return 'Rs. ' + (cents / 100).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      }
 
       function getSelectedOptions() {
         const selected = [];
-        const groups = sectionEl.querySelectorAll('.sh-editorial-option-group');
-        groups.forEach(group => {
-          const activeBtn = group.querySelector('.is-active');
-          if (activeBtn) {
-            selected.push(activeBtn.getAttribute('data-option-value'));
-          }
+        selects.forEach(select => {
+          selected.push(select.value);
         });
         return selected;
       }
 
       function updateVariant() {
         if (!variantsData.length) return;
-        const selectedOptions = getSelectedOptions();
+        const selected = getSelectedOptions();
 
         const matchedVariant = variantsData.find(v => {
-          return selectedOptions.every((optVal, idx) => v.options[idx] === optVal);
+          return selected.every((val, idx) => v.options[idx] === val);
         });
 
         if (matchedVariant) {
           if (variantInput) variantInput.value = matchedVariant.id;
 
-          // Update URL if on product page
+          // Update URL
           if (window.location.pathname.includes('/products/')) {
             const url = new URL(window.location.href);
             url.searchParams.set('variant', matchedVariant.id);
             window.history.replaceState({}, '', url.toString());
           }
 
-          // Update price if available
-          const priceContainer = sectionEl.querySelector('#sh-price-{{ section.id }}');
-          if (priceContainer && matchedVariant.price) {
-            const regPrice = priceContainer.querySelector('.price-item--regular, .price-item--sale');
-            if (regPrice && window.Shopify && typeof Shopify.formatMoney === 'function') {
-              regPrice.innerHTML = Shopify.formatMoney(matchedVariant.price);
+          // Update Price
+          if (priceContainer) {
+            let priceHtml = '';
+            if (matchedVariant.compare_at_price > matchedVariant.price) {
+              priceHtml += '<span class="sh-price-compare">' + formatMoney(matchedVariant.compare_at_price) + '</span> ';
             }
+            priceHtml += '<span class="sh-price-regular">' + formatMoney(matchedVariant.price) + '</span>';
+            priceContainer.innerHTML = priceHtml;
           }
 
-          // Update availability & CTA buttons
-          if (matchedVariant.available) {
-            if (buyBtn) {
+          // Update Button State
+          if (buyBtn) {
+            if (matchedVariant.available) {
               buyBtn.removeAttribute('disabled');
-              buyBtn.textContent = '{{ section.settings.buy_now_label | default: "BUY PRODUCT" }}';
-            }
-            if (cartBtn) {
-              cartBtn.removeAttribute('disabled');
-              cartBtn.textContent = '{{ section.settings.add_to_cart_label | default: "ADD TO CART" }}';
-            }
-          } else {
-            if (buyBtn) {
+              buyBtn.textContent = '{{ section.settings.buy_now_label | default: "Buy Now" }}';
+            } else {
               buyBtn.setAttribute('disabled', 'true');
-              buyBtn.textContent = 'SOLD OUT';
-            }
-            if (cartBtn) {
-              cartBtn.setAttribute('disabled', 'true');
-              cartBtn.textContent = 'SOLD OUT';
+              buyBtn.textContent = 'Sold Out';
             }
           }
 
-          // Update image if variant has featured image
-          if (matchedVariant.featured_image && matchedVariant.featured_image.src && heroImg) {
-            heroImg.style.opacity = '0.3';
-            setTimeout(() => {
-              heroImg.src = matchedVariant.featured_image.src;
-              heroImg.style.opacity = '1';
-            }, 120);
-          }
-
-          if (typeof window.shEditorialUpdateFbtMain === 'function') {
-            window.shEditorialUpdateFbtMain(matchedVariant);
+          // Scroll Gallery to Variant Image
+          if (matchedVariant.featured_media && matchedVariant.featured_media.id && track) {
+            const targetSlide = track.querySelector(`.sh-editorial-gallery-slide[data-media-id="${matchedVariant.featured_media.id}"]`);
+            if (targetSlide) {
+              track.scrollTo({ left: targetSlide.offsetLeft, behavior: 'smooth' });
+            }
           }
         }
       }
 
-      // Color swatch clicks
-      colorSwatches.forEach(swatch => {
-        swatch.addEventListener('click', function() {
-          const group = this.closest('.sh-editorial-option-group');
-          group.querySelectorAll('.sh-editorial-color-swatch').forEach(s => s.classList.remove('is-active'));
-          this.classList.add('is-active');
-
-          const val = this.getAttribute('data-option-value');
-          if (selectedColorLabel && val) {
-            selectedColorLabel.textContent = val.toUpperCase();
-          }
+      // Handle Select Dropdown changes
+      selects.forEach(select => {
+        select.addEventListener('change', function() {
+          const optIdx = this.getAttribute('data-option-index');
+          // Also sync any pattern swatch buttons matching this index
+          patternBtns.forEach(btn => {
+            if (btn.getAttribute('data-option-index') === optIdx) {
+              if (btn.getAttribute('data-option-value') === select.value) {
+                btn.classList.add('is-active');
+              } else {
+                btn.classList.remove('is-active');
+              }
+            }
+          });
           updateVariant();
         });
       });
 
-      // Size box clicks
-      sizeBoxes.forEach(box => {
-        box.addEventListener('click', function() {
-          const group = this.closest('.sh-editorial-option-group');
-          group.querySelectorAll('.sh-editorial-size-box').forEach(b => b.classList.remove('is-active'));
+      // Handle Pattern Swatch clicks
+      patternBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const optIdx = this.getAttribute('data-option-index');
+          const optVal = this.getAttribute('data-option-value');
+
+          patternBtns.forEach(b => {
+            if (b.getAttribute('data-option-index') === optIdx) b.classList.remove('is-active');
+          });
           this.classList.add('is-active');
 
-          const val = this.getAttribute('data-option-value');
-          if (selectedSizeLabel && val) {
-            selectedSizeLabel.textContent = val;
+          const matchingSelect = sectionEl.querySelector(`.sh-editorial-select[data-option-index="${optIdx}"]`);
+          if (matchingSelect) {
+            matchingSelect.value = optVal;
+            matchingSelect.dispatchEvent(new Event('change'));
+          } else {
+            updateVariant();
           }
-          updateVariant();
         });
       });
 
-      // Buy Product -> Instant Checkout
+      // Instant Checkout via Buy Now Button
       if (buyBtn) {
         buyBtn.addEventListener('click', function(e) {
           e.preventDefault();
           const varId = variantInput ? variantInput.value : null;
-          const quantity = quantityInput ? Math.max(1, parseInt(quantityInput.value, 10) || 1) : 1;
+          const qty = quantityInput ? Math.max(1, parseInt(quantityInput.value, 10) || 1) : 1;
           if (!varId) return;
 
-          buyBtn.style.opacity = '0.6';
-          buyBtn.textContent = 'REDIRECTING...';
+          buyBtn.style.opacity = '0.7';
+          buyBtn.textContent = 'Redirecting...';
 
           fetch('/cart/add.js', {
             method: 'POST',
@@ -1963,7 +1509,7 @@
               'Accept': 'application/json'
             },
             body: JSON.stringify({
-              items: [{ id: varId, quantity: quantity }]
+              items: [{ id: parseInt(varId), quantity: qty }]
             })
           })
           .then(res => res.json())
@@ -1972,290 +1518,9 @@
           })
           .catch(err => {
             console.error('Checkout error', err);
-            window.location.href = '/cart/' + varId + ':1';
+            window.location.href = '/cart/' + varId + ':' + qty;
           });
         });
-      }
-
-      // Add to Cart -> AJAX Add to cart
-      const form = sectionEl.querySelector('#sh-product-form-{{ section.id }}');
-      if (form && cartBtn) {
-        form.addEventListener('submit', function(e) {
-          e.preventDefault();
-          const varId = variantInput ? variantInput.value : null;
-          const quantity = quantityInput ? Math.max(1, parseInt(quantityInput.value, 10) || 1) : 1;
-          if (!varId) return;
-
-          const originalText = cartBtn.textContent;
-          cartBtn.setAttribute('disabled', 'true');
-          cartBtn.textContent = 'ADDING...';
-
-          fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              items: [{ id: varId, quantity: quantity }]
-            })
-          })
-          .then(res => res.json())
-          .then(cartItem => {
-            cartBtn.textContent = 'ADDED!';
-            setTimeout(() => {
-              cartBtn.removeAttribute('disabled');
-              cartBtn.textContent = originalText;
-            }, 1400);
-
-            // Trigger Dawn cart notification / drawer if present
-            document.documentElement.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true }));
-            const cartDrawer = document.querySelector('cart-drawer');
-            if (cartDrawer && typeof cartDrawer.renderContents === 'function') {
-              fetch('/cart?section_id=cart-drawer')
-                .then(r => r.text())
-                .then(html => {
-                  const div = document.createElement('div');
-                  div.innerHTML = html;
-                  cartDrawer.innerHTML = div.querySelector('cart-drawer').innerHTML;
-                  cartDrawer.open();
-                });
-            } else {
-              const cartNotification = document.querySelector('cart-notification');
-              if (cartNotification && typeof cartNotification.open === 'function') {
-                cartNotification.open();
-              }
-            }
-          })
-          .catch(err => {
-            console.error('Add to cart error', err);
-            cartBtn.removeAttribute('disabled');
-            cartBtn.textContent = originalText;
-          });
-        });
-      }
-
-      // ================= FBT (Frequently Bought Together) Logic =================
-      const fbtWrap = sectionEl.querySelector('#sh-fbt-{{ section.id }}');
-      if (fbtWrap) {
-        const fbtCheckboxes = fbtWrap.querySelectorAll('.sh-fbt-checkbox');
-        const fbtVariantSelects = fbtWrap.querySelectorAll('.sh-fbt-variant-select');
-        const fbtTotalEl = fbtWrap.querySelector('#sh-fbt-bundle-total-{{ section.id }}');
-        const fbtCompareEl = fbtWrap.querySelector('#sh-fbt-bundle-compare-{{ section.id }}');
-        const fbtAddBtn = fbtWrap.querySelector('#sh-fbt-btn-{{ section.id }}');
-
-        function formatFbtMoney(cents) {
-          if (window.Shopify && typeof Shopify.formatMoney === 'function') {
-            return Shopify.formatMoney(cents);
-          }
-          const num = (cents / 100).toLocaleString('en-IN', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          });
-          return 'Rs. ' + num;
-        }
-
-        function recalculateFbtTotal() {
-          let total = 0;
-          let compareTotal = 0;
-          let selectedCount = 0;
-
-          fbtCheckboxes.forEach(cb => {
-            if (cb.checked) {
-              selectedCount++;
-              const price = parseFloat(cb.getAttribute('data-price') || 0);
-              const compareAt = parseFloat(cb.getAttribute('data-compare-at') || price);
-              total += price;
-              compareTotal += compareAt;
-            }
-          });
-
-          if (fbtTotalEl) {
-            fbtTotalEl.textContent = formatFbtMoney(total);
-          }
-
-          if (fbtCompareEl) {
-            if (compareTotal > total) {
-              fbtCompareEl.textContent = formatFbtMoney(compareTotal);
-              fbtCompareEl.style.display = 'inline';
-            } else {
-              fbtCompareEl.style.display = 'none';
-            }
-          }
-
-          if (fbtAddBtn) {
-            const labelEl = fbtAddBtn.querySelector('.sh-fbt-claim-label');
-            const dotEl = fbtAddBtn.querySelector('.sh-fbt-claim-dot');
-            if (selectedCount === 0) {
-              fbtAddBtn.setAttribute('disabled', 'true');
-              if (labelEl) labelEl.textContent = 'Select items to claim offer';
-              if (dotEl) dotEl.style.display = 'none';
-              if (fbtTotalEl) fbtTotalEl.style.display = 'none';
-              if (fbtCompareEl) fbtCompareEl.style.display = 'none';
-            } else {
-              fbtAddBtn.removeAttribute('disabled');
-              if (labelEl) labelEl.textContent = '{{ section.settings.fbt_btn_text | default: "Claim Offer" }}';
-              if (dotEl) dotEl.style.display = 'inline';
-              if (fbtTotalEl) fbtTotalEl.style.display = 'inline';
-              if (compareTotal > total && fbtCompareEl) fbtCompareEl.style.display = 'inline';
-            }
-          }
-        }
-
-        // Checkbox toggle: updates total & card state
-        fbtCheckboxes.forEach(cb => {
-          cb.addEventListener('change', function() {
-            const idx = this.getAttribute('data-fbt-index');
-            const cardItem = fbtWrap.querySelector(`[data-fbt-card="${idx}"]`);
-            if (cardItem) {
-              if (this.checked) {
-                cardItem.classList.remove('is-inactive');
-              } else {
-                cardItem.classList.add('is-inactive');
-              }
-            }
-            recalculateFbtTotal();
-          });
-        });
-
-        // Variant selects: updates variant price, image and recalculates total
-        fbtVariantSelects.forEach(select => {
-          select.addEventListener('change', function() {
-            const idx = this.getAttribute('data-fbt-index');
-            const opt = this.options[this.selectedIndex];
-            const price = opt.getAttribute('data-price');
-            const compareAt = opt.getAttribute('data-compare-at');
-            const img = opt.getAttribute('data-img');
-
-            const checkbox = fbtWrap.querySelector(`.sh-fbt-checkbox[data-fbt-index="${idx}"]`);
-            if (checkbox) {
-              if (price) checkbox.setAttribute('data-price', price);
-              if (compareAt) checkbox.setAttribute('data-compare-at', compareAt);
-            }
-
-            const priceDisplay = fbtWrap.querySelector(`#sh-fbt-price-${idx}-{{ section.id }}`);
-            if (priceDisplay && price) {
-              priceDisplay.textContent = formatFbtMoney(price);
-            }
-
-            const compareDisplay = fbtWrap.querySelector(`#sh-fbt-compare-${idx}-{{ section.id }}`);
-            if (compareDisplay && compareAt) {
-              if (parseFloat(compareAt) > parseFloat(price)) {
-                compareDisplay.textContent = formatFbtMoney(compareAt);
-                compareDisplay.style.display = 'inline';
-              } else {
-                compareDisplay.style.display = 'none';
-              }
-            }
-
-            if (img) {
-              const thumbImg = fbtWrap.querySelector(`#sh-fbt-thumb-${idx}-{{ section.id }}`);
-              if (thumbImg) thumbImg.src = img;
-            }
-
-            recalculateFbtTotal();
-          });
-        });
-
-        // When main product variant changes, update FBT item 0 price & total
-        window.shEditorialUpdateFbtMain = function(matchedVariant) {
-          const mainCb = fbtWrap.querySelector('.sh-fbt-checkbox[data-fbt-index="0"]');
-          if (mainCb && matchedVariant) {
-            mainCb.setAttribute('data-price', matchedVariant.price);
-            mainCb.setAttribute('data-compare-at', matchedVariant.compare_at_price || matchedVariant.price);
-            const mainPriceEl = fbtWrap.querySelector('#sh-fbt-price-0-{{ section.id }}');
-            if (mainPriceEl) {
-              mainPriceEl.textContent = formatFbtMoney(matchedVariant.price);
-            }
-            const mainCompareEl = fbtWrap.querySelector('#sh-fbt-compare-0-{{ section.id }}');
-            if (mainCompareEl) {
-              if (matchedVariant.compare_at_price && matchedVariant.compare_at_price > matchedVariant.price) {
-                mainCompareEl.textContent = formatFbtMoney(matchedVariant.compare_at_price);
-                mainCompareEl.style.display = 'inline';
-              } else {
-                mainCompareEl.style.display = 'none';
-              }
-            }
-            if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
-              const mainThumb = fbtWrap.querySelector('#sh-fbt-thumb-0-{{ section.id }}');
-              if (mainThumb) mainThumb.src = matchedVariant.featured_image.src;
-            }
-            recalculateFbtTotal();
-          }
-        };
-
-        // Add to Cart for Bundle
-        if (fbtAddBtn) {
-          fbtAddBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const items = [];
-
-            // Item 0
-            const cb0 = fbtWrap.querySelector('.sh-fbt-checkbox[data-fbt-index="0"]');
-            if (cb0 && cb0.checked) {
-              const varId0 = variantInput ? variantInput.value : null;
-              if (varId0) items.push({ id: parseInt(varId0), quantity: 1 });
-            }
-
-            // Items 1 & 2
-            [1, 2].forEach(idx => {
-              const cb = fbtWrap.querySelector(`.sh-fbt-checkbox[data-fbt-index="${idx}"]`);
-              if (cb && cb.checked) {
-                const sel = fbtWrap.querySelector(`.sh-fbt-variant-select[data-fbt-index="${idx}"]`);
-                const hid = fbtWrap.querySelector(`.sh-fbt-variant-id[data-fbt-index="${idx}"]`);
-                const varId = sel ? sel.value : (hid ? hid.value : null);
-                if (varId) items.push({ id: parseInt(varId), quantity: 1 });
-              }
-            });
-
-            if (items.length === 0) return;
-
-            const originalBtnHtml = fbtAddBtn.innerHTML;
-            fbtAddBtn.setAttribute('disabled', 'true');
-            fbtAddBtn.textContent = 'Claiming Offer...';
-
-            fetch('/cart/add.js', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-              },
-              body: JSON.stringify({ items: items })
-            })
-            .then(res => res.json())
-            .then(() => {
-              fbtAddBtn.textContent = 'Offer Claimed!';
-              setTimeout(() => {
-                fbtAddBtn.removeAttribute('disabled');
-                fbtAddBtn.innerHTML = originalBtnHtml;
-              }, 1800);
-
-              // Trigger cart update event & open cart drawer
-              document.documentElement.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true }));
-              const cartDrawer = document.querySelector('cart-drawer');
-              if (cartDrawer && typeof cartDrawer.renderContents === 'function') {
-                fetch('/cart?section_id=cart-drawer')
-                  .then(r => r.text())
-                  .then(html => {
-                    const div = document.createElement('div');
-                    div.innerHTML = html;
-                    cartDrawer.innerHTML = div.querySelector('cart-drawer').innerHTML;
-                    cartDrawer.open();
-                  });
-              } else {
-                const cartNotification = document.querySelector('cart-notification');
-                if (cartNotification && typeof cartNotification.open === 'function') {
-                  cartNotification.open();
-                }
-              }
-            })
-            .catch(err => {
-              console.error('FBT Add error', err);
-              fbtAddBtn.removeAttribute('disabled');
-              fbtAddBtn.innerHTML = originalBtnHtml;
-            });
-          });
-        }
       }
     }
 
@@ -2278,7 +1543,7 @@
       "type": "product",
       "id": "product",
       "label": "Select Product",
-      "info": "Leave blank to display the first store product or preview demo"
+      "info": "Leave blank to display the current template product"
     },
     {
       "type": "header",
@@ -2301,26 +1566,99 @@
         },
         {
           "value": "right_col",
-          "label": "Above Product Title (Right Column)"
+          "label": "Inside Product Card (Top)"
         }
       ],
       "default": "top"
     },
     {
       "type": "header",
-      "content": "Button Labels"
+      "content": "Product Card Styling"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#f6f6f4"
     },
     {
       "type": "text",
       "id": "buy_now_label",
       "label": "Buy Now Button Label",
-      "default": "BUY PRODUCT"
+      "default": "Buy Now"
+    },
+    {
+      "type": "color",
+      "id": "buy_btn_bg",
+      "label": "Buy Now Button Background",
+      "default": "#73816e"
+    },
+    {
+      "type": "color",
+      "id": "buy_btn_text_color",
+      "label": "Buy Now Button Text Color",
+      "default": "#ffffff"
     },
     {
       "type": "text",
       "id": "add_to_cart_label",
-      "label": "Add to Cart Button Label",
+      "label": "Add to Cart Label",
       "default": "ADD TO CART"
+    },
+    {
+      "type": "header",
+      "content": "Delivery & Packaging Values"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_value_props",
+      "label": "Show Delivery & Packaging Info",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "delivery_text_left",
+      "label": "Delivery Title",
+      "default": "Free Delivery & Returns"
+    },
+    {
+      "type": "text",
+      "id": "delivery_text_right",
+      "label": "Delivery Detail",
+      "default": "Available on all orders"
+    },
+    {
+      "type": "text",
+      "id": "packaging_text_left",
+      "label": "Packaging Title",
+      "default": "Gift Packaging"
+    },
+    {
+      "type": "text",
+      "id": "packaging_text_right",
+      "label": "Packaging Detail",
+      "default": "Complimentary and plastic-free"
+    },
+    {
+      "type": "header",
+      "content": "Contact Us Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_link",
+      "label": "Show Contact Us Link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "contact_text",
+      "label": "Contact Link Text",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "contact_url",
+      "label": "Contact Link URL"
     },
     {
       "type": "header",
@@ -2330,7 +1668,7 @@
       "type": "checkbox",
       "id": "show_fbt",
       "label": "Show Frequently Bought Together",
-      "default": true
+      "default": false
     },
     {
       "type": "text",
@@ -2342,8 +1680,7 @@
       "type": "product_list",
       "id": "fbt_products",
       "label": "Custom Bundle Products (Optional)",
-      "limit": 2,
-      "info": "Select up to 2 bundle products. If empty, products will automatically be chosen from the same collection or store."
+      "limit": 2
     },
     {
       "type": "text",
@@ -2383,12 +1720,12 @@
     },
     {
       "type": "header",
-      "content": "Section Styling"
+      "content": "Section Layout & Spacing"
     },
     {
       "type": "color",
       "id": "bg_color",
-      "label": "Background Color",
+      "label": "Section Background Color",
       "default": "#ffffff"
     },
     {
@@ -2413,7 +1750,7 @@
       "min": 20,
       "max": 120,
       "step": 10,
-      "default": 60
+      "default": 40
     },
     {
       "type": "range",
@@ -2422,7 +1759,7 @@
       "min": 20,
       "max": 120,
       "step": 10,
-      "default": 80
+      "default": 60
     }
   ],
   "blocks": [
@@ -2435,19 +1772,19 @@
           "type": "text",
           "id": "title",
           "label": "Accordion Title",
-          "default": "DESCRIPTION"
+          "default": "Product Details"
         },
         {
           "type": "textarea",
           "id": "content",
           "label": "Fallback Content (if product has no description)",
-          "default": "Black Wide Leg Pants In Technical Nylon\nElasticated Waist Band\nSide Slit Pockets With Zip\nDrawstring On Hem To Adjust The Leg\nZip-Off System Below The Knee"
+          "default": "Wide leg pants in technical fabric. Elasticated waist band with side slit pockets and drawstring on hem."
         },
         {
           "type": "checkbox",
           "id": "open_by_default",
           "label": "Open by Default",
-          "default": true
+          "default": false
         }
       ]
     },
@@ -2459,13 +1796,13 @@
           "type": "text",
           "id": "title",
           "label": "Accordion Title",
-          "default": "DETAILS"
+          "default": "Fabric & Care"
         },
         {
           "type": "richtext",
           "id": "content",
           "label": "Accordion Content",
-          "default": "<p>100% Technical Nylon.<br>Dry clean or hand wash cold.<br>Made in Portugal.</p>"
+          "default": "<p>100% Organic Cotton.<br>Dry clean or hand wash cold.<br>Made in Portugal.</p>"
         },
         {
           "type": "checkbox",
@@ -2483,13 +1820,13 @@
           "type": "text",
           "id": "title",
           "label": "Accordion Title",
-          "default": "SIZE & FIT"
+          "default": "Size & Fit"
         },
         {
           "type": "richtext",
           "id": "content",
           "label": "Accordion Content",
-          "default": "<p>Model is 178 cm / 5'10\" and wears size 38.<br>Relaxed oversized fit.</p>"
+          "default": "<p>Model is 178 cm / 5'10\" and wears size 42.<br>Regular fit.</p>"
         },
         {
           "type": "checkbox",
@@ -2507,14 +1844,14 @@
         {
           "type": "description",
           "settings": {
-            "title": "DESCRIPTION",
-            "open_by_default": true
+            "title": "Product Details",
+            "open_by_default": false
           }
         },
         {
           "type": "details",
           "settings": {
-            "title": "DETAILS",
+            "title": "Fabric & Care",
             "open_by_default": false
           }
         }

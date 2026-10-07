@@ -24,7 +24,7 @@
         "custom_r9CUpY": {
           "type": "custom",
           "settings": {
-            "title": "Description",
+            "title": "Product Details",
             "content": "{{ product.description }}",
             "open_by_default": false
           }
@@ -32,14 +32,13 @@
         "details": {
           "type": "details",
           "settings": {
-            "title": "Product Details",
-            "content": "<ul><li>Brand: Himdim</li><li>Product Name: Green Botanical Pink Cotton Shirt</li><li>Fabric: Cotton</li><li>Colour: Light base with Green Botanical Print</li><li>Pattern: Botanical / Leaf Print</li><li>Neck: Shirt Collar</li><li>Sleeves: Full Sleeves</li><li>Closure: Front Button</li><li>Style: Casual / Contemporary</li><li>Occasion: Everyday & Casual Wear</li><li>Sizes Available: S, M, L, XL & XXL</li></ul>",
+            "title": "Fabric & Care",
+            "content": "<p>100% Premium Cotton. Gentle hand wash or machine wash cold. Do not bleach. Dry in shade.</p>",
             "open_by_default": false
           }
         }
       },
       "block_order": [
-        "description",
         "custom_r9CUpY",
         "details"
       ],
@@ -47,8 +46,18 @@
         "product": "",
         "show_breadcrumbs": true,
         "breadcrumb_position": "top",
-        "buy_now_label": "BUY PRODUCT",
+        "card_bg_color": "#f6f6f4",
+        "buy_now_label": "Buy Now",
+        "buy_btn_bg": "#73816e",
+        "buy_btn_text_color": "#ffffff",
         "add_to_cart_label": "ADD TO CART",
+        "show_value_props": true,
+        "delivery_text_left": "Free Delivery & Returns",
+        "delivery_text_right": "Available on all orders",
+        "packaging_text_left": "Gift Packaging",
+        "packaging_text_right": "Complimentary and plastic-free",
+        "show_contact_link": true,
+        "contact_text": "Contact Us",
         "show_fbt": false,
         "fbt_heading": "Frequently bought together",
         "fbt_products": [],
@@ -59,9 +68,9 @@
         "fbt_btn_bg": "#000000",
         "fbt_btn_text_color": "#FFFFFF",
         "bg_color": "#FFFFFF",
-        "text_color": "#000000",
+        "text_color": "#121212",
         "max_width": 1440,
-        "padding_top": 20,
+        "padding_top": 30,
         "padding_bottom": 60
       }
     },
