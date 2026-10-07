@@ -11,69 +11,10 @@
   "sections": {
     "offer_showcase": {
       "type": "offer-showcase",
-      "blocks": {
-        "offer_left": {
-          "type": "offer",
-          "settings": {
-            "offer_label": "Enjoy",
-            "offer_value": "15",
-            "offer_suffix": "% off",
-            "offer_text": "On your first purchase",
-            "link": "/collections/all"
-          }
-        },
-        "image_left_one": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/WhatsAppImage2026-09-07at16.13.27_764e8396-8e08-464f-8db9-9931e13a3d5b.png",
-            "link": "/collections/all"
-          }
-        },
-        "image_left_two": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/vibrant-yellow-floral-cotton-kurta-set-with-palazzo-1422497.png",
-            "link": "/collections/all"
-          }
-        },
-        "offer_right": {
-          "type": "offer",
-          "settings": {
-            "offer_label": "Enjoy",
-            "offer_value": "15",
-            "offer_suffix": "% off",
-            "offer_text": "On your first purchase",
-            "link": "/collections/all"
-          }
-        },
-        "image_right_one": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/teal-blossom-print-kurta-set-2487914.webp",
-            "link": "/collections/all"
-          }
-        },
-        "image_right_two": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/crimson-blossom-a-line-oversized-floral-cotton-kurta-set-5066055.webp",
-            "link": "/collections/all"
-          }
-        }
-      },
-      "block_order": [
-        "offer_left",
-        "image_left_one",
-        "image_left_two",
-        "offer_right",
-        "image_right_one",
-        "image_right_two"
-      ],
       "settings": {
-        "accessible_label": "Promotional offers",
-        "background": "#f0e9de",
-        "text_color": "#3b1d14",
-        "border_color": "#3b1d14",
+        "accessible_label": "Exclusive offer",
+        "background": "#efe8dd",
+        "text_color": "#30201b",
         "padding_top": 36,
         "padding_bottom": 36
       }

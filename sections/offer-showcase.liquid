@@ -1,170 +1,68 @@
 {%- style -%}
   .offer-showcase-{{ section.id }} {
     --offer-showcase-background: {{ section.settings.background }};
+    --offer-showcase-accent: {{ section.settings.accent_color }};
     --offer-showcase-text: {{ section.settings.text_color }};
-    --offer-showcase-border: {{ section.settings.border_color }};
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
-
   @media screen and (min-width: 750px) {
-    .offer-showcase-{{ section.id }} {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
-    }
+    .offer-showcase-{{ section.id }} { padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; }
   }
 {%- endstyle -%}
 
 <section class="offer-showcase offer-showcase-{{ section.id }}" aria-label="{{ section.settings.accessible_label | escape }}">
-  <div class="offer-showcase__inner page-width">
-    <div class="offer-showcase__grid">
-      {%- for block in section.blocks -%}
-        {%- case block.type -%}
-          {%- when 'offer' -%}
-            {%- if block.settings.link != blank -%}
-              <a class="offer-showcase__offer offer-showcase__offer--link" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>
-            {%- else -%}
-              <div class="offer-showcase__offer" {{ block.shopify_attributes }}>
-            {%- endif -%}
-              {%- if block.settings.offer_label != blank -%}
-                <p class="offer-showcase__label">{{ block.settings.offer_label | escape }}</p>
-              {%- endif -%}
-              <div class="offer-showcase__value">
-                <span class="offer-showcase__amount">{{ block.settings.offer_value | escape }}</span>
-                {%- if block.settings.offer_suffix != blank -%}
-                  <span class="offer-showcase__suffix">{{ block.settings.offer_suffix | escape }}</span>
-                {%- endif -%}
-              </div>
-              {%- if block.settings.offer_text != blank -%}
-                <p class="offer-showcase__text">{{ block.settings.offer_text | escape | newline_to_br }}</p>
-              {%- endif -%}
-            {%- if block.settings.link != blank -%}
-              </a>
-            {%- else -%}
-              </div>
-            {%- endif -%}
-          {%- when 'image' -%}
-            <div class="offer-showcase__image" {{ block.shopify_attributes }}>
-              {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}" class="offer-showcase__image-link">{%- endif -%}
-                {%- if block.settings.image != blank -%}
-                  {{
-                    block.settings.image
-                    | image_url: width: 900
-                    | image_tag:
-                      widths: '180, 360, 540, 720, 900',
-                      sizes: '(min-width: 990px) 12vw, (min-width: 750px) 18vw, 44vw',
-                      loading: 'lazy',
-                      class: 'offer-showcase__image-media'
-                  }}
-                {%- else -%}
-                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg offer-showcase__image-media' }}
-                {%- endif -%}
-              {%- if block.settings.link != blank -%}</a>{%- endif -%}
-            </div>
-        {%- endcase -%}
-      {%- endfor -%}
+  <div class="page-width">
+    <div class="offer-showcase__shell">
+      <div class="offer-showcase__content">
+        {%- if section.settings.eyebrow != blank -%}<p class="offer-showcase__eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+        {%- if section.settings.heading != blank -%}<h2 class="offer-showcase__heading">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+        <div class="offer-showcase__offer-line"><span class="offer-showcase__offer-value">{{ section.settings.offer_value | escape }}</span><span class="offer-showcase__offer-suffix">{{ section.settings.offer_suffix | escape }}</span></div>
+        {%- if section.settings.description != blank -%}<div class="offer-showcase__description rte">{{ section.settings.description }}</div>{%- endif -%}
+        {%- if section.settings.coupon_code != blank -%}<div class="offer-showcase__coupon" aria-label="Discount code {{ section.settings.coupon_code | escape }}"><span class="offer-showcase__coupon-label">{{ section.settings.coupon_label | escape }}</span><strong>{{ section.settings.coupon_code | escape }}</strong></div>{%- endif -%}
+        {%- if section.settings.button_label != blank -%}
+          <a {% if section.settings.button_link == blank %}role="link" aria-disabled="true"{% else %}href="{{ section.settings.button_link }}"{% endif %} class="offer-showcase__button">{{ section.settings.button_label | escape }}</a>
+        {%- endif -%}
+      </div>
+      <div class="offer-showcase__media">
+        <div class="offer-showcase__media-frame">
+          {%- if section.settings.image != blank -%}
+            {{ section.settings.image | image_url: width: 1400 | image_tag: widths: '480, 720, 960, 1200, 1400', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', class: 'offer-showcase__image' }}
+          {%- else -%}
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg offer-showcase__image' }}
+          {%- endif -%}
+        </div>
+        <span class="offer-showcase__media-note">{{ section.settings.media_note | escape }}</span>
+      </div>
     </div>
   </div>
 </section>
 
 {% stylesheet %}
-  .offer-showcase {
-    background: var(--offer-showcase-background);
-    color: var(--offer-showcase-text);
-  }
-
-  .offer-showcase__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.6rem;
-  }
-
-  .offer-showcase__offer,
-  .offer-showcase__image {
-    min-height: 18rem;
-  }
-
-  .offer-showcase__offer {
-    align-items: center;
-    border: 0.1rem solid var(--offer-showcase-border);
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 2.4rem 1.6rem;
-    text-align: center;
-    text-decoration: none;
-  }
-
-  .offer-showcase__offer--link {
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-
-  .offer-showcase__offer--link:hover,
-  .offer-showcase__offer--link:focus-visible {
-    background: var(--offer-showcase-text);
-    color: var(--offer-showcase-background);
-  }
-
-  .offer-showcase__label,
-  .offer-showcase__text {
-    font-family: var(--font-body-family);
-    font-size: 1.1rem;
-    letter-spacing: 0.38rem;
-    line-height: 1.35;
-    margin: 0;
-    text-transform: uppercase;
-  }
-
-  .offer-showcase__value {
-    align-items: flex-start;
-    display: flex;
-    line-height: 0.8;
-    margin: 1.2rem 0 1.5rem;
-  }
-
-  .offer-showcase__amount {
-    font-family: var(--font-heading-family);
-    font-size: clamp(5.6rem, 9vw, 9rem);
-    letter-spacing: -0.06em;
-  }
-
-  .offer-showcase__suffix {
-    font-size: 1.1rem;
-    letter-spacing: 0.18rem;
-    margin: 0.8rem 0 0 0.4rem;
-    text-transform: uppercase;
-  }
-
-  .offer-showcase__image,
-  .offer-showcase__image-link {
-    display: block;
-    overflow: hidden;
-  }
-
-  .offer-showcase__image-media {
-    display: block;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 250ms ease;
-    width: 100%;
-  }
-
-  .offer-showcase__image-link:hover .offer-showcase__image-media,
-  .offer-showcase__image-link:focus-visible .offer-showcase__image-media {
-    transform: scale(1.04);
-  }
-
+  .offer-showcase { background: var(--offer-showcase-background); color: var(--offer-showcase-text); }
+  .offer-showcase__shell { display: grid; overflow: hidden; }
+  .offer-showcase__content { padding: 4.8rem 2.4rem; }
+  .offer-showcase__eyebrow, .offer-showcase__coupon-label, .offer-showcase__media-note { font-size: 1.1rem; letter-spacing: .2rem; margin: 0; text-transform: uppercase; }
+  .offer-showcase__eyebrow { color: var(--offer-showcase-accent); font-weight: 700; }
+  .offer-showcase__heading { color: inherit; font-family: var(--font-heading-family); font-size: clamp(3.4rem, 5vw, 6rem); letter-spacing: -.04em; line-height: .98; margin: 1.4rem 0 1.8rem; max-width: 10ch; }
+  .offer-showcase__offer-line { align-items: flex-start; color: var(--offer-showcase-accent); display: flex; font-family: var(--font-heading-family); line-height: .8; margin-bottom: 1.8rem; }
+  .offer-showcase__offer-value { font-size: clamp(6.4rem, 10vw, 11rem); letter-spacing: -.08em; }
+  .offer-showcase__offer-suffix { font-family: var(--font-body-family); font-size: 1.3rem; letter-spacing: .15rem; margin: 1rem 0 0 .7rem; text-transform: uppercase; }
+  .offer-showcase__description { font-size: 1.5rem; line-height: 1.5; max-width: 38rem; }
+  .offer-showcase__coupon { align-items: center; border-bottom: .1rem solid color-mix(in srgb, currentColor 35%, transparent); border-top: .1rem solid color-mix(in srgb, currentColor 35%, transparent); display: flex; gap: 1.6rem; margin: 2.6rem 0; padding: 1.3rem 0; }
+  .offer-showcase__coupon strong { letter-spacing: .16rem; }
+  .offer-showcase__button { background: var(--offer-showcase-text); color: var(--offer-showcase-background); display: inline-block; font-size: 1.2rem; letter-spacing: .15rem; padding: 1.5rem 2.4rem; text-decoration: none; text-transform: uppercase; transition: background-color 150ms ease; }
+  .offer-showcase__button:hover, .offer-showcase__button:focus-visible { background: var(--offer-showcase-accent); }
+  .offer-showcase__media { min-height: 36rem; padding: 0 2.4rem 2.4rem; position: relative; }
+  .offer-showcase__media-frame { height: 100%; min-height: 36rem; overflow: hidden; }
+  .offer-showcase__image { display: block; height: 100%; object-fit: cover; width: 100%; }
+  .offer-showcase__media-note { background: var(--offer-showcase-background); bottom: 2.4rem; left: 2.4rem; padding: 1rem 1.2rem; position: absolute; }
   @media screen and (min-width: 750px) {
-    .offer-showcase__grid {
-      grid-template-columns: minmax(15rem, 1.4fr) repeat(2, minmax(10rem, 0.9fr)) minmax(15rem, 1.4fr) repeat(2, minmax(10rem, 0.9fr));
-      gap: 2.4rem;
-    }
-
-    .offer-showcase__offer,
-    .offer-showcase__image {
-      min-height: 21.5rem;
-    }
+    .offer-showcase__shell { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+    .offer-showcase__content { align-self: center; padding: 7rem clamp(4rem, 7vw, 11rem); }
+    .offer-showcase__media { min-height: 56rem; padding: 2.4rem 2.4rem 2.4rem 0; }
+    .offer-showcase__media-frame { min-height: 56rem; }
+    .offer-showcase__media-note { bottom: 2.4rem; left: 0; }
   }
 {% endstylesheet %}
 
@@ -173,120 +71,26 @@
   "name": "Offer showcase",
   "tag": "section",
   "class": "section",
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  },
+  "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
-    {
-      "type": "text",
-      "id": "accessible_label",
-      "label": "Accessible label",
-      "default": "Promotional offers"
-    },
-    {
-      "type": "color",
-      "id": "background",
-      "label": "Background color",
-      "default": "#f0e9de"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text color",
-      "default": "#3b1d14"
-    },
-    {
-      "type": "color",
-      "id": "border_color",
-      "label": "Border color",
-      "default": "#3b1d14"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "Top padding",
-      "default": 36
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "Bottom padding",
-      "default": 36
-    }
+    { "type": "text", "id": "accessible_label", "label": "Accessible label", "default": "Exclusive offer" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "A little something for you" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your first look deserves an offer" },
+    { "type": "text", "id": "offer_value", "label": "Offer value", "default": "15" },
+    { "type": "text", "id": "offer_suffix", "label": "Offer suffix", "default": "% off" },
+    { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Use this welcome offer on your first order and discover the pieces made for your everyday.</p>" },
+    { "type": "text", "id": "coupon_label", "label": "Coupon label", "default": "Use code" },
+    { "type": "text", "id": "coupon_code", "label": "Coupon code", "default": "WELCOME15" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the edit" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Feature image" },
+    { "type": "text", "id": "media_note", "label": "Image note", "default": "New season, considered" },
+    { "type": "color", "id": "background", "label": "Background color", "default": "#efe8dd" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#30201b" },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#9b5136" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Top padding", "default": 36 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Bottom padding", "default": 36 }
   ],
-  "blocks": [
-    {
-      "type": "offer",
-      "name": "Offer card",
-      "settings": [
-        {
-          "type": "text",
-          "id": "offer_label",
-          "label": "Top text",
-          "default": "Enjoy"
-        },
-        {
-          "type": "text",
-          "id": "offer_value",
-          "label": "Offer value",
-          "default": "15"
-        },
-        {
-          "type": "text",
-          "id": "offer_suffix",
-          "label": "Offer suffix",
-          "default": "% off"
-        },
-        {
-          "type": "textarea",
-          "id": "offer_text",
-          "label": "Offer text",
-          "default": "On your first purchase"
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "Link"
-        }
-      ]
-    },
-    {
-      "type": "image",
-      "name": "Promotional image",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "Link"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Offer showcase",
-      "blocks": [
-        { "type": "offer" },
-        { "type": "image" },
-        { "type": "image" },
-        { "type": "offer" },
-        { "type": "image" },
-        { "type": "image" }
-      ]
-    }
-  ]
+  "presets": [{ "name": "Offer showcase" }]
 }
 {% endschema %}
