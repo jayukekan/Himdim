@@ -49,7 +49,7 @@
         "breadcrumb_position": "top",
         "buy_now_label": "BUY PRODUCT",
         "add_to_cart_label": "ADD TO CART",
-        "show_fbt": true,
+        "show_fbt": false,
         "fbt_heading": "Frequently bought together",
         "fbt_products": [],
         "fbt_btn_text": "Claim Offer",

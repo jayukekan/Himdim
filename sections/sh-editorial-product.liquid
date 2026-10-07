@@ -33,7 +33,7 @@
 
 <div
   id="sh-editorial-{{ section.id }}"
-  class="sh-editorial-product-section"
+  class="sh-editorial-product-section sh-editorial-product-section--compact"
   data-section-id="{{ section.id }}"
   data-product-id="{{ product.id }}"
 >
@@ -371,6 +371,15 @@
             </div>
           {%- endif -%}
 
+          <div class="sh-editorial-quantity">
+            <label for="sh-quantity-{{ section.id }}">{{ 'products.product.quantity.label' | t }}</label>
+            <div class="sh-editorial-quantity-control">
+              <button type="button" class="sh-editorial-quantity-button" data-quantity-action="decrease" aria-label="{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}">−</button>
+              <input id="sh-quantity-{{ section.id }}" name="quantity" type="number" min="1" value="1">
+              <button type="button" class="sh-editorial-quantity-button" data-quantity-action="increase" aria-label="{{ 'products.product.quantity.increase' | t: product: product.title | escape }}">+</button>
+            </div>
+          </div>
+
           <!-- CTA Buttons: Buy Product (Checkout) & Add to Cart -->
           <div class="sh-editorial-actions">
             <button
@@ -401,6 +410,11 @@
             </button>
           </div>
         {%- endform -%}
+
+        <div class="sh-editorial-fulfilment">
+          <p><span>{{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}</span></p>
+          <p>{{ 'products.product.taxes_included' | t }}</p>
+        </div>
 
         <!-- ================= FREQUENTLY BOUGHT TOGETHER ================= -->
         {%- if section.settings.show_fbt -%}
@@ -802,8 +816,8 @@
   /* 3-Column Editorial Grid */
   #sh-editorial-{{ section.id }} .sh-editorial-grid {
     display: grid;
-    grid-template-columns: 1fr 1.25fr 1.05fr;
-    column-gap: 50px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(25rem, 32rem);
+    column-gap: 2.4rem;
     align-items: start;
   }
 
@@ -811,7 +825,7 @@
   #sh-editorial-{{ section.id }} .sh-editorial-col--left {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 2.8rem;
   }
 
   /* Thumbnails Carousel */
@@ -835,7 +849,7 @@
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-thumb-slide {
-    flex: 0 0 calc(50% - 8px);
+    flex: 0 0 100%;
     cursor: pointer;
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
@@ -992,20 +1006,20 @@
   #sh-editorial-{{ section.id }} .sh-editorial-product-title {
     font-family: var(--font-heading-family);
     font-style: var(--font-heading-style);
-    font-size: calc(var(--font-heading-scale) * 2.8rem);
+    font-size: calc(var(--font-heading-scale) * 2rem);
     font-weight: var(--font-heading-weight, 700);
     line-height: 1.25;
     letter-spacing: calc(var(--font-heading-scale) * 0.04rem);
-    text-transform: uppercase;
+    text-transform: none;
     color: #121212;
     margin: 0 0 16px 0;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-price-container {
-    font-size: 20px;
+    font-size: 1.5rem;
     font-weight: 500;
     color: #121212;
-    margin-bottom: 32px;
+    margin-bottom: 2.4rem;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-price-container .price {
@@ -1017,6 +1031,66 @@
     flex-direction: column;
     gap: 28px;
     margin-bottom: 36px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-quantity {
+    align-items: center;
+    display: flex;
+    gap: 1.2rem;
+    justify-content: space-between;
+    margin: 0 0 1.6rem;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-quantity label {
+    font-size: 1.1rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-quantity-control {
+    align-items: center;
+    border: .1rem solid rgba(18, 18, 18, .45);
+    display: flex;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-quantity-button {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font-size: 1.8rem;
+    height: 3.4rem;
+    width: 3.4rem;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-quantity input {
+    appearance: textfield;
+    border: 0;
+    font: inherit;
+    height: 3.4rem;
+    padding: 0;
+    text-align: center;
+    width: 3.6rem;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-quantity input::-webkit-inner-spin-button,
+  #sh-editorial-{{ section.id }} .sh-editorial-quantity input::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-fulfilment {
+    border-bottom: .1rem solid rgba(18, 18, 18, .12);
+    border-top: .1rem solid rgba(18, 18, 18, .12);
+    font-size: 1.1rem;
+    margin: 2.4rem 0;
+    padding: 1.4rem 0;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-fulfilment p {
+    display: flex;
+    justify-content: space-between;
+    margin: .5rem 0;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-option-group {
@@ -1648,12 +1722,21 @@
       }
 
       const variantInput = sectionEl.querySelector('#sh-variant-id-{{ section.id }}');
+      const quantityInput = sectionEl.querySelector('#sh-quantity-{{ section.id }}');
       const colorSwatches = sectionEl.querySelectorAll('.sh-editorial-color-swatch');
       const sizeBoxes = sectionEl.querySelectorAll('.sh-editorial-size-box');
       const selectedColorLabel = sectionEl.querySelector('#sh-selected-color-{{ section.id }}');
       const selectedSizeLabel = sectionEl.querySelector('#sh-selected-size-{{ section.id }}');
       const buyBtn = sectionEl.querySelector('#sh-buy-btn-{{ section.id }}');
       const cartBtn = sectionEl.querySelector('#sh-cart-btn-{{ section.id }}');
+
+      sectionEl.querySelectorAll('[data-quantity-action]').forEach(button => {
+        button.addEventListener('click', function() {
+          if (!quantityInput) return;
+          const currentQuantity = Math.max(1, parseInt(quantityInput.value, 10) || 1);
+          quantityInput.value = this.dataset.quantityAction === 'increase' ? currentQuantity + 1 : Math.max(1, currentQuantity - 1);
+        });
+      });
 
       function getSelectedOptions() {
         const selected = [];
@@ -1765,6 +1848,7 @@
         buyBtn.addEventListener('click', function(e) {
           e.preventDefault();
           const varId = variantInput ? variantInput.value : null;
+          const quantity = quantityInput ? Math.max(1, parseInt(quantityInput.value, 10) || 1) : 1;
           if (!varId) return;
 
           buyBtn.style.opacity = '0.6';
@@ -1777,7 +1861,7 @@
               'Accept': 'application/json'
             },
             body: JSON.stringify({
-              items: [{ id: varId, quantity: 1 }]
+              items: [{ id: varId, quantity: quantity }]
             })
           })
           .then(res => res.json())
@@ -1797,6 +1881,7 @@
         form.addEventListener('submit', function(e) {
           e.preventDefault();
           const varId = variantInput ? variantInput.value : null;
+          const quantity = quantityInput ? Math.max(1, parseInt(quantityInput.value, 10) || 1) : 1;
           if (!varId) return;
 
           const originalText = cartBtn.textContent;
@@ -1810,7 +1895,7 @@
               'Accept': 'application/json'
             },
             body: JSON.stringify({
-              items: [{ id: varId, quantity: 1 }]
+              items: [{ id: varId, quantity: quantity }]
             })
           })
           .then(res => res.json())
