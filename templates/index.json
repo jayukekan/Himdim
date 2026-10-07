@@ -302,7 +302,7 @@
         "show_arrows": true,
         "arrow_position": "floating",
         "show_progress_bar": true,
-        "card_shape": "arch",
+        "card_shape": "rounded",
         "card_width_desktop": 320,
         "card_height_desktop": 460,
         "card_width_mobile": 240,
