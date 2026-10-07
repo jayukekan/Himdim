@@ -9,28 +9,6 @@
  */
 {
   "sections": {
-    "offer_showcase": {
-      "type": "offer-showcase",
-      "settings": {
-        "accessible_label": "Exclusive offer",
-        "eyebrow": "A little something for you",
-        "heading": "Your first look deserves an offer",
-        "offer_value": "15",
-        "offer_suffix": "% off",
-        "description": "<p>Use this welcome offer on your first order and discover the pieces made for your everyday.</p>",
-        "coupon_label": "Use code",
-        "coupon_code": "WELCOME15",
-        "button_label": "Shop the edit",
-        "button_link": "/collections/all",
-        "image": "shopify://shop_images/teal-blossom-print-kurta-set-2487914.webp",
-        "media_note": "New season, considered",
-        "background": "#efe8dd",
-        "text_color": "#30201b",
-        "accent_color": "#9b5136",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
     "sh_hero_slideshow_mqQh7m": {
       "type": "sh-hero-slideshow",
       "blocks": {
@@ -129,6 +107,29 @@
         "mob_padding_bottom": 0,
         "full_width": true,
         "section_max_width": "1280"
+      }
+    },
+    "offer_showcase": {
+      "type": "offer-showcase",
+      "disabled": true,
+      "settings": {
+        "accessible_label": "Exclusive offer",
+        "eyebrow": "A little something for you",
+        "heading": "Your first look deserves an offer",
+        "offer_value": "15",
+        "offer_suffix": "% off",
+        "description": "<p>Use this welcome offer on your first order and discover the pieces made for your everyday.</p>",
+        "coupon_label": "Use code",
+        "coupon_code": "WELCOME15",
+        "button_label": "Shop the edit",
+        "button_link": "/collections/all",
+        "image": "shopify://shop_images/teal-blossom-print-kurta-set-2487914.webp",
+        "media_note": "New season, considered",
+        "background": "#efe8dd",
+        "text_color": "#30201b",
+        "accent_color": "#9b5136",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "sh_popular_categories_6xbHxW": {
@@ -417,6 +418,7 @@
     },
     "sh_featured_banner_image_Ra4WyJ": {
       "type": "sh-featured-banner-image",
+      "disabled": true,
       "name": "SH: Featured banner image",
       "settings": {
         "image": "shopify://shop_images/WhatsAppImage2026-08-30at22.18.36_411ad59d-26b4-4336-a0f6-247a75885169.jpg",
@@ -465,6 +467,144 @@
         "mob_padding_bottom": 0,
         "full_width": true,
         "section_max_width": "1440"
+      }
+    },
+    "offer_showcase_6jAFzL": {
+      "type": "offer-showcase",
+      "settings": {
+        "accessible_label": "Exclusive offer",
+        "eyebrow": "A little something for you",
+        "heading": "Your first look deserves an offer",
+        "offer_value": "15",
+        "offer_suffix": "% off",
+        "description": "<p>Use this welcome offer on your first order and discover the pieces made for your everyday.</p>",
+        "coupon_label": "Use code",
+        "coupon_code": "WELCOME15",
+        "button_label": "Shop the edit",
+        "button_link": "/collections/all",
+        "image": "shopify://shop_images/ChatGPTImageAug30_2026_03_27_59PM.png",
+        "media_note": "New season, considered",
+        "background": "#efe8dd",
+        "text_color": "#30201b",
+        "accent_color": "#9b5136",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "sh_arch_product_cards_6tNyxA": {
+      "type": "sh-arch-product-cards",
+      "blocks": {
+        "arch_card_PrC3cE": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "coral-blush-tissue-chanderi-pakistani-suit-set",
+            "custom_title": "Printemps - Été",
+            "custom_desc": "Crisp tailoring for everyday versatility",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_P8H6fn": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "ivory-sage-chanderi-suit-set",
+            "custom_title": "Automne - Hiver",
+            "custom_desc": "The look of a classic oxford with added stretch for comfort",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_WhqdVF": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "olive-moss-chanderi-suit-set",
+            "custom_title": "Édition Limitée",
+            "custom_desc": "Signature outerwear crafted from premium leather",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_434bxc": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "pearl-royale-silk-chanderi-suit-set-of-3",
+            "custom_title": "",
+            "custom_desc": "",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        },
+        "arch_card_KtWCBt": {
+          "type": "arch_card",
+          "disabled": true,
+          "settings": {
+            "product": "resham-gota-chanderi-suit-set",
+            "custom_title": "",
+            "custom_desc": "",
+            "custom_price": "",
+            "custom_compare_price": "",
+            "custom_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "arch_card_PrC3cE",
+        "arch_card_P8H6fn",
+        "arch_card_WhqdVF",
+        "arch_card_434bxc",
+        "arch_card_KtWCBt"
+      ],
+      "name": "SH: Arch cards & slider",
+      "settings": {
+        "layout_mode": "slider",
+        "grid_columns": "3",
+        "mob_grid_columns": "2",
+        "collection": "suits",
+        "products_to_show": 6,
+        "show_secondary_image": true,
+        "show_badges": true,
+        "show_vendor": false,
+        "show_arrows": true,
+        "arrow_position": "floating",
+        "show_progress_bar": true,
+        "card_shape": "rounded",
+        "card_width_desktop": 300,
+        "card_height_desktop": 460,
+        "card_width_mobile": 240,
+        "card_height_mobile": 340,
+        "card_gap_desktop": 22,
+        "card_gap_mobile": 16,
+        "heading": "Best Choice",
+        "heading_font_style": "theme",
+        "heading_size": 34,
+        "mob_heading_size": 24,
+        "heading_weight": "400",
+        "heading_color": "#1e1e1e",
+        "heading_align": "center",
+        "subheading": "",
+        "show_sparkles": false,
+        "sparkle_color": "#2b343d",
+        "card_title_size": 14,
+        "card_title_font": "theme",
+        "card_text_color": "#000000",
+        "show_price": true,
+        "see_all_text": "See All Collection",
+        "see_all_link": "shopify://collections/best-sellers",
+        "bg_color": "#ede9e2",
+        "full_width": false,
+        "section_max_width": 1400,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "mob_padding_top": 35,
+        "mob_padding_bottom": 35
       }
     },
     "sh_upcoming_products_showcase_UxqHtU": {
@@ -1228,6 +1368,8 @@
     "sh_arch_product_cards_xDB4HM",
     "featured_collection",
     "sh_featured_banner_image_Ra4WyJ",
+    "offer_showcase_6jAFzL",
+    "sh_arch_product_cards_6tNyxA",
     "sh_upcoming_products_showcase_UxqHtU",
     "sh_scrolling_marquee_VHy8jA",
     "sh_seasonal_drop_grid_e9bXUB",
