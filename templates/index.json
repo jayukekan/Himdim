@@ -220,6 +220,7 @@
     },
     "featured_collection_cKNKUi": {
       "type": "featured-collection",
+      "disabled": true,
       "name": "t:sections.featured-collection.presets.name",
       "settings": {
         "collection": "best-sellers",
@@ -318,7 +319,6 @@
         "arch_card_tCApNU",
         "arch_card_QHQKdW"
       ],
-      "disabled": true,
       "name": "SH: Arch cards & slider",
       "settings": {
         "layout_mode": "slider",
@@ -753,6 +753,7 @@
     },
     "featured_collection_4XJWpP": {
       "type": "featured-collection",
+      "disabled": true,
       "name": "t:sections.featured-collection.presets.name",
       "settings": {
         "collection": "kurti",
@@ -851,7 +852,6 @@
         "arch_card_3YpVxc",
         "arch_card_Eb3hM8"
       ],
-      "disabled": true,
       "name": "SH: Arch cards & slider",
       "settings": {
         "layout_mode": "slider",
