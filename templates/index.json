@@ -9,16 +9,6 @@
  */
 {
   "sections": {
-    "offer_showcase": {
-      "type": "offer-showcase",
-      "settings": {
-        "accessible_label": "Exclusive offer",
-        "background": "#efe8dd",
-        "text_color": "#30201b",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
     "sh_hero_slideshow_mqQh7m": {
       "type": "sh-hero-slideshow",
       "blocks": {
@@ -117,6 +107,27 @@
         "mob_padding_bottom": 0,
         "full_width": true,
         "section_max_width": "1280"
+      }
+    },
+    "offer_showcase": {
+      "type": "offer-showcase",
+      "settings": {
+        "accessible_label": "Exclusive offer",
+        "eyebrow": "A little something for you",
+        "heading": "Your first look deserves an offer",
+        "offer_value": "15",
+        "offer_suffix": "% off",
+        "description": "<p>Use this welcome offer on your first order and discover the pieces made for your everyday.</p>",
+        "coupon_label": "Use code",
+        "coupon_code": "WELCOME15",
+        "button_label": "Shop the edit",
+        "button_link": "",
+        "media_note": "New season, considered",
+        "background": "#efe8dd",
+        "text_color": "#30201b",
+        "accent_color": "#9b5136",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "sh_popular_categories_6xbHxW": {
@@ -405,6 +416,7 @@
     },
     "sh_featured_banner_image_Ra4WyJ": {
       "type": "sh-featured-banner-image",
+      "disabled": true,
       "name": "SH: Featured banner image",
       "settings": {
         "image": "shopify://shop_images/WhatsAppImage2026-08-30at22.18.36_411ad59d-26b4-4336-a0f6-247a75885169.jpg",
@@ -789,6 +801,29 @@
         "quick_add": "none",
         "columns_mobile": "2",
         "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "offer_showcase_xj7EtT": {
+      "type": "offer-showcase",
+      "name": "Offer showcase",
+      "settings": {
+        "accessible_label": "Exclusive offer",
+        "eyebrow": "A little something for you",
+        "heading": "Your first look deserves an offer",
+        "offer_value": "15",
+        "offer_suffix": "% off",
+        "description": "<p>Use this welcome offer on your first order and discover the pieces made for your everyday.</p>",
+        "coupon_label": "Use code",
+        "coupon_code": "WELCOME15",
+        "button_label": "Shop the edit",
+        "button_link": "",
+        "image": "shopify://shop_images/ChatGPTImageAug30_2026_03_27_59PM.png",
+        "media_note": "New season, considered",
+        "background": "#efe8dd",
+        "text_color": "#30201b",
+        "accent_color": "#9b5136",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -1221,6 +1256,7 @@
     "sh_seasonal_drop_grid_e9bXUB",
     "sh_scrolling_marquee_3fK3FG",
     "featured_collection_4XJWpP",
+    "offer_showcase_xj7EtT",
     "sh_arch_product_cards_EXetzQ",
     "sh_customer_testimonials_bbrYGg",
     "sh_media_gallery_5_bykMmA",
