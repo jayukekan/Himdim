@@ -139,8 +139,8 @@
         "category_NnRYL9": {
           "type": "category",
           "settings": {
-            "collection": "",
-            "title": "Sale",
+            "collection": "best-sellers",
+            "title": "BEST SELLER",
             "link": "",
             "badge_text": "",
             "badge_bg_color": "#d91212",
@@ -150,8 +150,8 @@
         "category_pKtyHH": {
           "type": "category",
           "settings": {
-            "collection": "",
-            "title": "Casual Pret",
+            "collection": "kurta",
+            "title": "CO-ORD SETS",
             "link": "",
             "badge_text": "",
             "badge_bg_color": "#d91212",
