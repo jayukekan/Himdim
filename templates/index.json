@@ -349,7 +349,7 @@
         "grid_columns": "4",
         "mob_grid_columns": "2",
         "collection": "best-sellers",
-        "products_to_show": 6,
+        "products_to_show": 8,
         "show_secondary_image": true,
         "show_badges": true,
         "show_vendor": false,
