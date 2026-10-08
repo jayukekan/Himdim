@@ -161,8 +161,8 @@
         "category_ypiarR": {
           "type": "category",
           "settings": {
-            "collection": "",
-            "title": "Corporate Chic",
+            "collection": "dresses",
+            "title": "DRESSES",
             "link": "",
             "badge_text": "",
             "badge_bg_color": "#d91212",
@@ -172,8 +172,8 @@
         "category_wYYcE9": {
           "type": "category",
           "settings": {
-            "collection": "",
-            "title": "Bakhtaawer Exclusive",
+            "collection": "kurti",
+            "title": "KURTA",
             "link": "",
             "badge_text": "",
             "badge_bg_color": "#d91212",
@@ -183,8 +183,8 @@
         "category_a9mxN9": {
           "type": "category",
           "settings": {
-            "collection": "",
-            "title": "Dupattas",
+            "collection": "suits",
+            "title": "SUITS",
             "link": "",
             "badge_text": "",
             "badge_bg_color": "#d91212",
