@@ -1023,7 +1023,7 @@
         "grid_columns": "3",
         "mob_grid_columns": "2",
         "collection": "kurti",
-        "products_to_show": 6,
+        "products_to_show": 3,
         "show_secondary_image": true,
         "show_badges": true,
         "show_vendor": false,
