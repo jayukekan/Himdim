@@ -345,8 +345,8 @@
       ],
       "name": "SH: Arch cards & slider",
       "settings": {
-        "layout_mode": "slider",
-        "grid_columns": "3",
+        "layout_mode": "grid",
+        "grid_columns": "4",
         "mob_grid_columns": "2",
         "collection": "best-sellers",
         "products_to_show": 6,
@@ -565,7 +565,7 @@
       ],
       "name": "SH: Arch cards & slider",
       "settings": {
-        "layout_mode": "grid",
+        "layout_mode": "slider",
         "grid_columns": "4",
         "mob_grid_columns": "2",
         "collection": "suits",
