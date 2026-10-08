@@ -25,13 +25,11 @@
       </span>
     </summary>
     <div
-      class="search-modal modal__content gradient"
+      class="search-modal search-modal--drawer modal__content gradient"
       role="dialog"
       aria-modal="true"
       aria-label="{{ 'general.search.search' | t }}"
     >
-      <div class="modal-overlay"></div>
-
       <button
         type="button"
         class="search-modal__close-button modal__close-button link link--text focus-inset"
@@ -127,6 +125,7 @@
         {%- endif -%}
       </div>
     </div>
+    <button type="button" class="modal-overlay search-modal__backdrop" aria-label="{{ 'accessibility.close' | t }}"></button>
   </details>
 </details-modal>
 
