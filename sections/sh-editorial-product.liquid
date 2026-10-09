@@ -187,12 +187,22 @@
             <div class="sh-editorial-price" id="sh-price-{{ section.id }}">
               {%- if product != blank -%}
                 {%- if current_variant.compare_at_price > current_variant.price -%}
+                  {%- assign discount_percent = current_variant.compare_at_price
+                    | minus: current_variant.price
+                    | times: 100.0
+                    | divided_by: current_variant.compare_at_price
+                    | round
+                  -%}
                   <span class="sh-price-compare">{{ current_variant.compare_at_price | money }}</span>
+                  <span class="sh-price-regular">{{ current_variant.price | money }}</span>
+                  <span class="sh-price-sale-badge">{{ discount_percent }}% OFF</span>
+                {%- else -%}
+                  <span class="sh-price-regular">{{ current_variant.price | money }}</span>
                 {%- endif -%}
-                <span class="sh-price-regular">{{ current_variant.price | money }}</span>
               {%- else -%}
                 <span class="sh-price-compare">Rs. 1,599.00</span>
                 <span class="sh-price-regular">Rs. 999.00</span>
+                <span class="sh-price-sale-badge">38% OFF</span>
               {%- endif -%}
             </div>
           </div>
@@ -993,9 +1003,9 @@
   /* Header Row: Title & Price */
   #sh-editorial-{{ section.id }} .sh-editorial-card-header {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
     margin-bottom: 24px;
   }
 
@@ -1008,24 +1018,41 @@
     color: {{ section.settings.text_color | default: '#121212' }};
     margin: 0;
     text-transform: none;
-    flex: 1;
+    width: 100%;
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-price {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     font-family: Didot, "Playfair Display", "Bodoni MT", Georgia, serif;
     font-size: 20px;
     font-weight: 600;
     color: {{ section.settings.text_color | default: '#121212' }};
-    white-space: nowrap;
-    text-align: right;
+    text-align: left;
   }
 
   #sh-editorial-{{ section.id }} .sh-price-compare {
     font-size: 15px;
     color: #888888;
     text-decoration: line-through;
-    margin-right: 8px;
+    margin-right: 0;
     font-weight: 400;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-price-sale-badge {
+    align-items: center;
+    background: #30201b;
+    border-radius: 2px;
+    color: #ffffff;
+    display: inline-flex;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    padding: 6px 8px;
   }
 
   /* Options Form */
@@ -1902,9 +1929,13 @@
           if (priceContainer) {
             let priceHtml = '';
             if (matchedVariant.compare_at_price > matchedVariant.price) {
-              priceHtml += '<span class="sh-price-compare">' + formatMoney(matchedVariant.compare_at_price) + '</span> ';
+              const salePercent = Math.round(((matchedVariant.compare_at_price - matchedVariant.price) / matchedVariant.compare_at_price) * 100);
+              priceHtml += '<span class="sh-price-compare">' + formatMoney(matchedVariant.compare_at_price) + '</span>';
+              priceHtml += '<span class="sh-price-regular">' + formatMoney(matchedVariant.price) + '</span>';
+              priceHtml += '<span class="sh-price-sale-badge">' + salePercent + '% OFF</span>';
+            } else {
+              priceHtml += '<span class="sh-price-regular">' + formatMoney(matchedVariant.price) + '</span>';
             }
-            priceHtml += '<span class="sh-price-regular">' + formatMoney(matchedVariant.price) + '</span>';
             priceContainer.innerHTML = priceHtml;
           }
 
