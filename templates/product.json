@@ -69,7 +69,7 @@
         "show_contact_link": true,
         "contact_text": "Contact Us",
         "contact_url": "",
-        "show_fbt": false,
+        "show_fbt": true,
         "fbt_heading": "Frequently bought together",
         "fbt_products": [],
         "fbt_btn_text": "Claim Offer",
