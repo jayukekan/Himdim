@@ -719,6 +719,30 @@
       </div>
     </dialog>
   {%- endif -%}
+  {%- if product != blank and request.page_type == 'product' -%}
+    <div
+      id="sh-sticky-atc-{{ section.id }}"
+      class="sh-sticky-atc"
+      role="region"
+      aria-label="{{ 'products.product.add_to_cart' | t | escape }}"
+      hidden
+    >
+      <div class="sh-sticky-atc__product">
+        <span class="sh-sticky-atc__title">{{ product.title | escape }}</span>
+        <span class="sh-sticky-atc__price" id="sh-sticky-atc-price-{{ section.id }}">{{ current_variant.price | money }}</span>
+        <span class="sh-sticky-atc__error" id="sh-sticky-atc-error-{{ section.id }}" role="status" aria-live="polite" hidden></span>
+      </div>
+      <button
+        type="button"
+        id="sh-sticky-atc-button-{{ section.id }}"
+        class="sh-sticky-atc__button"
+        data-available="{% if current_variant.available %}true{% else %}false{% endif %}"
+        {% unless current_variant.available %}disabled{% endunless %}
+      >
+        {{ section.settings.add_to_cart_label | default: 'Add to Cart' | escape }}
+      </button>
+    </div>
+  {%- endif -%}
 </div>
 </div>
 
@@ -1371,6 +1395,76 @@
     background-color: #a8a8a4 !important;
   }
 
+  #sh-editorial-{{ section.id }} .sh-sticky-atc[hidden] {
+    display: none !important;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc {
+    align-items: center;
+    background: #ffffff;
+    border-top: 1px solid rgba(48, 32, 27, 0.12);
+    bottom: 0;
+    box-shadow: 0 -8px 28px rgba(33, 25, 21, 0.12);
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    left: 0;
+    padding: 12px max(20px, calc((100vw - 1440px) / 2));
+    position: fixed;
+    right: 0;
+    z-index: 50;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__product {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__title {
+    font-size: 13px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__price {
+    color: #665d57;
+    font-size: 13px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__error {
+    color: #a12622;
+    font-size: 12px;
+    max-width: 46vw;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__button {
+    background: {{ section.settings.buy_btn_bg | default: '#30201b' }};
+    border: 0;
+    border-radius: 999px;
+    color: {{ section.settings.buy_btn_text_color | default: '#ffffff' }};
+    cursor: pointer;
+    flex: 0 0 auto;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 44px;
+    min-width: 160px;
+    padding: 0 28px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__button:hover:not(:disabled) {
+    filter: brightness(0.92);
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
   /* Dotted Divider */
   #sh-editorial-{{ section.id }} .sh-editorial-dotted-divider {
     border: none;
@@ -1814,6 +1908,22 @@
       width: 98px;
       padding: 0 6px;
     }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc {
+      gap: 12px;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc__title {
+      font-size: 12px;
+      max-width: 48vw;
+    }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc__price {
+      font-size: 12px;
+    }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc__button {
+      min-height: 42px;
+      min-width: 126px;
+      padding: 0 16px;
+    }
   }
 </style>
 
@@ -2019,6 +2129,52 @@
       const patternBtns = sectionEl.querySelectorAll('.sh-pattern-swatch-btn');
       const priceContainer = sectionEl.querySelector('#sh-price-{{ section.id }}');
       const buyBtn = sectionEl.querySelector('#sh-buy-btn-{{ section.id }}');
+      const stickyAtc = sectionEl.querySelector('#sh-sticky-atc-{{ section.id }}');
+      const stickyAtcButton = sectionEl.querySelector('#sh-sticky-atc-button-{{ section.id }}');
+      const stickyAtcPrice = sectionEl.querySelector('#sh-sticky-atc-price-{{ section.id }}');
+      const stickyAtcError = sectionEl.querySelector('#sh-sticky-atc-error-{{ section.id }}');
+      const productForm = sectionEl.querySelector('#sh-product-form-{{ section.id }}');
+
+      if (stickyAtc && buyBtn && 'IntersectionObserver' in window) {
+        let primaryButtonWasVisible = false;
+        const stickyAtcObserver = new IntersectionObserver((entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting) primaryButtonWasVisible = true;
+          stickyAtc.hidden = !primaryButtonWasVisible || entry.isIntersecting;
+        }, { threshold: 0 });
+        stickyAtcObserver.observe(buyBtn);
+      }
+
+      if (stickyAtcButton && productForm) {
+        stickyAtcButton.addEventListener('click', async function() {
+          if (stickyAtcButton.disabled) return;
+          const originalLabel = stickyAtcButton.textContent.trim();
+          if (stickyAtcError) stickyAtcError.hidden = true;
+          stickyAtcButton.disabled = true;
+          stickyAtcButton.setAttribute('aria-busy', 'true');
+          stickyAtcButton.textContent = '{{ "accessibility.loading" | t | escape }}';
+
+          try {
+            const response = await fetch('{{ routes.cart_add_url }}.js', {
+              method: 'POST',
+              headers: { Accept: 'application/json' },
+              body: new FormData(productForm)
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.description || result.message || 'Could not add this item to your cart.');
+            window.location.href = '{{ routes.cart_url }}';
+          } catch (error) {
+            console.error('Sticky add to cart failed', error);
+            if (stickyAtcError) {
+              stickyAtcError.textContent = error.message;
+              stickyAtcError.hidden = false;
+            }
+            stickyAtcButton.removeAttribute('aria-busy');
+            stickyAtcButton.textContent = originalLabel;
+            stickyAtcButton.disabled = stickyAtcButton.dataset.available !== 'true';
+          }
+        });
+      }
 
       function formatMoney(cents) {
         if (window.Shopify && typeof Shopify.formatMoney === 'function') {
@@ -2066,6 +2222,13 @@
             }
             priceContainer.innerHTML = priceHtml;
           }
+
+          if (stickyAtcPrice) stickyAtcPrice.textContent = formatMoney(matchedVariant.price);
+          if (stickyAtcButton) {
+            stickyAtcButton.dataset.available = matchedVariant.available ? 'true' : 'false';
+            stickyAtcButton.disabled = !matchedVariant.available;
+          }
+          if (stickyAtcError) stickyAtcError.hidden = true;
 
           // Update Button State
           if (buyBtn) {

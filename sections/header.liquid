@@ -164,7 +164,8 @@
     .header__icon--menu,
     .header__search .header__icon--search,
     .header__icon--account,
-    .header__icon--cart {
+    .header__icon--cart,
+    .header__icons .gp-wishlist-button {
       background-color: {{ section.settings.header_icon_bg | default: '#ffffff' }} !important;
       color: {{ section.settings.header_icon_color | default: '#121212' }} !important;
       border-radius: 50% !important;
@@ -185,7 +186,8 @@
     .header__icon--menu:hover,
     .header__search .header__icon--search:hover,
     .header__icon--account:hover,
-    .header__icon--cart:hover {
+    .header__icon--cart:hover,
+    .header__icons .gp-wishlist-button:hover {
       transform: scale(1.08) !important;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18) !important;
     }
@@ -225,7 +227,8 @@
     .header__icon--menu .icon,
     .header__search .header__icon--search .icon,
     .header__icon--account .icon,
-    .header__icon--cart .icon {
+    .header__icon--cart .icon,
+    .header__icons .gp-wishlist-button-icon {
       width: 2rem !important;
       height: 2rem !important;
       color: {{ section.settings.header_icon_color | default: '#121212' }} !important;
@@ -279,7 +282,8 @@
       .header__icon--menu,
       .header__search .header__icon--search,
       .header__icon--account,
-      .header__icon--cart {
+      .header__icon--cart,
+      .header__icons .gp-wishlist-button {
         width: 3.8rem !important;
         height: 3.8rem !important;
         min-width: 3.8rem !important;
@@ -288,7 +292,8 @@
       .header__icon--menu .icon,
       .header__search .header__icon--search .icon,
       .header__icon--account .icon,
-      .header__icon--cart .icon {
+      .header__icon--cart .icon,
+      .header__icons .gp-wishlist-button-icon {
         width: 1.8rem !important;
         height: 1.8rem !important;
       }
