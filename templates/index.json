@@ -149,6 +149,7 @@
         },
         "category_pKtyHH": {
           "type": "category",
+          "disabled": true,
           "settings": {
             "collection": "kurta",
             "title": "CO-ORD SETS",
@@ -214,7 +215,7 @@
         "subheading": "",
         "view_all_text": "",
         "view_all_link": "",
-        "circle_size_desktop": 165,
+        "circle_size_desktop": 130,
         "circle_size_mobile": 115,
         "item_border_radius": "50%",
         "circle_border_width": 0,
