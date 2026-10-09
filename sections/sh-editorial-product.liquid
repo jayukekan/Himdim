@@ -219,9 +219,21 @@
                   {%- assign opt_name_down = option.name | downcase -%}
 
                   <div class="sh-editorial-option-row" data-option-index="{{ opt_idx }}">
-                    <label class="sh-editorial-option-label" for="sh-opt-select-{{ section.id }}-{{ opt_idx }}">
-                      {{ option.name }}{% unless option.name contains ':' %}:{% endunless %}
-                    </label>
+                    <div class="sh-editorial-option-label-group">
+                      <label class="sh-editorial-option-label" for="sh-opt-select-{{ section.id }}-{{ opt_idx }}">
+                        {{ option.name }}{% unless option.name contains ':' %}:{% endunless %}
+                      </label>
+                      {%- if opt_name_down contains 'size' and section.settings.size_chart_page != blank -%}
+                        <button
+                          type="button"
+                          class="sh-size-chart-trigger"
+                          aria-haspopup="dialog"
+                          aria-controls="sh-size-chart-dialog-{{ section.id }}"
+                        >
+                          {{ section.settings.size_chart_label | default: 'Size Chart' | escape }}
+                        </button>
+                      {%- endif -%}
+                    </div>
 
                     <div class="sh-editorial-option-control">
                       {%- if opt_name_down contains 'pattern' and option.values.size > 0 -%}
@@ -692,7 +704,22 @@
       {%- endif -%}
     {%- endif -%}
 
-  </div>
+  {%- if section.settings.size_chart_page != blank -%}
+    <dialog
+      id="sh-size-chart-dialog-{{ section.id }}"
+      class="sh-size-chart-dialog"
+      aria-labelledby="sh-size-chart-title-{{ section.id }}"
+    >
+      <div class="sh-size-chart-dialog__header">
+        <h2 id="sh-size-chart-title-{{ section.id }}">{{ section.settings.size_chart_label | default: 'Size Chart' | escape }}</h2>
+        <button type="button" class="sh-size-chart-dialog__close" aria-label="{{ 'accessibility.close' | t | escape }}">&times;</button>
+      </div>
+      <div class="sh-size-chart-dialog__content rte">
+        {{ section.settings.size_chart_page.content }}
+      </div>
+    </dialog>
+  {%- endif -%}
+</div>
 </div>
 
 {%- comment -%} JSON variants data for instantaneous client-side variant switching {%- endcomment -%}
@@ -1070,6 +1097,12 @@
     gap: 14px;
   }
 
+  #sh-editorial-{{ section.id }} .sh-editorial-option-label-group {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
   #sh-editorial-{{ section.id }} .sh-editorial-option-label {
     font-size: 14px;
     font-weight: 600;
@@ -1082,6 +1115,84 @@
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-trigger {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: #6f665d;
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    padding: 4px 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-trigger:hover {
+    color: #30201b;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog {
+    border: 0;
+    border-radius: 8px;
+    box-shadow: 0 16px 60px rgba(0, 0, 0, 0.2);
+    color: #25211f;
+    max-height: min(80vh, 760px);
+    max-width: min(640px, calc(100vw - 32px));
+    overflow: auto;
+    padding: 24px;
+    width: 100%;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog::backdrop {
+    background: rgba(22, 18, 16, 0.56);
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog__header {
+    align-items: center;
+    border-bottom: 1px solid #e4e0dc;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog__header h2 {
+    font-size: 20px;
+    margin: 0;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog__close {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 26px;
+    height: 36px;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    width: 36px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog__content {
+    overflow-wrap: anywhere;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog__content table {
+    border-collapse: collapse;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog__content th,
+  #sh-editorial-{{ section.id }} .sh-size-chart-dialog__content td {
+    border: 1px solid #ded8d2;
+    padding: 9px 10px;
+    text-align: left;
   }
 
   /* Pattern Swatches */
@@ -1712,6 +1823,23 @@
       const sectionEl = document.getElementById('sh-editorial-{{ section.id }}');
       if (!sectionEl) return;
 
+      const sizeChartDialog = sectionEl.querySelector('#sh-size-chart-dialog-{{ section.id }}');
+      sectionEl.querySelectorAll('.sh-size-chart-trigger').forEach(button => {
+        button.addEventListener('click', function() {
+          if (sizeChartDialog && typeof sizeChartDialog.showModal === 'function') {
+            sizeChartDialog.showModal();
+          }
+        });
+      });
+      if (sizeChartDialog) {
+        const closeButton = sizeChartDialog.querySelector('.sh-size-chart-dialog__close');
+        if (closeButton) {
+          closeButton.addEventListener('click', function() {
+            sizeChartDialog.close();
+          });
+        }
+      }
+
       const track = sectionEl.querySelector('#sh-gal-track-{{ section.id }}');
       const prevBtn = sectionEl.querySelector('#sh-gal-prev-{{ section.id }}');
       const nextBtn = sectionEl.querySelector('#sh-gal-next-{{ section.id }}');
@@ -2052,6 +2180,22 @@
       "id": "product",
       "label": "Select Product",
       "info": "Leave blank to display the current template product"
+    },
+    {
+      "type": "header",
+      "content": "Size Chart"
+    },
+    {
+      "type": "page",
+      "id": "size_chart_page",
+      "label": "Size Chart Page",
+      "info": "Choose the Shopify page whose content will appear in the size chart popup."
+    },
+    {
+      "type": "text",
+      "id": "size_chart_label",
+      "label": "Size Chart Link Text",
+      "default": "Size Chart"
     },
     {
       "type": "header",
