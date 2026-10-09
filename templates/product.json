@@ -122,11 +122,79 @@
       "settings": {
         "include_margins": true
       }
+    },
+    "usp_benefits_CddVTc": {
+      "type": "usp-benefits",
+      "blocks": {
+        "benefit_JGJawj": {
+          "type": "benefit",
+          "settings": {
+            "icon": "truck",
+            "heading": "Timely Delivery",
+            "detail": "",
+            "link": ""
+          }
+        },
+        "benefit_aKYxpr": {
+          "type": "benefit",
+          "settings": {
+            "icon": "box",
+            "heading": "Free Shipping",
+            "detail": "",
+            "link": ""
+          }
+        },
+        "benefit_XLa6Rx": {
+          "type": "benefit",
+          "settings": {
+            "icon": "chat_bubble",
+            "heading": "24/7 Support",
+            "detail": "",
+            "link": ""
+          }
+        },
+        "benefit_tYHyrF": {
+          "type": "benefit",
+          "settings": {
+            "icon": "lock",
+            "heading": "Secured Payment",
+            "detail": "",
+            "link": ""
+          }
+        },
+        "benefit_JFjXmt": {
+          "type": "benefit",
+          "settings": {
+            "icon": "check_mark",
+            "heading": "Safe Check Out",
+            "detail": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "benefit_JGJawj",
+        "benefit_aKYxpr",
+        "benefit_XLa6Rx",
+        "benefit_tYHyrF",
+        "benefit_JFjXmt"
+      ],
+      "name": "USP benefits",
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#30201b",
+        "icon_color": "#30201b",
+        "border_color": "#e8e3df",
+        "content_width": 1400,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
     }
   },
   "order": [
     "main",
     "related-products",
-    "17915308834e050b76"
+    "17915308834e050b76",
+    "usp_benefits_CddVTc"
   ]
 }
