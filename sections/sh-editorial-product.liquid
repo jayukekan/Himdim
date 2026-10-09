@@ -164,6 +164,16 @@
             {% render 'breadcrumb', extra_classes: 'sh-breadcrumbs--right-col', product: product, collection: collection %}
           {%- endif -%}
 
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              {%- if block.id contains 'judge_me_reviews_preview_badge' -%}
+                <div class="sh-editorial-judge-me-badge" {{ block.shopify_attributes }}>
+                  {% render block %}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+
           <!-- Header Row: Title & Price -->
           <div class="sh-editorial-card-header">
             <h1 class="sh-editorial-title">
@@ -374,9 +384,11 @@
               {%- for block in section.blocks -%}
                 {%- case block.type -%}
                   {%- when '@app' -%}
-                    <div class="sh-editorial-app-block" {{ block.shopify_attributes }}>
-                      {% render block %}
-                    </div>
+                    {%- unless block.id contains 'judge_me_reviews_preview_badge' -%}
+                      <div class="sh-editorial-app-block" {{ block.shopify_attributes }}>
+                        {% render block %}
+                      </div>
+                    {%- endunless -%}
                   {%- when 'text' -%}
                     <div class="sh-editorial-text-block rte" {{ block.shopify_attributes }}>
                       {{ block.settings.text }}
