@@ -117,35 +117,45 @@
           "type": "benefit",
           "settings": {
             "icon": "truck",
-            "heading": "Timely Delivery"
+            "heading": "Timely Delivery",
+            "detail": "",
+            "link": ""
           }
         },
         "free_shipping": {
           "type": "benefit",
           "settings": {
             "icon": "box",
-            "heading": "Free Shipping"
+            "heading": "Free Shipping",
+            "detail": "",
+            "link": ""
           }
         },
         "customer_support": {
           "type": "benefit",
           "settings": {
             "icon": "chat_bubble",
-            "heading": "24/7 Support"
+            "heading": "24/7 Support",
+            "detail": "",
+            "link": ""
           }
         },
         "secured_payment": {
           "type": "benefit",
           "settings": {
             "icon": "lock",
-            "heading": "Secured Payment"
+            "heading": "Secured Payment",
+            "detail": "",
+            "link": ""
           }
         },
         "safe_checkout": {
           "type": "benefit",
           "settings": {
             "icon": "check_mark",
-            "heading": "Safe Check Out"
+            "heading": "Safe Check Out",
+            "detail": "",
+            "link": ""
           }
         }
       },
@@ -156,7 +166,15 @@
         "secured_payment",
         "safe_checkout"
       ],
-      "settings": {}
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#30201b",
+        "icon_color": "#30201b",
+        "border_color": "#e8e3df",
+        "content_width": 1400,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
     },
     "offer_showcase": {
       "type": "offer-showcase",
@@ -1437,6 +1455,73 @@
         "padding_top": 60,
         "padding_bottom": 60
       }
+    },
+    "usp_benefits_wfbqUa": {
+      "type": "usp-benefits",
+      "blocks": {
+        "benefit_nrr9eC": {
+          "type": "benefit",
+          "settings": {
+            "icon": "truck",
+            "heading": "Timely Delivery",
+            "detail": "",
+            "link": ""
+          }
+        },
+        "benefit_TizWUt": {
+          "type": "benefit",
+          "settings": {
+            "icon": "box",
+            "heading": "Free Shipping",
+            "detail": "",
+            "link": ""
+          }
+        },
+        "benefit_Rhq8h6": {
+          "type": "benefit",
+          "settings": {
+            "icon": "chat_bubble",
+            "heading": "24/7 Support",
+            "detail": "",
+            "link": ""
+          }
+        },
+        "benefit_F9z6DA": {
+          "type": "benefit",
+          "settings": {
+            "icon": "lock",
+            "heading": "Secured Payment",
+            "detail": "",
+            "link": ""
+          }
+        },
+        "benefit_Bf4abG": {
+          "type": "benefit",
+          "settings": {
+            "icon": "check_mark",
+            "heading": "Safe Check Out",
+            "detail": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "benefit_nrr9eC",
+        "benefit_TizWUt",
+        "benefit_Rhq8h6",
+        "benefit_F9z6DA",
+        "benefit_Bf4abG"
+      ],
+      "name": "USP benefits",
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#30201b",
+        "icon_color": "#30201b",
+        "border_color": "#e8e3df",
+        "content_width": 1400,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
     }
   },
   "order": [
@@ -1459,6 +1544,7 @@
     "179153155636d1d4c2",
     "sh_customer_testimonials_bbrYGg",
     "sh_media_gallery_5_bykMmA",
-    "sh_editorial_journal_main"
+    "sh_editorial_journal_main",
+    "usp_benefits_wfbqUa"
   ]
 }
