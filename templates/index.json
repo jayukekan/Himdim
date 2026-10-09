@@ -1062,6 +1062,35 @@
         "mob_padding_bottom": 35
       }
     },
+    "179153155636d1d4c2": {
+      "type": "apps",
+      "blocks": {
+        "reelfy_videos_reelfy_section_UnBdhw": {
+          "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+          "settings": {
+            "gallery_id": 25406,
+            "title": "",
+            "subtitle": "",
+            "heading_size": "1",
+            "heading_align": "left",
+            "heading_color": "",
+            "desc_style": "subtitle",
+            "desc_color": "",
+            "custom_class": "",
+            "background_color": "",
+            "padding_top": 36,
+            "padding_bottom": 36,
+            "padding_left_right": 0
+          }
+        }
+      },
+      "block_order": [
+        "reelfy_videos_reelfy_section_UnBdhw"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
     "sh_customer_testimonials_bbrYGg": {
       "type": "sh-customer-testimonials",
       "blocks": {
@@ -1377,6 +1406,7 @@
     "sh_scrolling_marquee_3fK3FG",
     "featured_collection_4XJWpP",
     "sh_arch_product_cards_EXetzQ",
+    "179153155636d1d4c2",
     "sh_customer_testimonials_bbrYGg",
     "sh_media_gallery_5_bykMmA",
     "sh_editorial_journal_main"

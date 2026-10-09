@@ -31,12 +31,23 @@
             "content": "<p>100% Premium Cotton. Gentle hand wash or machine wash cold. Do not bleach. Dry in shade.</p>",
             "open_by_default": false
           }
+        },
+        "reelfy_videos_reelfy_product_JYta3w": {
+          "type": "shopify://apps/reelfy-videos/blocks/reelfy-product/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+          "settings": {
+            "title": "",
+            "heading_size": "1",
+            "heading_align": "left",
+            "heading_color": "",
+            "custom_class": ""
+          }
         }
       },
       "block_order": [
         "judge_me_reviews_preview_badge_GfRnTK",
         "custom_r9CUpY",
-        "details"
+        "details",
+        "reelfy_videos_reelfy_product_JYta3w"
       ],
       "settings": {
         "product": "",
