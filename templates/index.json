@@ -110,6 +110,54 @@
         "section_max_width": "1280"
       }
     },
+    "usp_benefits": {
+      "type": "usp-benefits",
+      "blocks": {
+        "timely_delivery": {
+          "type": "benefit",
+          "settings": {
+            "icon": "truck",
+            "heading": "Timely Delivery"
+          }
+        },
+        "free_shipping": {
+          "type": "benefit",
+          "settings": {
+            "icon": "box",
+            "heading": "Free Shipping"
+          }
+        },
+        "customer_support": {
+          "type": "benefit",
+          "settings": {
+            "icon": "chat_bubble",
+            "heading": "24/7 Support"
+          }
+        },
+        "secured_payment": {
+          "type": "benefit",
+          "settings": {
+            "icon": "lock",
+            "heading": "Secured Payment"
+          }
+        },
+        "safe_checkout": {
+          "type": "benefit",
+          "settings": {
+            "icon": "check_mark",
+            "heading": "Safe Check Out"
+          }
+        }
+      },
+      "block_order": [
+        "timely_delivery",
+        "free_shipping",
+        "customer_support",
+        "secured_payment",
+        "safe_checkout"
+      ],
+      "settings": {}
+    },
     "offer_showcase": {
       "type": "offer-showcase",
       "disabled": true,
@@ -1393,6 +1441,7 @@
   },
   "order": [
     "sh_hero_slideshow_mqQh7m",
+    "usp_benefits",
     "offer_showcase",
     "sh_popular_categories_6xbHxW",
     "featured_collection_cKNKUi",
