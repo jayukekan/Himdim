@@ -339,6 +339,78 @@
         "padding_bottom": 36
       }
     },
+    "sh_scrolling_marquee_HDKEpM": {
+      "type": "sh-scrolling-marquee",
+      "blocks": {
+        "text_item_NzaqbU": {
+          "type": "text_item",
+          "settings": {
+            "text": "DESIGNED TO MOVE",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_BTYARq": {
+          "type": "text_item",
+          "settings": {
+            "text": "MADE TO LAST",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_8EV7Fz": {
+          "type": "text_item",
+          "settings": {
+            "text": "PREMIUM CRAFTSMANSHIP",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_yfxP86": {
+          "type": "text_item",
+          "settings": {
+            "text": "NEW ARRIVALS",
+            "link": "",
+            "highlight_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_item_NzaqbU",
+        "text_item_BTYARq",
+        "text_item_8EV7Fz",
+        "text_item_yfxP86"
+      ],
+      "name": "SH: Scrolling marquee",
+      "settings": {
+        "direction": "left",
+        "speed": 24,
+        "mob_speed": 16,
+        "pause_on_hover": true,
+        "font_size_desktop": 28,
+        "font_size_mobile": 20,
+        "font_weight": "800",
+        "font_style": "sans-serif",
+        "letter_case": "uppercase",
+        "letter_spacing": 1,
+        "outline_text": false,
+        "separator_type": "asterisk",
+        "separator_size": 22,
+        "gap_between_items": 45,
+        "mob_gap": 24,
+        "text_color": "#000000",
+        "text_hover_color": "#000000",
+        "separator_color": "#000000",
+        "bg_color": "#ffffff",
+        "border_top": false,
+        "border_bottom": false,
+        "border_color": "#e5e5e5",
+        "padding_top": 22,
+        "padding_bottom": 22,
+        "mob_padding_top": 14,
+        "mob_padding_bottom": 14
+      }
+    },
     "sh_arch_product_cards_xDB4HM": {
       "type": "sh-arch-product-cards",
       "blocks": {
@@ -453,78 +525,6 @@
         "padding_bottom": 60,
         "mob_padding_top": 35,
         "mob_padding_bottom": 35
-      }
-    },
-    "sh_scrolling_marquee_HDKEpM": {
-      "type": "sh-scrolling-marquee",
-      "blocks": {
-        "text_item_NzaqbU": {
-          "type": "text_item",
-          "settings": {
-            "text": "DESIGNED TO MOVE",
-            "link": "",
-            "highlight_color": ""
-          }
-        },
-        "text_item_BTYARq": {
-          "type": "text_item",
-          "settings": {
-            "text": "MADE TO LAST",
-            "link": "",
-            "highlight_color": ""
-          }
-        },
-        "text_item_8EV7Fz": {
-          "type": "text_item",
-          "settings": {
-            "text": "PREMIUM CRAFTSMANSHIP",
-            "link": "",
-            "highlight_color": ""
-          }
-        },
-        "text_item_yfxP86": {
-          "type": "text_item",
-          "settings": {
-            "text": "NEW ARRIVALS",
-            "link": "",
-            "highlight_color": ""
-          }
-        }
-      },
-      "block_order": [
-        "text_item_NzaqbU",
-        "text_item_BTYARq",
-        "text_item_8EV7Fz",
-        "text_item_yfxP86"
-      ],
-      "name": "SH: Scrolling marquee",
-      "settings": {
-        "direction": "left",
-        "speed": 24,
-        "mob_speed": 16,
-        "pause_on_hover": true,
-        "font_size_desktop": 28,
-        "font_size_mobile": 20,
-        "font_weight": "800",
-        "font_style": "sans-serif",
-        "letter_case": "uppercase",
-        "letter_spacing": 1,
-        "outline_text": false,
-        "separator_type": "asterisk",
-        "separator_size": 22,
-        "gap_between_items": 45,
-        "mob_gap": 24,
-        "text_color": "#000000",
-        "text_hover_color": "#000000",
-        "separator_color": "#000000",
-        "bg_color": "#ffffff",
-        "border_top": false,
-        "border_bottom": false,
-        "border_color": "#e5e5e5",
-        "padding_top": 22,
-        "padding_bottom": 22,
-        "mob_padding_top": 14,
-        "mob_padding_bottom": 14
       }
     },
     "sh_upcoming_products_showcase_UxqHtU": {
@@ -1602,14 +1602,14 @@
     "offer_showcase",
     "sh_popular_categories_6xbHxW",
     "featured_collection_cKNKUi",
-    "sh_arch_product_cards_xDB4HM",
     "sh_scrolling_marquee_HDKEpM",
+    "sh_arch_product_cards_xDB4HM",
     "sh_upcoming_products_showcase_UxqHtU",
+    "sh_scrolling_marquee_VHy8jA",
     "featured_collection",
     "sh_arch_product_cards_6tNyxA",
     "sh_featured_banner_image_Ra4WyJ",
     "offer_showcase_6jAFzL",
-    "sh_scrolling_marquee_VHy8jA",
     "sh_seasonal_drop_grid_e9bXUB",
     "sh_scrolling_marquee_3fK3FG",
     "featured_collection_4XJWpP",
