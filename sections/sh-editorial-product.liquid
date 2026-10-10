@@ -1320,7 +1320,8 @@
 
   /* Actions Row: Pill Quantity & Olive Pill Buy Now Button */
   #sh-editorial-{{ section.id }} .sh-editorial-actions-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
     gap: 14px;
     align-items: center;
     margin-top: 22px;
@@ -1377,7 +1378,7 @@
   }
 
   #sh-editorial-{{ section.id }} .sh-editorial-buy-now-btn {
-    flex: 1;
+    grid-column: 1 / -1;
     height: 44px;
     border-radius: 9999px;
     background-color: {{ section.settings.buy_btn_bg | default: '#73816e' }};
@@ -1950,6 +1951,9 @@
     #sh-editorial-{{ section.id }} .sh-editorial-quantity-pill {
       width: 98px;
       padding: 0 6px;
+    }
+    #sh-editorial-{{ section.id }} .sh-editorial-actions-row {
+      grid-template-columns: 98px minmax(0, 1fr);
     }
     #sh-editorial-{{ section.id }} .sh-sticky-atc {
       gap: 12px;
