@@ -350,6 +350,18 @@
 
               <button
                 type="button"
+                class="sh-editorial-add-to-cart-btn"
+                id="sh-add-to-cart-btn-{{ section.id }}"
+                {% unless current_variant.available %}disabled{% endunless %}
+              >
+                {%- if current_variant.available or product == blank -%}
+                  {{ section.settings.add_to_cart_label | default: 'Add to Cart' | escape }}
+                {%- else -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- endif -%}
+              </button>
+              <button
+                type="button"
                 class="sh-editorial-buy-now-btn"
                 id="sh-buy-btn-{{ section.id }}"
                 {% unless current_variant.available %}disabled{% endunless %}
@@ -361,6 +373,7 @@
                 {%- endif -%}
               </button>
             </div>
+            <p class="sh-atc-error" id="sh-atc-error-{{ section.id }}" role="alert" hidden></p>
           {%- endform -%}
 
           <!-- Dotted Separator -->
@@ -1389,6 +1402,36 @@
     transform: translateY(-1px);
   }
 
+  #sh-editorial-{{ section.id }} .sh-editorial-add-to-cart-btn {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    border-radius: 9999px;
+    background: transparent;
+    color: {{ section.settings.buy_btn_bg | default: '#30201b' }};
+    border: 1px solid {{ section.settings.buy_btn_bg | default: '#30201b' }};
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0 12px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-add-to-cart-btn:hover:not(:disabled) {
+    background: rgba(48, 32, 27, 0.07);
+  }
+
+  #sh-editorial-{{ section.id }} .sh-editorial-add-to-cart-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-atc-error {
+    margin: 10px 0 0;
+    color: #a32626;
+    font-size: 13px;
+  }
+
   #sh-editorial-{{ section.id }} .sh-editorial-buy-now-btn[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
@@ -2129,6 +2172,9 @@
       const patternBtns = sectionEl.querySelectorAll('.sh-pattern-swatch-btn');
       const priceContainer = sectionEl.querySelector('#sh-price-{{ section.id }}');
       const buyBtn = sectionEl.querySelector('#sh-buy-btn-{{ section.id }}');
+      const addToCartBtn = sectionEl.querySelector('#sh-add-to-cart-btn-{{ section.id }}');
+      const addToCartError = sectionEl.querySelector('#sh-atc-error-{{ section.id }}');
+      const cartDrawer = document.querySelector('cart-drawer');
       const stickyAtc = sectionEl.querySelector('#sh-sticky-atc-{{ section.id }}');
       const stickyAtcButton = sectionEl.querySelector('#sh-sticky-atc-button-{{ section.id }}');
       const stickyAtcPrice = sectionEl.querySelector('#sh-sticky-atc-price-{{ section.id }}');
@@ -2145,36 +2191,55 @@
         stickyAtcObserver.observe(buyBtn);
       }
 
-      if (stickyAtcButton && productForm) {
-        stickyAtcButton.addEventListener('click', async function() {
-          if (stickyAtcButton.disabled) return;
-          const originalLabel = stickyAtcButton.textContent.trim();
-          if (stickyAtcError) stickyAtcError.hidden = true;
-          stickyAtcButton.disabled = true;
-          stickyAtcButton.setAttribute('aria-busy', 'true');
-          stickyAtcButton.textContent = '{{ "accessibility.loading" | t | escape }}';
+      async function addProductToCart(button, errorElement) {
+        if (!button || !productForm || button.disabled) return;
+        const originalLabel = button.textContent.trim();
+        if (errorElement) errorElement.hidden = true;
+        button.disabled = true;
+        button.setAttribute('aria-busy', 'true');
+        button.textContent = '{{ "accessibility.loading" | t | escape }}';
 
-          try {
-            const response = await fetch('{{ routes.cart_add_url }}.js', {
-              method: 'POST',
-              headers: { Accept: 'application/json' },
-              body: new FormData(productForm)
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.description || result.message || 'Could not add this item to your cart.');
+        try {
+          const formData = new FormData(productForm);
+          formData.set('sections', 'cart-drawer,cart-icon-bubble');
+          formData.set('sections_url', window.location.pathname);
+          const response = await fetch('{{ routes.cart_add_url }}.js', {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: formData
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.description || result.message || 'Could not add this item to your cart.');
+          if (
+            cartDrawer &&
+            typeof cartDrawer.renderContents === 'function' &&
+            result.sections &&
+            result.sections['cart-drawer'] &&
+            result.sections['cart-icon-bubble']
+          ) {
+            cartDrawer.renderContents(result);
+          } else {
             window.location.href = '{{ routes.cart_url }}';
-          } catch (error) {
-            console.error('Sticky add to cart failed', error);
-            if (stickyAtcError) {
-              stickyAtcError.textContent = error.message;
-              stickyAtcError.hidden = false;
-            }
-            stickyAtcButton.removeAttribute('aria-busy');
-            stickyAtcButton.textContent = originalLabel;
-            stickyAtcButton.disabled = stickyAtcButton.dataset.available !== 'true';
           }
-        });
+        } catch (error) {
+          console.error('Add to cart failed', error);
+          if (errorElement) {
+            errorElement.textContent = error.message;
+            errorElement.hidden = false;
+          }
+        } finally {
+          button.removeAttribute('aria-busy');
+          button.textContent = originalLabel;
+          if (button === stickyAtcButton) {
+            button.disabled = button.dataset.available !== 'true';
+          } else {
+            button.disabled = !(variantInput && variantsData.some((variant) => String(variant.id) === variantInput.value && variant.available));
+          }
+        }
       }
+
+      if (stickyAtcButton) stickyAtcButton.addEventListener('click', () => addProductToCart(stickyAtcButton, stickyAtcError));
+      if (addToCartBtn) addToCartBtn.addEventListener('click', () => addProductToCart(addToCartBtn, addToCartError));
 
       function formatMoney(cents) {
         if (window.Shopify && typeof Shopify.formatMoney === 'function') {
@@ -2229,6 +2294,12 @@
             stickyAtcButton.disabled = !matchedVariant.available;
           }
           if (stickyAtcError) stickyAtcError.hidden = true;
+          if (addToCartBtn) {
+            addToCartBtn.disabled = !matchedVariant.available;
+            addToCartBtn.textContent = matchedVariant.available
+              ? '{{ section.settings.add_to_cart_label | default: "Add to Cart" | escape }}'
+              : '{{ "products.product.sold_out" | t | escape }}';
+          }
 
           // Update Button State
           if (buyBtn) {

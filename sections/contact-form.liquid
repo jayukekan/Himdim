@@ -12,10 +12,58 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  .section-{{ section.id }}-padding .contact-editorial__layout {
+    display: grid;
+    grid-template-columns: minmax(260px, .8fr) minmax(0, 1.2fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: start;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .section-{{ section.id }}-padding .contact-editorial__information {
+    padding: clamp(28px, 4vw, 48px);
+    background: #30201b;
+    color: #fff;
+  }
+
+  .section-{{ section.id }}-padding .contact-editorial__information h2 { margin-top: 0; color: inherit; }
+  .section-{{ section.id }}-padding .contact-editorial__intro { margin-bottom: 28px; color: rgba(255, 255, 255, .78); }
+  .section-{{ section.id }}-padding .contact-editorial__detail { margin: 20px 0 0; }
+  .section-{{ section.id }}-padding .contact-editorial__detail-label { display: block; margin-bottom: 5px; font-size: 1.2rem; letter-spacing: .08em; text-transform: uppercase; opacity: .7; }
+  .section-{{ section.id }}-padding .contact-editorial__detail a { color: inherit; text-underline-offset: .25em; }
+  .section-{{ section.id }}-padding .contact-editorial__form { min-width: 0; }
+  .section-{{ section.id }}-padding .contact-editorial__form > .title { margin-top: 0; }
+
+  @media screen and (max-width: 749px) {
+    .section-{{ section.id }}-padding .contact-editorial__layout { grid-template-columns: 1fr; gap: 28px; }
+    .section-{{ section.id }}-padding .contact-editorial__information { padding: 28px 24px; }
+  }
 {%- endstyle -%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient">
-  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding">
+  <div class="contact page-width section-{{ section.id }}-padding">
+    <div class="contact-editorial__layout">
+      <aside class="contact-editorial__information">
+        <h2 class="h1">{{ section.settings.contact_heading | escape }}</h2>
+        {%- if section.settings.contact_intro != blank -%}
+          <div class="contact-editorial__intro rte">{{ section.settings.contact_intro }}</div>
+        {%- endif -%}
+        {%- if section.settings.contact_business_name != blank -%}
+          <p class="contact-editorial__detail"><span class="contact-editorial__detail-label">Business</span>{{ section.settings.contact_business_name | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.contact_phone != blank -%}
+          <p class="contact-editorial__detail"><span class="contact-editorial__detail-label">{{ 'templates.contact.form.phone' | t }}</span><a href="tel:{{ section.settings.contact_phone | remove: ' ' | escape }}">{{ section.settings.contact_phone | escape }}</a></p>
+        {%- endif -%}
+        {%- if section.settings.contact_email != blank -%}
+          <p class="contact-editorial__detail"><span class="contact-editorial__detail-label">{{ 'templates.contact.form.email' | t }}</span><a href="mailto:{{ section.settings.contact_email | escape }}">{{ section.settings.contact_email | escape }}</a></p>
+        {%- endif -%}
+        {%- if section.settings.contact_address != blank -%}
+          <div class="contact-editorial__detail"><span class="contact-editorial__detail-label">Address</span>{{ section.settings.contact_address | escape | newline_to_br }}</div>
+        {%- endif -%}
+      </aside>
+      <div class="contact-editorial__form">
     {%- if section.settings.heading != blank -%}
       <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         {{ section.settings.heading }}
@@ -132,6 +180,8 @@
         </button>
       </div>
     {%- endform -%}
+      </div>
+    </div>
   </div>
 </div>
 
@@ -183,6 +233,46 @@
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Contact information"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Information heading",
+      "default": "Get in touch"
+    },
+    {
+      "type": "richtext",
+      "id": "contact_intro",
+      "label": "Introduction",
+      "default": "<p>We would love to hear from you. Send us a message and our team will get back to you.</p>"
+    },
+    {
+      "type": "text",
+      "id": "contact_business_name",
+      "label": "Business name",
+      "default": "Himdim Wear"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Phone number",
+      "default": "9509195682"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email address",
+      "default": "himdimwear@gmail.com"
+    },
+    {
+      "type": "textarea",
+      "id": "contact_address",
+      "label": "Address",
+      "default": "47, Lata Sinema ke Pichhe, Nayaj Colony, Jhotwara, 302012 Jaipur RJ, India"
     },
     {
       "type": "header",

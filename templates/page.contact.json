@@ -19,6 +19,7 @@
     },
     "rich_text_NpnQyW": {
       "type": "rich-text",
+      "disabled": true,
       "blocks": {
         "heading_wCCWka": {
           "type": "heading",
@@ -51,9 +52,15 @@
     "form": {
       "type": "contact-form",
       "settings": {
-        "heading": "",
+        "heading": "Send us a message",
         "heading_size": "h1",
         "color_scheme": "scheme-1",
+        "contact_heading": "Get in touch",
+        "contact_intro": "<p>We would love to hear from you. Send us a message and our team will get back to you.</p>",
+        "contact_business_name": "Himdim Wear",
+        "contact_phone": "9509195682",
+        "contact_email": "himdimwear@gmail.com",
+        "contact_address": "47, Lata Sinema ke Pichhe, Nayaj Colony, Jhotwara, 302012 Jaipur RJ, India",
         "padding_top": 36,
         "padding_bottom": 36
       }
