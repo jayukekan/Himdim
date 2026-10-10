@@ -11,27 +11,6 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "b_whatsapp_tNhRHX": {
-      "type": "B-whatsapp",
-      "name": "KS - WhatsApp Chat",
-      "settings": {
-        "whatsapp_number": "9178785 71292",
-        "primary_color": "#25D366",
-        "secondary_color": "#095e54",
-        "bg_color": "#ece5dd",
-        "text_color": "#121212",
-        "btn_position": "right",
-        "btn_text": "Chat with us",
-        "show_btn_text": true,
-        "btn_z_index": "2",
-        "show_dialog": true,
-        "dialog_header_img": "shopify://shop_images/Untitled_design_1_270f8d5a-5a97-441f-af68-272994830511.png",
-        "dialog_name": "Himdim Wear",
-        "dialog_subtitle": "Typically replies within minutes.",
-        "dialog_msg": "<p>Hi there 👋<br/>How can I help you?</p>",
-        "dialog_input_label": "Type a message..."
-      }
-    },
     "footer": {
       "type": "footer",
       "blocks": {
@@ -86,7 +65,6 @@
     }
   },
   "order": [
-    "b_whatsapp_tNhRHX",
     "footer"
   ]
 }
