@@ -455,6 +455,152 @@
         "mob_padding_bottom": 35
       }
     },
+    "sh_scrolling_marquee_HDKEpM": {
+      "type": "sh-scrolling-marquee",
+      "blocks": {
+        "text_item_NzaqbU": {
+          "type": "text_item",
+          "settings": {
+            "text": "DESIGNED TO MOVE",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_BTYARq": {
+          "type": "text_item",
+          "settings": {
+            "text": "MADE TO LAST",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_8EV7Fz": {
+          "type": "text_item",
+          "settings": {
+            "text": "PREMIUM CRAFTSMANSHIP",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_yfxP86": {
+          "type": "text_item",
+          "settings": {
+            "text": "NEW ARRIVALS",
+            "link": "",
+            "highlight_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_item_NzaqbU",
+        "text_item_BTYARq",
+        "text_item_8EV7Fz",
+        "text_item_yfxP86"
+      ],
+      "name": "SH: Scrolling marquee",
+      "settings": {
+        "direction": "left",
+        "speed": 24,
+        "mob_speed": 16,
+        "pause_on_hover": true,
+        "font_size_desktop": 28,
+        "font_size_mobile": 20,
+        "font_weight": "800",
+        "font_style": "sans-serif",
+        "letter_case": "uppercase",
+        "letter_spacing": 1,
+        "outline_text": false,
+        "separator_type": "asterisk",
+        "separator_size": 22,
+        "gap_between_items": 45,
+        "mob_gap": 24,
+        "text_color": "#000000",
+        "text_hover_color": "#000000",
+        "separator_color": "#000000",
+        "bg_color": "#ffffff",
+        "border_top": false,
+        "border_bottom": false,
+        "border_color": "#e5e5e5",
+        "padding_top": 22,
+        "padding_bottom": 22,
+        "mob_padding_top": 14,
+        "mob_padding_bottom": 14
+      }
+    },
+    "sh_upcoming_products_showcase_UxqHtU": {
+      "type": "sh-upcoming-products-showcase",
+      "blocks": {
+        "showcase_item_Nzhqfc": {
+          "type": "showcase_item",
+          "settings": {
+            "product": "pink-petal-gathered-cotton-top-for-women-stylish-floral-everyday-top",
+            "image": "shopify://shop_images/WhatsAppImage2026-09-07at16.13.27_764e8396-8e08-464f-8db9-9931e13a3d5b.png",
+            "title": "Dresses",
+            "pill_bg_color": "#d7e6c4",
+            "link": "shopify://collections/dresses",
+            "button_label": ""
+          }
+        },
+        "showcase_item_NwFXyr": {
+          "type": "showcase_item",
+          "settings": {
+            "product": "vibrant-yellow-floral-cotton-kurta-set-with-palazzo",
+            "image": "shopify://shop_images/vibrant-yellow-floral-cotton-kurta-set-with-palazzo-1422497.png",
+            "title": "Kurta",
+            "pill_bg_color": "#f1dcc8",
+            "link": "shopify://collections/kurti",
+            "button_label": ""
+          }
+        },
+        "showcase_item_Cgr3mh": {
+          "type": "showcase_item",
+          "settings": {
+            "product": "ornate-paisley-handblock-cotton-suit-set",
+            "image": "shopify://shop_images/ornate-paisley-handblock-cotton-suit-set-1582808.png",
+            "title": "Suits",
+            "pill_bg_color": "#e1e8ee",
+            "link": "shopify://collections/suits",
+            "button_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "showcase_item_Nzhqfc",
+        "showcase_item_NwFXyr",
+        "showcase_item_Cgr3mh"
+      ],
+      "name": "SH: Upcoming showcase",
+      "settings": {
+        "heading_main": "Discover What’s Next",
+        "heading_suffix": "—  Fresh Styles, Timeless Elegance",
+        "heading_size": 34,
+        "mob_heading_size": 24,
+        "heading_color": "#111111",
+        "heading_alignment": "left",
+        "capsule_width": 75,
+        "capsule_height_desktop": 400,
+        "capsule_height_mobile": 320,
+        "capsule_border_radius": 300,
+        "default_capsule_bg": "#d7e6c4",
+        "image_fit": "contain",
+        "image_popout_desktop": 80,
+        "image_popout_mobile": 45,
+        "image_max_width": 85,
+        "show_side_list": true,
+        "side_list_font_size": 28,
+        "side_list_font_style": "theme",
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "autoplay_speed": 5,
+        "bg_color": "#ede9e2",
+        "section_max_width": 1400,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "mob_padding_top": 35,
+        "mob_padding_bottom": 35
+      }
+    },
     "featured_collection": {
       "type": "featured-collection",
       "disabled": true,
@@ -481,81 +627,6 @@
         "columns_mobile": "2",
         "swipe_on_mobile": false,
         "padding_top": 44,
-        "padding_bottom": 36
-      }
-    },
-    "sh_featured_banner_image_Ra4WyJ": {
-      "type": "sh-featured-banner-image",
-      "disabled": true,
-      "name": "SH: Featured banner image",
-      "settings": {
-        "image": "shopify://shop_images/WhatsAppImage2026-08-30at22.18.36_411ad59d-26b4-4336-a0f6-247a75885169.jpg",
-        "image_height": "medium",
-        "image_border_radius": 0,
-        "heading": "<p>NEW SEASON EDIT</p>",
-        "text": "<p>Get the perfect look for your fall classic wardrobe.</p>",
-        "button_label_1": "SHOP ALL",
-        "button_link_1": "/",
-        "btn_outline": false,
-        "outline_btn_text_color": "#121212",
-        "button_label_2": "",
-        "button_link_2": "/",
-        "btn_outline2": true,
-        "outline_btn_text_color2": "#ffffff",
-        "border_radius1": 0,
-        "desktop_content_position": "bottom-center",
-        "desktop_content_alignment": "center",
-        "mobile_content_position": "middle",
-        "mobile_content_alignment": "center",
-        "heading_font_size": 50,
-        "heading_font_weight": "500",
-        "content_font_size": 16,
-        "opacity": 0,
-        "overlay_color": "#121212",
-        "heading_color": "#ffffff",
-        "heading_highlight_color": "#ffffff",
-        "content_color": "#ffffff",
-        "btn_bg_color": "#121212",
-        "btn_text_color": "#ffffff",
-        "btn_border_color": "#121212",
-        "btn_hover_bg_color": "#ffffff",
-        "btn_hover_text_color": "#121212",
-        "btn_hover_border_color": "#121212",
-        "btn_shadow_color": "#121212",
-        "btn_bg_color2": "#121212",
-        "btn_text_color2": "#ffffff",
-        "btn_border_color2": "#121212",
-        "btn_hover_bg_color2": "#ffffff",
-        "btn_hover_text_color2": "#121212",
-        "btn_hover_border_color2": "#121212",
-        "btn_shadow_color2": "#121212",
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "mob_padding_top": 0,
-        "mob_padding_bottom": 0,
-        "full_width": true,
-        "section_max_width": "1440"
-      }
-    },
-    "offer_showcase_6jAFzL": {
-      "type": "offer-showcase",
-      "settings": {
-        "accessible_label": "Exclusive offer",
-        "eyebrow": "A little something for you",
-        "heading": "Your first look deserves an offer",
-        "offer_value": "15",
-        "offer_suffix": "% off",
-        "description": "<p>Use this welcome offer on your first order and discover the pieces made for your everyday.</p>",
-        "coupon_label": "Use code",
-        "coupon_code": "WELCOME15",
-        "button_label": "Shop the edit",
-        "button_link": "/collections/all",
-        "image": "shopify://shop_images/ChatGPTImageAug30_2026_03_27_59PM.png",
-        "media_note": "New season, considered",
-        "background": "#efe8dd",
-        "text_color": "#30201b",
-        "accent_color": "#9b5136",
-        "padding_top": 36,
         "padding_bottom": 36
       }
     },
@@ -675,78 +746,79 @@
         "mob_padding_bottom": 35
       }
     },
-    "sh_upcoming_products_showcase_UxqHtU": {
-      "type": "sh-upcoming-products-showcase",
-      "blocks": {
-        "showcase_item_Nzhqfc": {
-          "type": "showcase_item",
-          "settings": {
-            "product": "pink-petal-gathered-cotton-top-for-women-stylish-floral-everyday-top",
-            "image": "shopify://shop_images/WhatsAppImage2026-09-07at16.13.27_764e8396-8e08-464f-8db9-9931e13a3d5b.png",
-            "title": "Dresses",
-            "pill_bg_color": "#d7e6c4",
-            "link": "shopify://collections/dresses",
-            "button_label": ""
-          }
-        },
-        "showcase_item_NwFXyr": {
-          "type": "showcase_item",
-          "settings": {
-            "product": "vibrant-yellow-floral-cotton-kurta-set-with-palazzo",
-            "image": "shopify://shop_images/vibrant-yellow-floral-cotton-kurta-set-with-palazzo-1422497.png",
-            "title": "Kurta",
-            "pill_bg_color": "#f1dcc8",
-            "link": "shopify://collections/kurti",
-            "button_label": ""
-          }
-        },
-        "showcase_item_Cgr3mh": {
-          "type": "showcase_item",
-          "settings": {
-            "product": "ornate-paisley-handblock-cotton-suit-set",
-            "image": "shopify://shop_images/ornate-paisley-handblock-cotton-suit-set-1582808.png",
-            "title": "Suits",
-            "pill_bg_color": "#e1e8ee",
-            "link": "shopify://collections/suits",
-            "button_label": ""
-          }
-        }
-      },
-      "block_order": [
-        "showcase_item_Nzhqfc",
-        "showcase_item_NwFXyr",
-        "showcase_item_Cgr3mh"
-      ],
-      "name": "SH: Upcoming showcase",
+    "sh_featured_banner_image_Ra4WyJ": {
+      "type": "sh-featured-banner-image",
+      "disabled": true,
+      "name": "SH: Featured banner image",
       "settings": {
-        "heading_main": "Discover What’s Next",
-        "heading_suffix": "—  Fresh Styles, Timeless Elegance",
-        "heading_size": 34,
-        "mob_heading_size": 24,
-        "heading_color": "#111111",
-        "heading_alignment": "left",
-        "capsule_width": 75,
-        "capsule_height_desktop": 400,
-        "capsule_height_mobile": 320,
-        "capsule_border_radius": 300,
-        "default_capsule_bg": "#d7e6c4",
-        "image_fit": "contain",
-        "image_popout_desktop": 80,
-        "image_popout_mobile": 45,
-        "image_max_width": 85,
-        "show_side_list": true,
-        "side_list_font_size": 28,
-        "side_list_font_style": "theme",
-        "show_arrows": true,
-        "show_dots": true,
-        "autoplay": false,
-        "autoplay_speed": 5,
-        "bg_color": "#ede9e2",
-        "section_max_width": 1400,
-        "padding_top": 60,
-        "padding_bottom": 60,
-        "mob_padding_top": 35,
-        "mob_padding_bottom": 35
+        "image": "shopify://shop_images/WhatsAppImage2026-08-30at22.18.36_411ad59d-26b4-4336-a0f6-247a75885169.jpg",
+        "image_height": "medium",
+        "image_border_radius": 0,
+        "heading": "<p>NEW SEASON EDIT</p>",
+        "text": "<p>Get the perfect look for your fall classic wardrobe.</p>",
+        "button_label_1": "SHOP ALL",
+        "button_link_1": "/",
+        "btn_outline": false,
+        "outline_btn_text_color": "#121212",
+        "button_label_2": "",
+        "button_link_2": "/",
+        "btn_outline2": true,
+        "outline_btn_text_color2": "#ffffff",
+        "border_radius1": 0,
+        "desktop_content_position": "bottom-center",
+        "desktop_content_alignment": "center",
+        "mobile_content_position": "middle",
+        "mobile_content_alignment": "center",
+        "heading_font_size": 50,
+        "heading_font_weight": "500",
+        "content_font_size": 16,
+        "opacity": 0,
+        "overlay_color": "#121212",
+        "heading_color": "#ffffff",
+        "heading_highlight_color": "#ffffff",
+        "content_color": "#ffffff",
+        "btn_bg_color": "#121212",
+        "btn_text_color": "#ffffff",
+        "btn_border_color": "#121212",
+        "btn_hover_bg_color": "#ffffff",
+        "btn_hover_text_color": "#121212",
+        "btn_hover_border_color": "#121212",
+        "btn_shadow_color": "#121212",
+        "btn_bg_color2": "#121212",
+        "btn_text_color2": "#ffffff",
+        "btn_border_color2": "#121212",
+        "btn_hover_bg_color2": "#ffffff",
+        "btn_hover_text_color2": "#121212",
+        "btn_hover_border_color2": "#121212",
+        "btn_shadow_color2": "#121212",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mob_padding_top": 0,
+        "mob_padding_bottom": 0,
+        "full_width": true,
+        "section_max_width": "1440"
+      }
+    },
+    "offer_showcase_6jAFzL": {
+      "type": "offer-showcase",
+      "settings": {
+        "accessible_label": "Exclusive offer",
+        "eyebrow": "A little something for you",
+        "heading": "Your first look deserves an offer",
+        "offer_value": "15",
+        "offer_suffix": "% off",
+        "description": "<p>Use this welcome offer on your first order and discover the pieces made for your everyday.</p>",
+        "coupon_label": "Use code",
+        "coupon_code": "WELCOME15",
+        "button_label": "Shop the edit",
+        "button_link": "/collections/all",
+        "image": "shopify://shop_images/ChatGPTImageAug30_2026_03_27_59PM.png",
+        "media_note": "New season, considered",
+        "background": "#efe8dd",
+        "text_color": "#30201b",
+        "accent_color": "#9b5136",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "sh_scrolling_marquee_VHy8jA": {
@@ -1531,11 +1603,12 @@
     "sh_popular_categories_6xbHxW",
     "featured_collection_cKNKUi",
     "sh_arch_product_cards_xDB4HM",
+    "sh_scrolling_marquee_HDKEpM",
+    "sh_upcoming_products_showcase_UxqHtU",
     "featured_collection",
+    "sh_arch_product_cards_6tNyxA",
     "sh_featured_banner_image_Ra4WyJ",
     "offer_showcase_6jAFzL",
-    "sh_arch_product_cards_6tNyxA",
-    "sh_upcoming_products_showcase_UxqHtU",
     "sh_scrolling_marquee_VHy8jA",
     "sh_seasonal_drop_grid_e9bXUB",
     "sh_scrolling_marquee_3fK3FG",
