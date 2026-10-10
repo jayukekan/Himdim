@@ -485,7 +485,7 @@
       "name": "SH: Arch cards & slider",
       "settings": {
         "layout_mode": "grid",
-        "grid_columns": "3",
+        "grid_columns": "4",
         "mob_grid_columns": "2",
         "collection": "best-sellers",
         "products_to_show": 6,
@@ -520,7 +520,7 @@
         "see_all_link": "shopify://collections/best-sellers",
         "bg_color": "#ede9e2",
         "full_width": false,
-        "section_max_width": 1400,
+        "section_max_width": 1500,
         "padding_top": 60,
         "padding_bottom": 60,
         "mob_padding_top": 35,
@@ -599,6 +599,78 @@
         "padding_bottom": 60,
         "mob_padding_top": 35,
         "mob_padding_bottom": 35
+      }
+    },
+    "sh_scrolling_marquee_VHy8jA": {
+      "type": "sh-scrolling-marquee",
+      "blocks": {
+        "text_item_d7iUL8": {
+          "type": "text_item",
+          "settings": {
+            "text": "DESIGNED TO MOVE",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_P9BK39": {
+          "type": "text_item",
+          "settings": {
+            "text": "MADE TO LAST",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_WrhxUR": {
+          "type": "text_item",
+          "settings": {
+            "text": "PREMIUM CRAFTSMANSHIP",
+            "link": "",
+            "highlight_color": ""
+          }
+        },
+        "text_item_nk8cPA": {
+          "type": "text_item",
+          "settings": {
+            "text": "NEW ARRIVALS",
+            "link": "",
+            "highlight_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_item_d7iUL8",
+        "text_item_P9BK39",
+        "text_item_WrhxUR",
+        "text_item_nk8cPA"
+      ],
+      "name": "SH: Scrolling marquee",
+      "settings": {
+        "direction": "left",
+        "speed": 24,
+        "mob_speed": 16,
+        "pause_on_hover": true,
+        "font_size_desktop": 28,
+        "font_size_mobile": 20,
+        "font_weight": "800",
+        "font_style": "sans-serif",
+        "letter_case": "uppercase",
+        "letter_spacing": 1,
+        "outline_text": false,
+        "separator_type": "asterisk",
+        "separator_size": 22,
+        "gap_between_items": 45,
+        "mob_gap": 24,
+        "text_color": "#000000",
+        "text_hover_color": "#000000",
+        "separator_color": "#000000",
+        "bg_color": "#ffffff",
+        "border_top": false,
+        "border_bottom": false,
+        "border_color": "#e5e5e5",
+        "padding_top": 22,
+        "padding_bottom": 22,
+        "mob_padding_top": 14,
+        "mob_padding_bottom": 14
       }
     },
     "featured_collection": {
@@ -819,78 +891,6 @@
         "accent_color": "#9b5136",
         "padding_top": 36,
         "padding_bottom": 36
-      }
-    },
-    "sh_scrolling_marquee_VHy8jA": {
-      "type": "sh-scrolling-marquee",
-      "blocks": {
-        "text_item_d7iUL8": {
-          "type": "text_item",
-          "settings": {
-            "text": "DESIGNED TO MOVE",
-            "link": "",
-            "highlight_color": ""
-          }
-        },
-        "text_item_P9BK39": {
-          "type": "text_item",
-          "settings": {
-            "text": "MADE TO LAST",
-            "link": "",
-            "highlight_color": ""
-          }
-        },
-        "text_item_WrhxUR": {
-          "type": "text_item",
-          "settings": {
-            "text": "PREMIUM CRAFTSMANSHIP",
-            "link": "",
-            "highlight_color": ""
-          }
-        },
-        "text_item_nk8cPA": {
-          "type": "text_item",
-          "settings": {
-            "text": "NEW ARRIVALS",
-            "link": "",
-            "highlight_color": ""
-          }
-        }
-      },
-      "block_order": [
-        "text_item_d7iUL8",
-        "text_item_P9BK39",
-        "text_item_WrhxUR",
-        "text_item_nk8cPA"
-      ],
-      "name": "SH: Scrolling marquee",
-      "settings": {
-        "direction": "left",
-        "speed": 24,
-        "mob_speed": 16,
-        "pause_on_hover": true,
-        "font_size_desktop": 28,
-        "font_size_mobile": 20,
-        "font_weight": "800",
-        "font_style": "sans-serif",
-        "letter_case": "uppercase",
-        "letter_spacing": 1,
-        "outline_text": false,
-        "separator_type": "asterisk",
-        "separator_size": 22,
-        "gap_between_items": 45,
-        "mob_gap": 24,
-        "text_color": "#000000",
-        "text_hover_color": "#000000",
-        "separator_color": "#000000",
-        "bg_color": "#ffffff",
-        "border_top": false,
-        "border_bottom": false,
-        "border_color": "#e5e5e5",
-        "padding_top": 22,
-        "padding_bottom": 22,
-        "mob_padding_top": 14,
-        "mob_padding_bottom": 14
       }
     },
     "sh_seasonal_drop_grid_e9bXUB": {
