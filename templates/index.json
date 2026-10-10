@@ -775,7 +775,7 @@
       ],
       "name": "SH: Arch cards & slider",
       "settings": {
-        "layout_mode": "slider",
+        "layout_mode": "grid",
         "grid_columns": "4",
         "mob_grid_columns": "2",
         "collection": "suits",
