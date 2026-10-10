@@ -16,6 +16,12 @@
           "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {}
         },
+        "custom_liquid_yKiCa4": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<div style=\"text-align:center;\nmargin-top:5px;\nmargin-bottom:12px;\nmax-width: 60rem;\">\n                  <img style=\"width:100%;display:block;margin:0 auto;\" src=\"https://cdn.shopify.com/s/files/1/0688/3075/7033/files/trust_page_3.png?v=1752215350\" alt=\"Trust\">\n                </div>"
+          }
+        },
         "custom_r9CUpY": {
           "type": "custom",
           "settings": {
@@ -45,6 +51,7 @@
       },
       "block_order": [
         "judge_me_reviews_preview_badge_GfRnTK",
+        "custom_liquid_yKiCa4",
         "custom_r9CUpY",
         "details",
         "reelfy_videos_reelfy_product_JYta3w"
