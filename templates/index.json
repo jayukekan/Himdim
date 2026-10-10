@@ -151,6 +151,7 @@
         },
         "safe_checkout": {
           "type": "benefit",
+          "disabled": true,
           "settings": {
             "icon": "check_mark",
             "heading": "Safe Check Out",
@@ -166,6 +167,7 @@
         "secured_payment",
         "safe_checkout"
       ],
+      "disabled": true,
       "settings": {
         "background_color": "#ffffff",
         "text_color": "#30201b",
@@ -276,13 +278,13 @@
         "heading": "POPULAR CATEGORIES",
         "heading_tag": "h2",
         "heading_size": 28,
-        "mob_heading_size": 22,
+        "mob_heading_size": 18,
         "heading_color": "#000000",
         "subheading": "",
         "view_all_text": "",
         "view_all_link": "",
         "circle_size_desktop": 130,
-        "circle_size_mobile": 115,
+        "circle_size_mobile": 80,
         "item_border_radius": "50%",
         "circle_border_width": 0,
         "circle_border_color": "#e5e5e5",
@@ -499,7 +501,7 @@
         "card_width_desktop": 300,
         "card_height_desktop": 500,
         "card_width_mobile": 240,
-        "card_height_mobile": 240,
+        "card_height_mobile": 300,
         "card_gap_desktop": 22,
         "card_gap_mobile": 16,
         "heading": "Best Choice",
@@ -579,8 +581,8 @@
         "heading_alignment": "left",
         "capsule_width": 75,
         "capsule_height_desktop": 500,
-        "capsule_height_mobile": 320,
-        "capsule_border_radius": 300,
+        "capsule_height_mobile": 220,
+        "capsule_border_radius": 270,
         "default_capsule_bg": "#d7e6c4",
         "image_fit": "contain",
         "image_popout_desktop": 80,
@@ -787,10 +789,10 @@
         "arrow_position": "floating",
         "show_progress_bar": true,
         "card_shape": "rounded",
-        "card_width_desktop": 300,
-        "card_height_desktop": 500,
+        "card_width_desktop": 400,
+        "card_height_desktop": 400,
         "card_width_mobile": 240,
-        "card_height_mobile": 340,
+        "card_height_mobile": 240,
         "card_gap_desktop": 22,
         "card_gap_mobile": 16,
         "heading": "Best Choice",
@@ -1172,8 +1174,8 @@
         "card_shape": "rounded",
         "card_width_desktop": 240,
         "card_height_desktop": 500,
-        "card_width_mobile": 240,
-        "card_height_mobile": 240,
+        "card_width_mobile": 220,
+        "card_height_mobile": 300,
         "card_gap_desktop": 22,
         "card_gap_mobile": 16,
         "heading": "New Choice",
@@ -1457,6 +1459,35 @@
         "scroll_duration": 4
       }
     },
+    "17916301942f58eeea": {
+      "type": "apps",
+      "blocks": {
+        "instafeed_app_block_D3VUPz": {
+          "type": "shopify://apps/instafeed/blocks/app-block/c447db20-095d-4a10-9725-b5977662c9d5",
+          "settings": {
+            "title": "@himdim_wear",
+            "title_color": "",
+            "title_size_v2": 0,
+            "alignment": "center",
+            "instafeed_margin_top": 0,
+            "instafeed_margin_bottom": 0,
+            "instafeed_margin_sides": 0,
+            "show_instagram_link": false,
+            "link_alignment": "left",
+            "link_color": "#000000",
+            "background_color": "",
+            "feed_id": "",
+            "html_area": ""
+          }
+        }
+      },
+      "block_order": [
+        "instafeed_app_block_D3VUPz"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
     "sh_editorial_journal_main": {
       "type": "sh-editorial-journal",
       "blocks": {
@@ -1569,6 +1600,7 @@
         },
         "benefit_Bf4abG": {
           "type": "benefit",
+          "disabled": true,
           "settings": {
             "icon": "check_mark",
             "heading": "Safe Check Out",
@@ -1617,6 +1649,7 @@
     "179153155636d1d4c2",
     "sh_customer_testimonials_bbrYGg",
     "sh_media_gallery_5_bykMmA",
+    "17916301942f58eeea",
     "sh_editorial_journal_main",
     "usp_benefits_wfbqUa"
   ]
