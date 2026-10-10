@@ -594,7 +594,7 @@
         "autoplay": false,
         "autoplay_speed": 5,
         "bg_color": "#ede9e2",
-        "section_max_width": 1400,
+        "section_max_width": 1600,
         "padding_top": 40,
         "padding_bottom": 40,
         "mob_padding_top": 35,
