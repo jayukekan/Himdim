@@ -827,7 +827,9 @@
 
   /* ================= LEFT GALLERY (2-UP SLIDER) ================= */
   #sh-editorial-{{ section.id }} .sh-editorial-gallery-col {
-    position: relative;
+    position: sticky;
+    top: calc(var(--header-height, 0px) + 24px);
+    align-self: start;
     width: 100%;
     min-width: 0;
   }
@@ -1052,8 +1054,7 @@
 
   /* ================= RIGHT PRODUCT CARD ================= */
   #sh-editorial-{{ section.id }} .sh-editorial-info-col {
-    position: sticky;
-    top: 24px;
+    position: static;
     width: 100%;
   }
 
@@ -1897,6 +1898,10 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
+    }
+
+    #sh-editorial-{{ section.id }} .sh-editorial-gallery-col {
+      position: static;
     }
 
     /* 1 image visible full-width on mobile */
