@@ -533,15 +533,12 @@
     {%- if section.settings.show_fbt -%}
       {%- liquid
         assign fbt_prod_1 = blank
-        assign fbt_prod_2 = blank
 
         if section.settings.fbt_products != blank and section.settings.fbt_products.count > 0
           for bp in section.settings.fbt_products
             if bp.id != product.id and bp.available
               if fbt_prod_1 == blank
                 assign fbt_prod_1 = bp
-              elsif fbt_prod_2 == blank
-                assign fbt_prod_2 = bp
                 break
               endif
             endif
@@ -557,8 +554,6 @@
             if cp.id != product.id and cp.available
               if fbt_prod_1 == blank
                 assign fbt_prod_1 = cp
-              elsif fbt_prod_2 == blank
-                assign fbt_prod_2 = cp
                 break
               endif
             endif
@@ -586,15 +581,6 @@
           endif
 
           assign bundle_init_total = p0_price | plus: p1_price
-          assign bundle_init_comp = p0_comp | plus: p1_comp
-
-          if fbt_prod_2 != blank
-            assign p2_variant = fbt_prod_2.selected_or_first_available_variant
-            assign p2_price = p2_variant.price
-            assign p2_comp = p2_variant.compare_at_price | default: p2_price
-            assign bundle_init_total = bundle_init_total | plus: p2_price
-            assign bundle_init_comp = bundle_init_comp | plus: p2_comp
-          endif
         -%}
 
         <div class="sh-fbt-wrapper" id="sh-fbt-{{ section.id }}">
@@ -711,7 +697,7 @@
           >
             <span class="sh-fbt-claim-label">{{ section.settings.fbt_btn_text | default: 'Claim Offer' }}</span>
             <span class="sh-fbt-claim-dot">•</span>
-            <span class="sh-fbt-claim-total" id="sh-fbt-bundle-total-{{ section.id }}">{{ bundle_init_total | money }}</span>
+            <span class="sh-fbt-claim-total" id="sh-fbt-bundle-total-{{ section.id }}" role="status" aria-live="polite">{{ bundle_init_total | money }}</span>
           </button>
         </div>
       {%- endif -%}
@@ -1850,9 +1836,20 @@
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-card-pricing {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
     font-size: 13px;
     font-weight: 600;
     margin-top: 4px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-fbt-card-compare {
+    color: #888888;
+    font-size: 12px;
+    font-weight: 400;
+    text-decoration: line-through;
   }
 
   #sh-editorial-{{ section.id }} .sh-fbt-claim-btn {
@@ -1981,6 +1978,13 @@
 
 <script>
   (function() {
+    function calculateFbtTotal(checkboxes) {
+      return Array.from(checkboxes).reduce((total, checkbox) => {
+        const price = Number.parseInt(checkbox.dataset.price, 10) || 0;
+        return total + (checkbox.checked ? price : 0);
+      }, 0);
+    }
+
     function initEditorialProduct() {
       const sectionEl = document.getElementById('sh-editorial-{{ section.id }}');
       if (!sectionEl) return;
@@ -1990,6 +1994,21 @@
       const productFormForFbt = buyNowButton ? buyNowButton.closest('form') : null;
       if (fbtWrapper && productFormForFbt) {
         productFormForFbt.insertAdjacentElement('afterend', fbtWrapper);
+      }
+      if (fbtWrapper) {
+        const fbtCheckboxes = Array.from(fbtWrapper.querySelectorAll('.sh-fbt-checkbox'));
+        const fbtTotal = fbtWrapper.querySelector('#sh-fbt-bundle-total-{{ section.id }}');
+        const updateFbtTotal = function() {
+          const total = calculateFbtTotal(fbtCheckboxes);
+          if (fbtTotal) fbtTotal.textContent = formatMoney(total);
+          fbtCheckboxes.forEach((checkbox) => {
+            const card = checkbox.closest('.sh-fbt-card');
+            if (card) card.classList.toggle('is-active', checkbox.checked);
+          });
+        };
+
+        fbtCheckboxes.forEach((checkbox) => checkbox.addEventListener('change', updateFbtTotal));
+        updateFbtTotal();
       }
 
       const sizeChartDialog = sectionEl.querySelector('#sh-size-chart-dialog-{{ section.id }}');
