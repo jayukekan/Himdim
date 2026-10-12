@@ -7,11 +7,11 @@
           {%- if product.featured_image -%}
             <img
               class="cart-drawer-upsell__image"
-              src="{{ product.featured_image | image_url: width: 300 }}"
+              src="{{ product.featured_image | image_url: width: 400 }}"
               alt="{{ product.featured_image.alt | default: product.title | escape }}"
               loading="lazy"
-              width="120"
-              height="150"
+              width="140"
+              height="187"
             >
           {%- else -%}
             {{ 'product-1' | placeholder_svg_tag: 'cart-drawer-upsell__image placeholder' }}
@@ -29,9 +29,9 @@
           </a>
 
           <div class="cart-drawer-upsell__pricing">
-            <span class="cart-drawer-upsell__price">{{ product.price | money }}</span>
-            {%- if product.compare_at_price > product.price -%}
-              <s class="cart-drawer-upsell__compare-price">{{ product.compare_at_price | money }}</s>
+            <span class="cart-drawer-upsell__price">{{ current_var.price | money }}</span>
+            {%- if current_var.compare_at_price > current_var.price -%}
+              <s class="cart-drawer-upsell__compare-price">{{ current_var.compare_at_price | money }}</s>
             {%- endif -%}
           </div>
 
@@ -46,8 +46,11 @@
                     value="{{ variant.id }}"
                     {% if variant.id == current_var.id %}selected="selected"{% endif %}
                     {% unless variant.available %}disabled="disabled"{% endunless %}
+                    data-price="{{ variant.price | money }}"
+                    data-compare-price="{{ variant.compare_at_price | money }}"
+                    data-available="{% if variant.available %}true{% else %}false{% endif %}"
                   >
-                    {{ variant.title }}{% unless variant.available %} (Sold out){% endunless %}
+                    Size: {{ variant.title | upcase }}{% unless variant.available %} - Sold out{% endunless %}
                   </option>
                 {%- endfor -%}
               </select>
@@ -60,7 +63,9 @@
             data-variant-id="{{ current_var.id }}"
             {% unless current_var.available %}disabled="disabled"{% endunless %}
           >
-            <span class="cart-drawer-upsell__add-btn-text">+ Add</span>
+            <span class="cart-drawer-upsell__add-btn-text">
+              {%- if current_var.available -%}+ Add{%- else -%}Sold Out{%- endif -%}
+            </span>
             <span class="cart-drawer-upsell__spinner" aria-hidden="true" hidden>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>
             </span>

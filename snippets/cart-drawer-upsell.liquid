@@ -57,11 +57,11 @@
                 {%- if product.featured_image -%}
                   <img
                     class="cart-drawer-upsell__image"
-                    src="{{ product.featured_image | image_url: width: 300 }}"
+                    src="{{ product.featured_image | image_url: width: 400 }}"
                     alt="{{ product.featured_image.alt | default: product.title | escape }}"
                     loading="lazy"
-                    width="120"
-                    height="150"
+                    width="140"
+                    height="187"
                   >
                 {%- else -%}
                   {{ 'product-1' | placeholder_svg_tag: 'cart-drawer-upsell__image placeholder' }}
@@ -79,9 +79,9 @@
                 </a>
 
                 <div class="cart-drawer-upsell__pricing">
-                  <span class="cart-drawer-upsell__price">{{ product.price | money }}</span>
-                  {%- if product.compare_at_price > product.price -%}
-                    <s class="cart-drawer-upsell__compare-price">{{ product.compare_at_price | money }}</s>
+                  <span class="cart-drawer-upsell__price">{{ current_var.price | money }}</span>
+                  {%- if current_var.compare_at_price > current_var.price -%}
+                    <s class="cart-drawer-upsell__compare-price">{{ current_var.compare_at_price | money }}</s>
                   {%- endif -%}
                 </div>
 
@@ -96,8 +96,11 @@
                           value="{{ variant.id }}"
                           {% if variant.id == current_var.id %}selected="selected"{% endif %}
                           {% unless variant.available %}disabled="disabled"{% endunless %}
+                          data-price="{{ variant.price | money }}"
+                          data-compare-price="{{ variant.compare_at_price | money }}"
+                          data-available="{% if variant.available %}true{% else %}false{% endif %}"
                         >
-                          {{ variant.title }}{% unless variant.available %} (Sold out){% endunless %}
+                          Size: {{ variant.title | upcase }}{% unless variant.available %} - Sold out{% endunless %}
                         </option>
                       {%- endfor -%}
                     </select>
@@ -110,7 +113,9 @@
                   data-variant-id="{{ current_var.id }}"
                   {% unless current_var.available %}disabled="disabled"{% endunless %}
                 >
-                  <span class="cart-drawer-upsell__add-btn-text">+ Add</span>
+                  <span class="cart-drawer-upsell__add-btn-text">
+                    {%- if current_var.available -%}+ Add{%- else -%}Sold Out{%- endif -%}
+                  </span>
                   <span class="cart-drawer-upsell__spinner" aria-hidden="true" hidden>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>
                   </span>
@@ -190,19 +195,13 @@
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    padding-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(var(--color-foreground), 0.2) transparent;
+    scrollbar-width: none; /* Hide ugly scrollbar */
   }
 
   .cart-drawer-upsell__slider::-webkit-scrollbar {
-    height: 3px;
-  }
-
-  .cart-drawer-upsell__slider::-webkit-scrollbar-thumb {
-    background: rgba(var(--color-foreground), 0.2);
-    border-radius: 3px;
+    display: none; /* Chrome, Safari, Edge */
   }
 
   .cart-drawer-upsell__card {
@@ -229,8 +228,7 @@
     position: relative;
     display: block;
     width: 100%;
-    aspect-ratio: 1 / 1;
-    max-height: 12.5rem;
+    aspect-ratio: 3 / 4;
     overflow: hidden;
     border-radius: 6px;
     background: #f7f7f5;
@@ -240,6 +238,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top center;
     display: block;
     transition: transform 0.3s ease;
   }
@@ -250,71 +249,74 @@
 
   .cart-drawer-upsell__badge {
     position: absolute;
-    top: 5px;
-    left: 5px;
+    top: 6px;
+    left: 6px;
     background: #b78a48;
     color: #ffffff;
     font-size: 0.95rem;
     font-weight: 600;
-    padding: 2px 5px;
+    padding: 2px 6px;
     border-radius: 3px;
-    letter-spacing: 0.3px;
-    line-height: 1.1;
+    letter-spacing: 0.4px;
+    line-height: 1.2;
+    z-index: 1;
   }
 
   .cart-drawer-upsell__info {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    margin-top: 0.6rem;
+    margin-top: 0.7rem;
   }
 
   .cart-drawer-upsell__product-title {
     font-size: 1.15rem;
     font-weight: 500;
-    line-height: 1.25;
+    line-height: 1.3;
     color: rgb(var(--color-foreground));
     text-decoration: none;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.35rem;
   }
 
   .cart-drawer-upsell__pricing {
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
   }
 
   .cart-drawer-upsell__price {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: rgb(var(--color-foreground));
   }
 
   .cart-drawer-upsell__compare-price {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     color: rgba(var(--color-foreground), 0.5);
     text-decoration: line-through;
   }
 
   .cart-drawer-upsell__variant-wrap {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
   }
 
   .cart-drawer-upsell__variant-select {
     width: 100%;
-    font-size: 1.05rem;
-    padding: 0.35rem 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.45rem 0.6rem;
     border: 1px solid rgba(var(--color-foreground), 0.15);
     border-radius: 4px;
     background: #fafaf8;
     color: rgb(var(--color-foreground));
     cursor: pointer;
     outline: none;
+    transition: border-color 0.2s ease;
   }
 
   .cart-drawer-upsell__variant-select:focus {
@@ -324,8 +326,8 @@
   .cart-drawer-upsell__add-btn {
     width: 100%;
     margin-top: auto;
-    padding: 0.55rem 0.6rem;
-    font-size: 1.1rem;
+    padding: 0.65rem 0.8rem;
+    font-size: 1.15rem;
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -370,84 +372,124 @@
 
 <script>
   (function() {
-    function initCartDrawerUpsell() {
+    // Only bind global delegation listeners once
+    if (window._cartDrawerUpsellBound) return;
+    window._cartDrawerUpsellBound = true;
+
+    // Delegate variant change
+    document.addEventListener('change', function(e) {
+      const select = e.target.closest('.cart-drawer-upsell__variant-select');
+      if (!select) return;
+
+      const card = select.closest('.cart-drawer-upsell__card');
+      if (!card) return;
+
+      const selectedOpt = select.options[select.selectedIndex];
+      if (!selectedOpt) return;
+
+      const variantId = select.value;
+      const isAvailable = selectedOpt.dataset.available === 'true' && !selectedOpt.disabled;
+      const price = selectedOpt.dataset.price;
+      const comparePrice = selectedOpt.dataset.comparePrice;
+
+      const addBtn = card.querySelector('.cart-drawer-upsell__add-btn');
+      if (addBtn) {
+        addBtn.dataset.variantId = variantId;
+        const textEl = addBtn.querySelector('.cart-drawer-upsell__add-btn-text');
+
+        if (isAvailable) {
+          addBtn.removeAttribute('disabled');
+          if (textEl) textEl.textContent = '+ Add';
+        } else {
+          addBtn.setAttribute('disabled', 'disabled');
+          if (textEl) textEl.textContent = 'Sold Out';
+        }
+      }
+
+      // Live price update
+      if (price) {
+        const priceEl = card.querySelector('.cart-drawer-upsell__price');
+        if (priceEl) priceEl.textContent = price;
+      }
+      if (comparePrice) {
+        const compEl = card.querySelector('.cart-drawer-upsell__compare-price');
+        if (compEl) compEl.textContent = comparePrice;
+      }
+    });
+
+    // Delegate clicks for nav arrows & add to cart
+    document.addEventListener('click', async function(e) {
+      // Prev / Next scroll buttons
+      const navBtn = e.target.closest('.cart-drawer-upsell__nav-btn');
+      if (navBtn) {
+        const slider = document.getElementById('cart-drawer-upsell-slider');
+        if (slider) {
+          const direction = navBtn.dataset.dir === 'prev' ? -1 : 1;
+          const scrollAmount = (slider.clientWidth * 0.75) * direction;
+          slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+        return;
+      }
+
+      // Add to cart button
+      const btn = e.target.closest('.cart-drawer-upsell__add-btn');
+      if (!btn) return;
+      e.preventDefault();
+
+      const card = btn.closest('.cart-drawer-upsell__card');
+      const select = card ? card.querySelector('.cart-drawer-upsell__variant-select') : null;
+      // Get the currently selected variant from the select dropdown
+      const variantId = (select && select.value) ? select.value : btn.dataset.variantId;
+
+      if (!variantId || btn.disabled) return;
+
+      const textEl = btn.querySelector('.cart-drawer-upsell__add-btn-text');
+      const spinEl = btn.querySelector('.cart-drawer-upsell__spinner');
+
+      btn.disabled = true;
+      if (textEl) textEl.hidden = true;
+      if (spinEl) spinEl.hidden = false;
+
+      try {
+        const formData = new FormData();
+        formData.set('id', variantId);
+        formData.set('quantity', '1');
+        formData.set('sections', 'cart-drawer,cart-icon-bubble');
+
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: formData
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.description || data.message || 'Error adding item');
+
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer && typeof cartDrawer.renderContents === 'function' && data.sections) {
+          cartDrawer.renderContents(data);
+        } else {
+          window.location.reload();
+        }
+
+        if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+          publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-drawer-upsell', cartData: data });
+        }
+      } catch (err) {
+        console.error('Cart upsell add failed:', err);
+        alert(err.message || 'Could not add item to cart');
+        btn.disabled = false;
+        if (textEl) textEl.hidden = false;
+        if (spinEl) spinEl.hidden = true;
+      }
+    });
+
+    // Check Shopify Recommendations API dynamically if available
+    function checkDynamicRecommendations() {
       const container = document.getElementById('cart-drawer-upsell-container');
       if (!container) return;
 
       const slider = container.querySelector('#cart-drawer-upsell-slider');
-      const navBtns = container.querySelectorAll('.cart-drawer-upsell__nav-btn');
-
-      // Scroll arrows
-      navBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (!slider) return;
-          const direction = btn.dataset.dir === 'prev' ? -1 : 1;
-          const scrollAmount = (slider.clientWidth * 0.75) * direction;
-          slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        });
-      });
-
-      // Variant dropdown change
-      container.querySelectorAll('.cart-drawer-upsell__variant-select').forEach(select => {
-        select.addEventListener('change', (e) => {
-          const card = e.target.closest('.cart-drawer-upsell__card');
-          const addBtn = card ? card.querySelector('.cart-drawer-upsell__add-btn') : null;
-          if (addBtn) {
-            addBtn.dataset.variantId = e.target.value;
-          }
-        });
-      });
-
-      // Add to Cart click
-      container.querySelectorAll('.cart-drawer-upsell__add-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-          e.preventDefault();
-          const variantId = btn.dataset.variantId;
-          if (!variantId || btn.disabled) return;
-
-          const textEl = btn.querySelector('.cart-drawer-upsell__add-btn-text');
-          const spinEl = btn.querySelector('.cart-drawer-upsell__spinner');
-
-          btn.disabled = true;
-          if (textEl) textEl.hidden = true;
-          if (spinEl) spinEl.hidden = false;
-
-          try {
-            const formData = new FormData();
-            formData.set('id', variantId);
-            formData.set('quantity', '1');
-            formData.set('sections', 'cart-drawer,cart-icon-bubble');
-
-            const res = await fetch('/cart/add.js', {
-              method: 'POST',
-              headers: { 'X-Requested-With': 'XMLHttpRequest' },
-              body: formData
-            });
-
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.description || data.message || 'Error adding product to cart');
-
-            const cartDrawer = document.querySelector('cart-drawer');
-            if (cartDrawer && typeof cartDrawer.renderContents === 'function' && data.sections) {
-              cartDrawer.renderContents(data);
-            } else {
-              window.location.reload();
-            }
-
-            if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
-              publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-drawer-upsell', cartData: data });
-            }
-          } catch (err) {
-            console.error('Cart upsell add failed:', err);
-            alert(err.message || 'Could not add item to cart');
-            btn.disabled = false;
-            if (textEl) textEl.hidden = false;
-            if (spinEl) spinEl.hidden = true;
-          }
-        });
-      });
-
-      // Dynamic check for Shopify Recommendations API
       const firstProductId = container.dataset.firstProductId;
       if (firstProductId && window.Shopify && window.Shopify.routes && window.Shopify.routes.root) {
         const recUrl = `${window.Shopify.routes.root}recommendations/products?product_id=${firstProductId}&limit=4&intent=related&section_id=cart-drawer-recommendations`;
@@ -460,20 +502,16 @@
             if (recCards && recCards.length > 0 && slider) {
               slider.innerHTML = '';
               recCards.forEach(c => slider.appendChild(c));
-              initCartDrawerUpsell();
             }
           })
-          .catch(() => {
-            // Keep pre-rendered collection cards safely
-          });
+          .catch(() => {});
       }
     }
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCartDrawerUpsell);
+      document.addEventListener('DOMContentLoaded', checkDynamicRecommendations);
     } else {
-      initCartDrawerUpsell();
+      checkDynamicRecommendations();
     }
   })();
 </script>
-
