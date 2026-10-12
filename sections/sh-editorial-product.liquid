@@ -1985,6 +1985,13 @@
       const sectionEl = document.getElementById('sh-editorial-{{ section.id }}');
       if (!sectionEl) return;
 
+      const fbtWrapper = sectionEl.querySelector('.sh-fbt-wrapper');
+      const buyNowButton = sectionEl.querySelector('#sh-buy-btn-{{ section.id }}');
+      const productFormForFbt = buyNowButton ? buyNowButton.closest('form') : null;
+      if (fbtWrapper && productFormForFbt) {
+        productFormForFbt.insertAdjacentElement('afterend', fbtWrapper);
+      }
+
       const sizeChartDialog = sectionEl.querySelector('#sh-size-chart-dialog-{{ section.id }}');
       sectionEl.querySelectorAll('.sh-size-chart-trigger').forEach(button => {
         button.addEventListener('click', function() {
