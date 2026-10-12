@@ -209,9 +209,9 @@
                                 {{ item.final_price | money }}
                               </strong>
                             </div>
-                          {%- else -%}
-                            <div class="product-option">
-                              {{ item.original_price | money }}
+                          {%- elsif item.quantity > 1 -%}
+                            <div class="product-option cart-item__unit-price-note">
+                              {{ item.original_price | money }} each
                             </div>
                           {%- endif -%}
 
