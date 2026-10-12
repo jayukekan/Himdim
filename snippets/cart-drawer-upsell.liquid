@@ -1,0 +1,479 @@
+{% comment %}
+  Cart Drawer "You May Also Like" Upsell Component
+  Renders responsive recommendations with 1-click quick add inside the cart drawer.
+{% endcomment %}
+
+{%- liquid
+  assign cart_product_ids = ''
+  for item in cart.items
+    assign cart_product_ids = cart_product_ids | append: item.product.id | append: ','
+  endfor
+
+  assign upsell_collection = collections['best-sellers']
+  if upsell_collection == blank or upsell_collection.products_count == 0
+    assign upsell_collection = collections['kurti']
+  endif
+  if upsell_collection == blank or upsell_collection.products_count == 0
+    assign upsell_collection = collections['kurta']
+  endif
+  if upsell_collection == blank or upsell_collection.products_count == 0
+    assign upsell_collection = collections['suits']
+  endif
+  if upsell_collection == blank or upsell_collection.products_count == 0
+    assign upsell_collection = collections['all']
+  endif
+
+  assign shown_count = 0
+-%}
+
+<div class="cart-drawer-upsell" id="cart-drawer-upsell-container" data-first-product-id="{{ cart.items.first.product_id }}">
+  <div class="cart-drawer-upsell__header">
+    <div class="cart-drawer-upsell__title-wrap">
+      <svg class="cart-drawer-upsell__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      <h3 class="cart-drawer-upsell__title">{{ 'sections.cart.headings.upsell' | default: 'You May Also Like' }}</h3>
+    </div>
+    <div class="cart-drawer-upsell__nav">
+      <button type="button" class="cart-drawer-upsell__nav-btn" data-dir="prev" aria-label="Previous recommendations">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <button type="button" class="cart-drawer-upsell__nav-btn" data-dir="next" aria-label="Next recommendations">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="cart-drawer-upsell__slider" id="cart-drawer-upsell-slider">
+    {%- if upsell_collection != blank and upsell_collection.products_count > 0 -%}
+      {%- for product in upsell_collection.products -%}
+        {%- assign p_id_str = product.id | append: '' -%}
+        {%- unless cart_product_ids contains p_id_str -%}
+          {%- if product.available and shown_count < 6 -%}
+            {%- assign shown_count = shown_count | plus: 1 -%}
+            {%- assign current_var = product.selected_or_first_available_variant -%}
+            <div class="cart-drawer-upsell__card" data-product-id="{{ product.id }}">
+              <a href="{{ product.url }}" class="cart-drawer-upsell__image-link" tabindex="-1" aria-hidden="true">
+                {%- if product.featured_image -%}
+                  <img
+                    class="cart-drawer-upsell__image"
+                    src="{{ product.featured_image | image_url: width: 300 }}"
+                    alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                    loading="lazy"
+                    width="120"
+                    height="150"
+                  >
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'cart-drawer-upsell__image placeholder' }}
+                {%- endif -%}
+
+                {%- if product.compare_at_price > product.price -%}
+                  {%- assign discount_percent = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+                  <span class="cart-drawer-upsell__badge">{{ discount_percent }}% OFF</span>
+                {%- endif -%}
+              </a>
+
+              <div class="cart-drawer-upsell__info">
+                <a href="{{ product.url }}" class="cart-drawer-upsell__product-title" title="{{ product.title | escape }}">
+                  {{ product.title | escape }}
+                </a>
+
+                <div class="cart-drawer-upsell__pricing">
+                  <span class="cart-drawer-upsell__price">{{ product.price | money }}</span>
+                  {%- if product.compare_at_price > product.price -%}
+                    <s class="cart-drawer-upsell__compare-price">{{ product.compare_at_price | money }}</s>
+                  {%- endif -%}
+                </div>
+
+                {%- if product.has_only_default_variant == false -%}
+                  <div class="cart-drawer-upsell__variant-wrap">
+                    <select
+                      class="cart-drawer-upsell__variant-select"
+                      aria-label="Select size for {{ product.title | escape }}"
+                    >
+                      {%- for variant in product.variants -%}
+                        <option
+                          value="{{ variant.id }}"
+                          {% if variant.id == current_var.id %}selected="selected"{% endif %}
+                          {% unless variant.available %}disabled="disabled"{% endunless %}
+                        >
+                          {{ variant.title }}{% unless variant.available %} (Sold out){% endunless %}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                {%- endif -%}
+
+                <button
+                  type="button"
+                  class="cart-drawer-upsell__add-btn"
+                  data-variant-id="{{ current_var.id }}"
+                  {% unless current_var.available %}disabled="disabled"{% endunless %}
+                >
+                  <span class="cart-drawer-upsell__add-btn-text">+ Add</span>
+                  <span class="cart-drawer-upsell__spinner" aria-hidden="true" hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endunless -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .cart-drawer-upsell {
+    padding: 1.4rem 0 1.2rem;
+    margin-top: 1.2rem;
+    border-top: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+
+  .cart-drawer-upsell__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+  }
+
+  .cart-drawer-upsell__title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .cart-drawer-upsell__icon {
+    color: #b78a48;
+    flex-shrink: 0;
+  }
+
+  .cart-drawer-upsell__title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: rgb(var(--color-foreground));
+    text-transform: capitalize;
+  }
+
+  .cart-drawer-upsell__nav {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .cart-drawer-upsell__nav-btn {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--color-foreground), 0.15);
+    background: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(var(--color-foreground));
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+  }
+
+  .cart-drawer-upsell__nav-btn:hover {
+    background: rgb(var(--color-foreground));
+    color: #ffffff;
+    border-color: rgb(var(--color-foreground));
+  }
+
+  .cart-drawer-upsell__slider {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 0.6rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--color-foreground), 0.2) transparent;
+  }
+
+  .cart-drawer-upsell__slider::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .cart-drawer-upsell__slider::-webkit-scrollbar-thumb {
+    background: rgba(var(--color-foreground), 0.2);
+    border-radius: 3px;
+  }
+
+  .cart-drawer-upsell__card {
+    flex: 0 0 calc(50% - 0.5rem);
+    min-width: 14rem;
+    max-width: 17rem;
+    scroll-snap-align: start;
+    background: #ffffff;
+    border: 1px solid rgba(var(--color-foreground), 0.08);
+    border-radius: 8px;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .cart-drawer-upsell__card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .cart-drawer-upsell__image-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #f7f7f5;
+  }
+
+  .cart-drawer-upsell__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .cart-drawer-upsell__card:hover .cart-drawer-upsell__image {
+    transform: scale(1.03);
+  }
+
+  .cart-drawer-upsell__badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: #b78a48;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.4px;
+    line-height: 1.2;
+  }
+
+  .cart-drawer-upsell__info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-top: 0.8rem;
+  }
+
+  .cart-drawer-upsell__product-title {
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: rgb(var(--color-foreground));
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.8rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .cart-drawer-upsell__pricing {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .cart-drawer-upsell__price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: rgb(var(--color-foreground));
+  }
+
+  .cart-drawer-upsell__compare-price {
+    font-size: 1.1rem;
+    color: rgba(var(--color-foreground), 0.5);
+    text-decoration: line-through;
+  }
+
+  .cart-drawer-upsell__variant-wrap {
+    margin-bottom: 0.6rem;
+  }
+
+  .cart-drawer-upsell__variant-select {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid rgba(var(--color-foreground), 0.15);
+    border-radius: 4px;
+    background: #fafaf8;
+    color: rgb(var(--color-foreground));
+    cursor: pointer;
+    outline: none;
+  }
+
+  .cart-drawer-upsell__variant-select:focus {
+    border-color: rgb(var(--color-foreground));
+  }
+
+  .cart-drawer-upsell__add-btn {
+    width: 100%;
+    margin-top: auto;
+    padding: 0.65rem 0.8rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: #121212;
+    color: #ffffff;
+    border: 1px solid #121212;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+  }
+
+  .cart-drawer-upsell__add-btn:hover:not(:disabled) {
+    background: #333333;
+    border-color: #333333;
+  }
+
+  .cart-drawer-upsell__add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .cart-drawer-upsell__spinner svg {
+    width: 14px;
+    height: 14px;
+    animation: cart-upsell-spin 0.8s linear infinite;
+  }
+
+  @keyframes cart-upsell-spin {
+    100% { transform: rotate(360deg); }
+  }
+
+  @media screen and (max-width: 380px) {
+    .cart-drawer-upsell__card {
+      min-width: 13rem;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    function initCartDrawerUpsell() {
+      const container = document.getElementById('cart-drawer-upsell-container');
+      if (!container) return;
+
+      const slider = container.querySelector('#cart-drawer-upsell-slider');
+      const navBtns = container.querySelectorAll('.cart-drawer-upsell__nav-btn');
+
+      // Scroll arrows
+      navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!slider) return;
+          const direction = btn.dataset.dir === 'prev' ? -1 : 1;
+          const scrollAmount = (slider.clientWidth * 0.75) * direction;
+          slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+      });
+
+      // Variant dropdown change
+      container.querySelectorAll('.cart-drawer-upsell__variant-select').forEach(select => {
+        select.addEventListener('change', (e) => {
+          const card = e.target.closest('.cart-drawer-upsell__card');
+          const addBtn = card ? card.querySelector('.cart-drawer-upsell__add-btn') : null;
+          if (addBtn) {
+            addBtn.dataset.variantId = e.target.value;
+          }
+        });
+      });
+
+      // Add to Cart click
+      container.querySelectorAll('.cart-drawer-upsell__add-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const variantId = btn.dataset.variantId;
+          if (!variantId || btn.disabled) return;
+
+          const textEl = btn.querySelector('.cart-drawer-upsell__add-btn-text');
+          const spinEl = btn.querySelector('.cart-drawer-upsell__spinner');
+
+          btn.disabled = true;
+          if (textEl) textEl.hidden = true;
+          if (spinEl) spinEl.hidden = false;
+
+          try {
+            const formData = new FormData();
+            formData.set('id', variantId);
+            formData.set('quantity', '1');
+            formData.set('sections', 'cart-drawer,cart-icon-bubble');
+
+            const res = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'X-Requested-With': 'XMLHttpRequest' },
+              body: formData
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.description || data.message || 'Error adding product to cart');
+
+            const cartDrawer = document.querySelector('cart-drawer');
+            if (cartDrawer && typeof cartDrawer.renderContents === 'function' && data.sections) {
+              cartDrawer.renderContents(data);
+            } else {
+              window.location.reload();
+            }
+
+            if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+              publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-drawer-upsell', cartData: data });
+            }
+          } catch (err) {
+            console.error('Cart upsell add failed:', err);
+            alert(err.message || 'Could not add item to cart');
+            btn.disabled = false;
+            if (textEl) textEl.hidden = false;
+            if (spinEl) spinEl.hidden = true;
+          }
+        });
+      });
+
+      // Dynamic check for Shopify Recommendations API
+      const firstProductId = container.dataset.firstProductId;
+      if (firstProductId && window.Shopify && window.Shopify.routes && window.Shopify.routes.root) {
+        const recUrl = `${window.Shopify.routes.root}recommendations/products?product_id=${firstProductId}&limit=4&intent=related&section_id=cart-drawer-recommendations`;
+        fetch(recUrl)
+          .then(res => res.text())
+          .then(htmlText => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlText;
+            const recCards = tempDiv.querySelectorAll('.cart-drawer-upsell__card');
+            if (recCards && recCards.length > 0 && slider) {
+              slider.innerHTML = '';
+              recCards.forEach(c => slider.appendChild(c));
+              initCartDrawerUpsell();
+            }
+          })
+          .catch(() => {
+            // Keep pre-rendered collection cards safely
+          });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCartDrawerUpsell);
+    } else {
+      initCartDrawerUpsell();
+    }
+  })();
+</script>
+
