@@ -1260,6 +1260,35 @@
         "mob_padding_bottom": 35
       }
     },
+    "1791874339c295d436": {
+      "type": "apps",
+      "blocks": {
+        "instafeed_app_block_4QCma9": {
+          "type": "shopify://apps/instafeed/blocks/app-block/c447db20-095d-4a10-9725-b5977662c9d5",
+          "settings": {
+            "title": "@himdim_wear",
+            "title_color": "",
+            "title_size_v2": 0,
+            "alignment": "center",
+            "instafeed_margin_top": 0,
+            "instafeed_margin_bottom": 0,
+            "instafeed_margin_sides": 0,
+            "show_instagram_link": false,
+            "link_alignment": "center",
+            "link_color": "#000000",
+            "background_color": "",
+            "feed_id": "",
+            "html_area": ""
+          }
+        }
+      },
+      "block_order": [
+        "instafeed_app_block_4QCma9"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
     "sh_media_gallery_5_bykMmA": {
       "type": "sh-media-gallery-5",
       "blocks": {
@@ -1543,6 +1572,7 @@
     "sh_arch_product_cards_EXetzQ",
     "179153155636d1d4c2",
     "sh_customer_testimonials_bbrYGg",
+    "1791874339c295d436",
     "sh_media_gallery_5_bykMmA",
     "sh_editorial_journal_main",
     "usp_benefits_wfbqUa"
