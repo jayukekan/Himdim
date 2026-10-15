@@ -37,7 +37,7 @@
             "box_bg_color": "#ffffff",
             "heading_color": "#000000",
             "content_color": "#000000",
-            "btn_bg_color": "#FFFFFF",
+            "btn_bg_color": "#ffffff",
             "btn_text_color": "#000000",
             "btn_border_color": "#121212",
             "btn_hover_bg_color": "#ffffff",
@@ -70,7 +70,7 @@
             "box_bg_color": "#ffffff",
             "heading_color": "#000000",
             "content_color": "#000000",
-            "btn_bg_color": "#FFFFFF",
+            "btn_bg_color": "#ffffff",
             "btn_text_color": "#000000",
             "btn_border_color": "#121212",
             "btn_hover_bg_color": "#ffffff",
@@ -446,11 +446,11 @@
         "show_price": true,
         "see_all_text": "See All Collection",
         "see_all_link": "shopify://collections/best-sellers",
-        "bg_color": "#ede9e2",
+        "bg_color": "#EFE8DD",
         "full_width": false,
         "section_max_width": 1400,
         "padding_top": 60,
-        "padding_bottom": 60,
+        "padding_bottom": 50,
         "mob_padding_top": 35,
         "mob_padding_bottom": 35
       }
@@ -535,6 +535,79 @@
         "mob_padding_bottom": 0,
         "full_width": true,
         "section_max_width": "1440"
+      }
+    },
+    "scrolling_text_jzEUBF": {
+      "type": "scrolling-text",
+      "blocks": {
+        "message_EXLqcJ": {
+          "type": "message",
+          "settings": {
+            "text": "TIPS IN A FLASH",
+            "link": "",
+            "text_style": "outline",
+            "color": "#000000"
+          }
+        },
+        "message_GQ69iq": {
+          "type": "message",
+          "settings": {
+            "text": "YOUR ORDER SHIPS FAST",
+            "link": "",
+            "text_style": "outline",
+            "color": "#000000"
+          }
+        },
+        "message_FNnMbb": {
+          "type": "message",
+          "settings": {
+            "text": "EASY RETURNS",
+            "link": "",
+            "text_style": "outline",
+            "color": "#000000"
+          }
+        },
+        "message_963kbE": {
+          "type": "message",
+          "settings": {
+            "text": "MADE WITH CARE",
+            "link": "",
+            "text_style": "outline",
+            "color": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "message_EXLqcJ",
+        "message_GQ69iq",
+        "message_FNnMbb",
+        "message_963kbE"
+      ],
+      "name": "Scrolling text",
+      "settings": {
+        "background_color": "#EFE8DD",
+        "text_color": "#000000",
+        "show_border": true,
+        "border_color": "#000000",
+        "font_family": "body",
+        "font_size_desktop": 50,
+        "font_size_mobile": 13,
+        "font_weight": "400",
+        "letter_spacing": 0,
+        "line_height": 120,
+        "text_transform": "uppercase",
+        "outline_width": 1.5,
+        "padding_top": 16,
+        "padding_bottom": 16,
+        "padding_horizontal": 0,
+        "padding_top_mobile": 16,
+        "padding_bottom_mobile": 16,
+        "padding_horizontal_mobile": 0,
+        "item_gap": 48,
+        "animation_speed": 25,
+        "direction": "left",
+        "pause_on_hover": true,
+        "accessibility_label": "Store offers"
       }
     },
     "offer_showcase_6jAFzL": {
@@ -1562,6 +1635,7 @@
     "sh_arch_product_cards_xDB4HM",
     "featured_collection",
     "sh_featured_banner_image_Ra4WyJ",
+    "scrolling_text_jzEUBF",
     "offer_showcase_6jAFzL",
     "sh_arch_product_cards_6tNyxA",
     "sh_upcoming_products_showcase_UxqHtU",
