@@ -1,0 +1,37 @@
+{% doc %}
+  Renders scrolling text message items inside a track group.
+
+  @param {object} blocks - Message blocks configured in the section.
+  @param {boolean} [duplicate] - Whether this is the visual duplicate used for the seamless loop.
+  @param {string} [fallback_color] - Section text color used when a block has no custom color.
+
+  @example
+  {% render 'scrolling-text-items', blocks: section.blocks, duplicate: false %}
+{% enddoc %}
+
+{%- for block in blocks -%}
+  {%- if block.settings.text != blank -%}
+    {%- liquid
+      assign item_color = block.settings.color | default: fallback_color
+    -%}
+    <div
+      class="scrolling-text__item scrolling-text__item--{{ block.settings.text_style }}"
+      style="--scrolling-text-item-color: {{ item_color }};"
+      {% unless duplicate %}
+        {{ block.shopify_attributes }}
+      {% endunless %}
+    >
+      {%- if block.settings.link != blank -%}
+        <a
+          class="scrolling-text__link"
+          href="{{ block.settings.link }}"
+          {% if duplicate %}tabindex="-1"{% endif %}
+        >
+          {{- block.settings.text | escape -}}
+        </a>
+      {%- else -%}
+        <span>{{ block.settings.text | escape }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endfor -%}
