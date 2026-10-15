@@ -105,6 +105,9 @@
     },
     "related-products": {
       "type": "related-products",
+      "custom_css": [
+        "span.price-item.price-item--sale.price-item--last {font-weight: 600;}"
+      ],
       "settings": {
         "heading": "You may also like",
         "heading_size": "h2",
