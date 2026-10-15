@@ -1,6 +1,15 @@
+{%- liquid
+  assign usp_desktop_columns = section.blocks.size | at_most: 5
+  assign usp_desktop_columns = usp_desktop_columns | at_least: 1
+  assign usp_tablet_columns = section.blocks.size | at_most: 3
+  assign usp_tablet_columns = usp_tablet_columns | at_least: 1
+  assign usp_mobile_columns = section.blocks.size | at_most: 2
+  assign usp_mobile_columns = usp_mobile_columns | at_least: 1
+-%}
+
 <section
   class="usp-benefits"
-  style="--usp-background: {{ section.settings.background_color }}; --usp-foreground: {{ section.settings.text_color }}; --usp-icon: {{ section.settings.icon_color }}; --usp-border: {{ section.settings.border_color }}; --usp-content-width: {{ section.settings.content_width }}px; --usp-padding-top: {{ section.settings.padding_top }}px; --usp-padding-bottom: {{ section.settings.padding_bottom }}px;"
+  style="--usp-background: {{ section.settings.background_color }}; --usp-foreground: {{ section.settings.text_color }}; --usp-icon: {{ section.settings.icon_color }}; --usp-border: {{ section.settings.border_color }}; --usp-content-width: {{ section.settings.content_width }}px; --usp-padding-top: {{ section.settings.padding_top }}px; --usp-padding-bottom: {{ section.settings.padding_bottom }}px; --usp-columns-desktop: {{ usp_desktop_columns }}; --usp-columns-tablet: {{ usp_tablet_columns }}; --usp-columns-mobile: {{ usp_mobile_columns }};"
 >
   <div class="usp-benefits__inner">
     <ul class="usp-benefits__list" role="list">
@@ -47,7 +56,7 @@
     align-items: stretch;
     display: grid;
     gap: 1.6rem;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--usp-columns-desktop), minmax(0, 1fr));
     list-style: none;
     margin: 0;
     padding: 0;
@@ -63,7 +72,9 @@
     display: flex;
     gap: 1rem;
     height: 100%;
+    justify-content: center;
     text-decoration: none;
+    width: 100%;
   }
 
   #shopify-section-{{ section.id }} .usp-benefits__icon {
@@ -109,7 +120,7 @@
 
   @media screen and (max-width: 989px) {
     #shopify-section-{{ section.id }} .usp-benefits__list {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(var(--usp-columns-tablet), minmax(0, 1fr));
     }
   }
 
@@ -121,7 +132,7 @@
 
     #shopify-section-{{ section.id }} .usp-benefits__list {
       column-gap: 1rem;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(var(--usp-columns-mobile), minmax(0, 1fr));
       row-gap: 1.8rem;
     }
 
@@ -141,6 +152,16 @@
 
     #shopify-section-{{ section.id }} .usp-benefits__detail {
       font-size: 1.1rem;
+    }
+  }
+
+  @media screen and (max-width: 479px) {
+    #shopify-section-{{ section.id }} .usp-benefits__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    #shopify-section-{{ section.id }} .usp-benefits__content {
+      justify-content: flex-start;
     }
   }
 </style>
