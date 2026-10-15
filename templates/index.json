@@ -16,7 +16,7 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/1.jpg",
-            "mob_image": "shopify://shop_images/2_88597b54-0fe7-4db7-a08c-94caa6b2b342.jpg",
+            "mob_image": "shopify://shop_images/2_97f9786f-1341-4688-bc30-efffeba2e2e8.png",
             "heading": "GRACE IN EVERY THREAD",
             "subheading": "<p>Celebrate timeless silhouettes crafted for modern elegance.</p>",
             "button_label": "SHOP ALL",
@@ -50,7 +50,7 @@
           "type": "image_slide",
           "settings": {
             "image": "shopify://shop_images/2.jpg",
-            "mob_image": "shopify://shop_images/1_a21af412-80fb-459f-ba7f-e1f66d9a77d6.jpg",
+            "mob_image": "shopify://shop_images/1_2faf5ff7-4597-415b-b9cf-b928426545ff.png",
             "heading": "No compromise, On comfort & style",
             "subheading": "<p>When it comes to style and comfort, nothing beats our trendy cotton suits.</p>",
             "button_label": "SHOP ALL",
@@ -63,7 +63,7 @@
             "desktop_content_alignment": "left",
             "show_text_box": true,
             "mobile_content_position": "middle",
-            "mobile_content_alignment": "right",
+            "mobile_content_alignment": "center",
             "heading_font_size": 25,
             "content_font_size": 15,
             "opacity": 0,
@@ -90,7 +90,7 @@
         "slide_height": "adapt",
         "auto_rotate": false,
         "change_slides_speed": 5,
-        "show_arrows": false,
+        "show_arrows": true,
         "show_pagination": true,
         "pagination_type": "dots",
         "show_text_below_mob": true,
@@ -152,6 +152,7 @@
         },
         "safe_checkout": {
           "type": "benefit",
+          "disabled": true,
           "settings": {
             "icon": "check_mark",
             "heading": "Safe Check Out",
@@ -306,8 +307,8 @@
         "arrow_bg_color": "#ffffff",
         "padding_top": 45,
         "padding_bottom": 45,
-        "mob_padding_top": 25,
-        "mob_padding_bottom": 25
+        "mob_padding_top": 45,
+        "mob_padding_bottom": 45
       }
     },
     "featured_collection_cKNKUi": {
