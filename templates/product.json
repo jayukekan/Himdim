@@ -185,6 +185,7 @@
         },
         "benefit_JFjXmt": {
           "type": "benefit",
+          "disabled": true,
           "settings": {
             "icon": "check_mark",
             "heading": "Safe Check Out",
