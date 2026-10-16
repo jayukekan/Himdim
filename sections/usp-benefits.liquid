@@ -120,7 +120,7 @@
 
   @media screen and (max-width: 989px) {
     #shopify-section-{{ section.id }} .usp-benefits__list {
-      grid-template-columns: repeat(var(--usp-columns-tablet), minmax(0, 1fr));
+      {% comment %} grid-template-columns: repeat(var(--usp-columns-tablet), minmax(0, 1fr)); {% endcomment %}
     }
   }
 
