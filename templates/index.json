@@ -86,7 +86,7 @@
         "image_slide_iqP3Y3"
       ],
       "custom_css": [
-        "@media (max-width: 749px) {.sp-slideshow-content-box {background: none !important; }}"
+        "@media (max-width: 749px) {.sp-slideshow-content-box {background: #00000069 !important; }}"
       ],
       "name": "SH: Hero slideshow",
       "settings": {
