@@ -27,7 +27,7 @@
             "button_size": 16,
             "desktop_content_position": "bottom-right",
             "desktop_content_alignment": "left",
-            "show_text_box": false,
+            "show_text_box": true,
             "mobile_content_position": "bottom",
             "mobile_content_alignment": "left",
             "heading_font_size": 30,
