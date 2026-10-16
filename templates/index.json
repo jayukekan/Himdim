@@ -1242,11 +1242,11 @@
         "testimonial_ExfdVx": {
           "type": "testimonial",
           "settings": {
-            "author_name": "Farhan Rahman",
+            "author_name": "Priya Sharma",
             "author_role": "Customer",
             "is_verified": true,
             "rating": 5,
-            "review_text": "Ordered a suit set for an office celebration, and honestly, I wasn't expecting this luxury at the price. The fabric was incredible.",
+            "review_text": "The cotton suit set looks beautiful, and the floral print is so elegant. I love how effortlessly it can be styled for both everyday wear and special occasions.",
             "product_name": "",
             "product_link": "",
             "review_date": ""
@@ -1255,11 +1255,11 @@
         "testimonial_rkeijP": {
           "type": "testimonial",
           "settings": {
-            "author_name": "Sarah Ahmed",
+            "author_name": "Neha Patel",
             "author_role": "Customer",
             "is_verified": true,
             "rating": 5,
-            "review_text": "I've always struggled to find outfits that feel both stylish and comfortable — until I discovered this brand.",
+            "review_text": "I was looking for something traditional yet modern, and the designs are exactly my style. The colours and prints make every outfit feel special.",
             "product_name": "",
             "product_link": "",
             "review_date": ""
@@ -1268,11 +1268,11 @@
         "testimonial_n6Adp8": {
           "type": "testimonial",
           "settings": {
-            "author_name": "Tanvir Khan",
+            "author_name": "Anjali Mehta",
             "author_role": "Customer",
             "is_verified": true,
             "rating": 5,
-            "review_text": "My shopping experience felt so personal and warm. The website was easy to browse, the checkout seamless, and delivery arrived earlier than expected.",
+            "review_text": "The handblock-inspired patterns are absolutely lovely. I especially like the graceful silhouettes and how easily the outfits pair with simple accessories.",
             "product_name": "",
             "product_link": "",
             "review_date": ""
@@ -1281,11 +1281,37 @@
         "testimonial_yT4JMb": {
           "type": "testimonial",
           "settings": {
-            "author_name": "Meherun Nesa",
+            "author_name": "Riya Kapoor",
             "author_role": "Customer",
             "is_verified": true,
             "rating": 5,
-            "review_text": "I never thought an outfit could change how I felt about myself — until I wore this. The moment I put it on, I felt confident and effortlessly beautiful.",
+            "review_text": "Such a beautiful collection of ethnic wear! The kurta designs are stylish without being too heavy, making them perfect for casual outings and family gatherings.",
+            "product_name": "",
+            "product_link": "",
+            "review_date": ""
+          }
+        },
+        "testimonial_YwpKCi": {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Sneha Verma",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "The floral suit sets have such a timeless appeal. I really like the combination of elegant colours, classic patterns and contemporary styling.",
+            "product_name": "",
+            "product_link": "",
+            "review_date": ""
+          }
+        },
+        "testimonial_zCDcDN": {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Kavya Shah",
+            "author_role": "Customer",
+            "is_verified": true,
+            "rating": 5,
+            "review_text": "I love the variety of prints and colours in the collection. From everyday kurtas to more dressed-up ethnic looks, there's something for every mood.",
             "product_name": "",
             "product_link": "",
             "review_date": ""
@@ -1296,7 +1322,9 @@
         "testimonial_ExfdVx",
         "testimonial_rkeijP",
         "testimonial_n6Adp8",
-        "testimonial_yT4JMb"
+        "testimonial_yT4JMb",
+        "testimonial_YwpKCi",
+        "testimonial_zCDcDN"
       ],
       "name": "SH: Customers Love",
       "settings": {
