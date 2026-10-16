@@ -23,7 +23,6 @@
         },
         "announcement_N8Ae4W": {
           "type": "announcement",
-          "disabled": true,
           "settings": {
             "text": "30% off on prepaid orders only.",
             "link": ""

@@ -263,6 +263,37 @@
     border: 1px solid rgba(0, 0, 0, 0.08);
   }
 
+  #sh-arch-{{ section.id }} .sh-arch-product-tags {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    max-width: calc(100% - 28px);
+    pointer-events: none;
+  }
+
+  #sh-arch-{{ section.id }} .sh-arch-product-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 4px 9px;
+    border: 1px solid rgba(18, 18, 18, 0.1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #121212;
+    font-family: var(--font-body-family);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(6px);
+  }
+
   /* Quick View / Floating Pill on hover */
   #sh-arch-{{ section.id }} .sh-arch-quick-view {
     position: absolute;
@@ -670,6 +701,8 @@
                     {% endif %}
                   {% endif %}
 
+                  {% render 'sh-product-card-tags', tags: item_product.tags %}
+
                   {% if item_image != blank %}
                     {{ item_image | image_url: width: 900 | image_tag:
                       loading: 'lazy',
@@ -766,6 +799,8 @@
                       {% render 'sh-sale-percentage-badge', price: item_price_num, compare_at_price: item_compare_price_num %}
                     {% endif %}
                   {% endif %}
+
+                  {% render 'sh-product-card-tags', tags: block_product.tags %}
 
                   {% if item_image != blank %}
                     {{ item_image | image_url: width: 900 | image_tag:

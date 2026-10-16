@@ -1,0 +1,16 @@
+{% doc %}
+  Renders up to three product tags as compact card labels.
+
+  @param {object} tags - Product tags to display.
+
+  @example
+  {% render 'sh-product-card-tags', tags: product.tags %}
+{% enddoc %}
+
+{%- if tags != blank -%}
+  <div class="sh-arch-product-tags">
+    {%- for tag in tags limit: 3 -%}
+      <span class="sh-arch-product-tag">{{ tag | escape }}</span>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
