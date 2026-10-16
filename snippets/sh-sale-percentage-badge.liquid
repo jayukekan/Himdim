@@ -1,0 +1,20 @@
+{% doc %}
+  Renders a percentage-off sale badge when the compare-at price is greater than the selling price.
+
+  @param {number} price - Current selling price in cents.
+  @param {number} compare_at_price - Original compare-at price in cents.
+  @param {string} [badge_class] - Optional badge CSS classes.
+
+  @example
+  {% render 'sh-sale-percentage-badge', price: product.price, compare_at_price: product.compare_at_price %}
+{% enddoc %}
+
+{%- if compare_at_price > price and compare_at_price > 0 -%}
+  {%- liquid
+    assign discount_percentage = compare_at_price | minus: price
+    assign discount_percentage = discount_percentage | times: 100.0
+    assign discount_percentage = discount_percentage | divided_by: compare_at_price
+    assign discount_percentage = discount_percentage | round
+  -%}
+  <span class="{{ badge_class | default: 'sh-arch-badge sh-arch-badge-sale' }}">{{ discount_percentage }}% OFF</span>
+{%- endif -%}

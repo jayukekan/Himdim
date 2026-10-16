@@ -666,7 +666,7 @@
                     {% if item_available == false %}
                       <span class="sh-arch-badge sh-arch-badge-soldout">Sold out</span>
                     {% elsif item_compare_price_num > item_price_num %}
-                      <span class="sh-arch-badge sh-arch-badge-sale">Sale</span>
+                      {% render 'sh-sale-percentage-badge', price: item_price_num, compare_at_price: item_compare_price_num %}
                     {% endif %}
                   {% endif %}
 
@@ -763,7 +763,7 @@
                     {% if item_available == false %}
                       <span class="sh-arch-badge sh-arch-badge-soldout">Sold out</span>
                     {% elsif item_compare_price_num > item_price_num %}
-                      <span class="sh-arch-badge sh-arch-badge-sale">Sale</span>
+                      {% render 'sh-sale-percentage-badge', price: item_price_num, compare_at_price: item_compare_price_num %}
                     {% endif %}
                   {% endif %}
 
