@@ -62,8 +62,8 @@
             "desktop_content_position": "bottom-right",
             "desktop_content_alignment": "left",
             "show_text_box": true,
-            "mobile_content_position": "middle",
-            "mobile_content_alignment": "center",
+            "mobile_content_position": "bottom",
+            "mobile_content_alignment": "left",
             "heading_font_size": 25,
             "content_font_size": 15,
             "opacity": 0,
@@ -84,6 +84,9 @@
       "block_order": [
         "image_slide_aBpXFX",
         "image_slide_iqP3Y3"
+      ],
+      "custom_css": [
+        "@media (max-width: 749px) {.sp-slideshow-content-box {background: none !important; }}"
       ],
       "name": "SH: Hero slideshow",
       "settings": {
