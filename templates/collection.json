@@ -19,6 +19,9 @@
     },
     "product-grid": {
       "type": "main-collection-product-grid",
+      "custom_css": [
+        "span.price-item.price-item--sale.price-item--last, span.price-item.price-item--regular {font-weight: 600;}"
+      ],
       "settings": {
         "products_per_page": 36,
         "columns_desktop": 3,
