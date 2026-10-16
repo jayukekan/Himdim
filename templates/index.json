@@ -1168,7 +1168,7 @@
         "grid_columns": "3",
         "mob_grid_columns": "2",
         "collection": "kurti",
-        "products_to_show": 3,
+        "products_to_show": 6,
         "show_secondary_image": true,
         "show_badges": true,
         "show_vendor": false,
@@ -1604,6 +1604,7 @@
         },
         "benefit_Bf4abG": {
           "type": "benefit",
+          "disabled": true,
           "settings": {
             "icon": "check_mark",
             "heading": "Safe Check Out",
