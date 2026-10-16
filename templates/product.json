@@ -109,7 +109,7 @@
         "span.price-item.price-item--sale.price-item--last {font-weight: 600;}"
       ],
       "settings": {
-        "heading": "You may also like",
+        "heading": "<strong>You may also like</strong>",
         "heading_size": "h2",
         "products_to_show": 8,
         "columns_desktop": 4,
