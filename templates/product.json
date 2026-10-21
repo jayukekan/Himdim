@@ -16,6 +16,12 @@
           "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {}
         },
+        "custom_liquid_BENKq9": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<style>\n.himdim-offer {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 12px;\n  padding: 14px 16px;\n  background: #fcf8f4;\n  border: 1px solid #d9c8bd;\n  border-radius: 10px;\n  margin: 12px 0;\n  font-family: inherit;\n}\n\n.himdim-offer-left {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  min-width: 0;\n}\n\n.himdim-offer-icon {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: #eee4dc;\n  color: #4b2b24;\n  width: 40px;\n  height: 40px;\n  border-radius: 8px;\n  flex-shrink: 0;\n}\n\n.himdim-offer-title {\n  font-size: 14px;\n  font-weight: 600;\n  color: #382923;\n  line-height: 1.4;\n}\n\n.himdim-offer-text {\n  font-size: 12px;\n  color: #73635a;\n  margin-top: 3px;\n}\n\n.himdim-offer-code {\n  border: 1px dashed #a88c79;\n  background: transparent;\n  border-radius: 6px;\n  padding: 9px 12px;\n  color: #382923;\n  font-size: 13px;\n  font-weight: 700;\n  letter-spacing: 1px;\n  cursor: pointer;\n  white-space: nowrap;\n  font-family: inherit;\n}\n\n.himdim-offer-code:hover {\n  background: #eee4dc;\n}\n\n@media(max-width: 480px) {\n  .himdim-offer {\n    padding: 12px;\n    gap: 8px;\n  }\n\n  .himdim-offer-title {\n    font-size: 13px;\n  }\n\n  .himdim-offer-text {\n    font-size: 11px;\n  }\n\n  .himdim-offer-code {\n    font-size: 12px;\n    padding: 8px 10px;\n  }\n}\n</style>\n\n<div class=\"himdim-offer\">\n  <div class=\"himdim-offer-left\">\n    <div class=\"himdim-offer-icon\">\n      <svg width=\"23\" height=\"23\" viewBox=\"0 0 24 24\"\n        fill=\"none\" stroke=\"currentColor\"\n        stroke-width=\"1.6\" stroke-linecap=\"round\"\n        stroke-linejoin=\"round\" aria-hidden=\"true\">\n        <path d=\"M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z\"/>\n        <circle cx=\"8\" cy=\"8\" r=\"1\"/>\n        <path d=\"m10 16 6-6\"/>\n      </svg>\n    </div>\n\n    <div>\n      <div class=\"himdim-offer-title\">\n        Extra 10% OFF\n      </div>\n      <div class=\"himdim-offer-text\">\n        Use code at checkout\n      </div>\n    </div>\n  </div>\n\n  <button\n    type=\"button\"\n    class=\"himdim-offer-code\"\n    aria-label=\"Copy discount code FLAT10\"\n    onclick=\"\n      var btn = this;\n      var original = 'FLAT10';\n      if (navigator.clipboard && window.isSecureContext) {\n        navigator.clipboard.writeText(original).then(function(){\n          btn.textContent = 'COPIED!';\n          setTimeout(function(){\n            btn.textContent = original;\n          }, 2000);\n        });\n      }\n    \">\n    FLAT10\n  </button>\n</div>"
+          }
+        },
         "custom_liquid_yKiCa4": {
           "type": "custom_liquid",
           "settings": {
@@ -51,6 +57,7 @@
       },
       "block_order": [
         "judge_me_reviews_preview_badge_GfRnTK",
+        "custom_liquid_BENKq9",
         "custom_liquid_yKiCa4",
         "custom_r9CUpY",
         "details",
