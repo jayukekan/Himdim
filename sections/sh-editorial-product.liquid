@@ -766,19 +766,68 @@
       hidden
     >
       <div class="sh-sticky-atc__product">
-        <span class="sh-sticky-atc__title">{{ product.title | escape }}</span>
-        <span class="sh-sticky-atc__price" id="sh-sticky-atc-price-{{ section.id }}">{{ current_variant.price | money }}</span>
-        <span class="sh-sticky-atc__error" id="sh-sticky-atc-error-{{ section.id }}" role="status" aria-live="polite" hidden></span>
+        {%- if product.featured_image != blank -%}
+          <div class="sh-sticky-atc__media">
+            <img
+              id="sh-sticky-atc-img-{{ section.id }}"
+              src="{{ current_variant.featured_image | default: product.featured_image | image_url: width: 140 }}"
+              alt="{{ product.title | escape }}"
+              width="44"
+              height="55"
+              loading="lazy"
+            >
+          </div>
+        {%- endif -%}
+        <div class="sh-sticky-atc__meta">
+          <span class="sh-sticky-atc__title">{{ product.title | escape }}</span>
+          <span class="sh-sticky-atc__price" id="sh-sticky-atc-price-{{ section.id }}">{{ current_variant.price | money }}</span>
+          <span class="sh-sticky-atc__error" id="sh-sticky-atc-error-{{ section.id }}" role="status" aria-live="polite" hidden></span>
+        </div>
       </div>
-      <button
-        type="button"
-        id="sh-sticky-atc-button-{{ section.id }}"
-        class="sh-sticky-atc__button"
-        data-available="{% if current_variant.available %}true{% else %}false{% endif %}"
-        {% unless current_variant.available %}disabled{% endunless %}
-      >
-        {{ section.settings.add_to_cart_label | default: 'Add to Cart' | escape }}
-      </button>
+
+      <div class="sh-sticky-atc__actions">
+        {%- if product.has_only_default_variant == false -%}
+          <div class="sh-sticky-atc__select-wrap">
+            <select
+              id="sh-sticky-atc-select-{{ section.id }}"
+              class="sh-sticky-atc__select"
+              aria-label="{{ 'products.product.select_options' | t | default: 'Select Size / Variant' | escape }}"
+            >
+              {%- for variant in product.variants -%}
+                <option
+                  value="{{ variant.id }}"
+                  {% if variant.id == current_variant.id %}selected="selected"{% endif %}
+                  {% unless variant.available %}disabled="disabled"{% endunless %}
+                  data-price="{{ variant.price }}"
+                  data-compare-price="{{ variant.compare_at_price }}"
+                  data-available="{% if variant.available %}true{% else %}false{% endif %}"
+                >
+                  {{ variant.title }}{% unless variant.available %} (Sold out){% endunless %}
+                </option>
+              {%- endfor -%}
+            </select>
+            <span class="sh-sticky-atc__select-caret" aria-hidden="true">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 1 5 5 9 1"></polyline>
+              </svg>
+            </span>
+          </div>
+        {%- endif -%}
+
+        <button
+          type="button"
+          id="sh-sticky-atc-button-{{ section.id }}"
+          class="sh-sticky-atc__button"
+          data-available="{% if current_variant.available %}true{% else %}false{% endif %}"
+          {% unless current_variant.available %}disabled{% endunless %}
+        >
+          {%- if current_variant.available -%}
+            {{ section.settings.add_to_cart_label | default: 'Add to Cart' | escape }}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t | escape }}
+          {%- endif -%}
+        </button>
+      </div>
     </div>
   {%- endif -%}
 </div>
@@ -1535,10 +1584,10 @@
     bottom: 0;
     box-shadow: 0 -8px 28px rgba(33, 25, 21, 0.12);
     display: flex;
-    gap: 24px;
+    gap: 20px;
     justify-content: space-between;
     left: 0;
-    padding: 12px max(20px, calc((100vw - 1440px) / 2));
+    padding: 10px max(20px, calc((100vw - 1440px) / 2));
     position: fixed;
     right: 0;
     z-index: 50;
@@ -1546,8 +1595,34 @@
 
   #sh-editorial-{{ section.id }} .sh-sticky-atc__product {
     display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__media {
+    width: 44px;
+    height: 55px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f7f7f5;
+    flex: 0 0 44px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__meta {
+    display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
     min-width: 0;
   }
 
@@ -1557,17 +1632,64 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: rgb(var(--color-foreground, #121212));
   }
 
   #sh-editorial-{{ section.id }} .sh-sticky-atc__price {
-    color: #665d57;
+    color: #121212;
     font-size: 13px;
+    font-weight: 600;
   }
 
   #sh-editorial-{{ section.id }} .sh-sticky-atc__error {
     color: #a12622;
     font-size: 12px;
     max-width: 46vw;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__select-wrap {
+    position: relative;
+    min-width: 120px;
+    max-width: 180px;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__select {
+    width: 100%;
+    height: 44px;
+    padding: 0 30px 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(48, 32, 27, 0.2);
+    background: #fafaf8;
+    font-size: 13px;
+    font-weight: 500;
+    color: #121212;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__select:focus {
+    border-color: #121212;
+  }
+
+  #sh-editorial-{{ section.id }} .sh-sticky-atc__select-caret {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #666;
+    display: flex;
+    align-items: center;
   }
 
   #sh-editorial-{{ section.id }} .sh-sticky-atc__button {
@@ -1581,8 +1703,9 @@
     font-size: 13px;
     font-weight: 600;
     min-height: 44px;
-    min-width: 160px;
-    padding: 0 28px;
+    min-width: 140px;
+    padding: 0 24px;
+    transition: all 0.2s ease;
   }
 
   #sh-editorial-{{ section.id }} .sh-sticky-atc__button:hover:not(:disabled) {
@@ -2194,20 +2317,41 @@
       font-size: 11px;
     }
     #sh-editorial-{{ section.id }} .sh-sticky-atc {
-      gap: 12px;
-      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      gap: 10px;
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc__product {
+      gap: 8px;
+    }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc__media {
+      width: 36px;
+      height: 46px;
+      flex: 0 0 36px;
     }
     #sh-editorial-{{ section.id }} .sh-sticky-atc__title {
-      font-size: 12px;
-      max-width: 48vw;
+      font-size: 11.5px;
+      max-width: 34vw;
     }
     #sh-editorial-{{ section.id }} .sh-sticky-atc__price {
-      font-size: 12px;
+      font-size: 11.5px;
+    }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc__actions {
+      gap: 8px;
+    }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc__select-wrap {
+      min-width: 85px;
+      max-width: 115px;
+    }
+    #sh-editorial-{{ section.id }} .sh-sticky-atc__select {
+      height: 40px;
+      font-size: 11.5px;
+      padding: 0 24px 0 10px;
     }
     #sh-editorial-{{ section.id }} .sh-sticky-atc__button {
-      min-height: 42px;
-      min-width: 126px;
-      padding: 0 16px;
+      min-height: 40px;
+      min-width: 95px;
+      padding: 0 14px;
+      font-size: 12px;
     }
   }
 </style>
@@ -2597,6 +2741,8 @@
       const stickyAtcButton = sectionEl.querySelector('#sh-sticky-atc-button-{{ section.id }}');
       const stickyAtcPrice = sectionEl.querySelector('#sh-sticky-atc-price-{{ section.id }}');
       const stickyAtcError = sectionEl.querySelector('#sh-sticky-atc-error-{{ section.id }}');
+      const stickyAtcSelect = sectionEl.querySelector('#sh-sticky-atc-select-{{ section.id }}');
+      const stickyAtcImg = sectionEl.querySelector('#sh-sticky-atc-img-{{ section.id }}');
       const productForm = sectionEl.querySelector('#sh-product-form-{{ section.id }}');
 
       if (stickyAtc && buyBtn && 'IntersectionObserver' in window) {
@@ -2710,6 +2856,19 @@
           if (stickyAtcButton) {
             stickyAtcButton.dataset.available = matchedVariant.available ? 'true' : 'false';
             stickyAtcButton.disabled = !matchedVariant.available;
+            stickyAtcButton.textContent = matchedVariant.available
+              ? '{{ section.settings.add_to_cart_label | default: "Add to Cart" | escape }}'
+              : '{{ "products.product.sold_out" | t | escape }}';
+          }
+          if (stickyAtcSelect && String(stickyAtcSelect.value) !== String(matchedVariant.id)) {
+            stickyAtcSelect.value = matchedVariant.id;
+          }
+          if (stickyAtcImg) {
+            if (matchedVariant.featured_image) {
+              stickyAtcImg.src = matchedVariant.featured_image.src || matchedVariant.featured_image;
+            } else if (matchedVariant.featured_media && matchedVariant.featured_media.preview_image) {
+              stickyAtcImg.src = matchedVariant.featured_media.preview_image.src;
+            }
           }
           if (stickyAtcError) stickyAtcError.hidden = true;
           if (addToCartBtn) {
@@ -2757,6 +2916,35 @@
           updateVariant();
         });
       });
+
+      // Handle Sticky ATC Variant Dropdown changes
+      if (stickyAtcSelect) {
+        stickyAtcSelect.addEventListener('change', function() {
+          const selectedVariantId = this.value;
+          const matchedVariant = variantsData.find(v => String(v.id) === String(selectedVariantId));
+          if (!matchedVariant) return;
+
+          if (matchedVariant.options && matchedVariant.options.length) {
+            selects.forEach((sel, idx) => {
+              if (matchedVariant.options[idx]) {
+                sel.value = matchedVariant.options[idx];
+              }
+            });
+
+            patternBtns.forEach(btn => {
+              const optIdx = Number.parseInt(btn.getAttribute('data-option-index'), 10);
+              const optVal = btn.getAttribute('data-option-value');
+              if (matchedVariant.options[optIdx] === optVal) {
+                btn.classList.add('is-active');
+              } else if (matchedVariant.options[optIdx]) {
+                btn.classList.remove('is-active');
+              }
+            });
+          }
+
+          updateVariant();
+        });
+      }
 
       // Handle Pattern Swatch clicks
       patternBtns.forEach(btn => {
